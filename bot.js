@@ -49,7 +49,7 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle("blitzbot's list of commands")
       .setColor([251, 204, 23])
-      .setDescription("For administration commands, use ~advanced. For games commands, use ~games.")
+      .setDescription("For administration commands, use ∼advanced. For games commands, use ∼games.")
       .setFooter("blitzbot", 'https://raw.githubusercontent.com/blitzbot-public/blitzbot/master/blitzbot.png')
       .setTimestamp()
 
@@ -345,7 +345,7 @@ client.on("message", async message => {
 
     const embed = new Discord.RichEmbed()
       .setTitle(`${username}'s Rainbow Six Siege Stats`)
-      .setDescription("For PVE stats, use ~r6pve")
+      .setDescription("For PVE stats, use ∼r6pve")
       .setColor([251, 204, 23])
       .setFooter("blitzbot", 'https://raw.githubusercontent.com/blitzbot-public/blitzbot/master/blitzbot.png')
       .setTimestamp()
