@@ -46,10 +46,10 @@ client.on("message", async message => {
   //////////////////////////////////////////////////////
   if (command === "help") {
     const embed = new Discord.RichEmbed()
-      .setTitle("blitzbot's list of commands")
+      .setTitle("tangerine's list of commands")
       .setColor([251, 204, 23])
       .setDescription("For administration commands, use ∼advanced. For games commands, use ∼games.")
-      .setFooter("blitzbot", 'https://raw.githubusercontent.com/blitzbot-public/blitzbot/master/blitzbot.png')
+      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
 
       .addBlankField(false)
@@ -83,9 +83,9 @@ client.on("message", async message => {
   //////////////////////////////////////////////////////
   if (command === "games") {
     const embed = new Discord.RichEmbed()
-      .setTitle("blitzbot's list of game trackers")
+      .setTitle("tangerine's list of game trackers")
       .setColor([251, 204, 23])
-      .setFooter("blitzbot", 'https://raw.githubusercontent.com/blitzbot-public/blitzbot/master/blitzbot.png')
+      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
 
       .addBlankField(false)
@@ -100,10 +100,10 @@ client.on("message", async message => {
   //////////////////////////////////////////////////////
   if (command === "advanced") {
     const embed = new Discord.RichEmbed()
-      .setTitle("blitzbot's administration commands")
+      .setTitle("tangerine's administration commands")
       .setColor([251, 204, 23])
-      .setDescription("You must have special permissions to run these commands. View the master list here: bit.ly/blitzbotAdmin")
-      .setFooter("blitzbot", 'https://raw.githubusercontent.com/blitzbot-public/blitzbot/master/blitzbot.png')
+      .setDescription("You must have special permissions to run these commands. View the master list here: bit.ly/tangerineAdmin")
+      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
       .addBlankField(true)
       .addField("‏‏‎⚡‎", "**ADMINISTRATION**")
@@ -123,7 +123,7 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "about") {
-    message.reply(`Currently using blitzbot version 0.0.7. Last updated 04/22/2020. Support: https://discord.gg/uwcgjYw. Currently serving ${client.users.size} users in ${client.channels.size} channels of ${client.guilds.size} servers.`)
+    message.reply(`Currently using tangerine version 0.1.0. Last updated 04/22/2020. Support: https://discord.gg/uwcgjYw. Currently serving ${client.users.size} users in ${client.channels.size} channels of ${client.guilds.size} servers.`)
   }
   //////////////////////////////////////////////////////
   if (command === "say") {
@@ -171,7 +171,8 @@ client.on("message", async message => {
   if (command === "purge") {
     if (!message.member.hasPermission("MANAGE_MESSAGES"))
       return message.reply("Sorry, you don't have permissions to use this!");
-    const deleteCount = parseInt(args[0], 10);
+    let deleteCountPrimary = parseInt(args[0], 10);
+    let deleteCount = deleteCountPrimary + 1;
     if (!deleteCount || deleteCount < 2 || deleteCount > 200)
       return message.reply("Please provide a number between 2 and 200 for the number of messages to delete");
 
@@ -294,18 +295,15 @@ client.on("message", async message => {
   //////////////////////////////////////////////////////
   if (command === "someone") {
     if (!message.member.hasPermission('ADMINISTRATOR'))
-    return message.reply("Sorry, you don't have permissions to use this!");
+      return message.reply("Sorry, you don't have permissions to use this!");
     message.reply(`the selected person is: ${message.guild.members.random()}`);
   }
   //////////////////////////////////////////////////////
   if (command === "useless") {
-
     message.react('❓');
-
     const filter = (reaction, user) => {
       return ['❓'].includes(reaction.emoji.name) && user.id === message.author.id;
     };
-
     message.awaitReactions(filter, {
         max: 1,
         time: 60000,
@@ -313,7 +311,6 @@ client.on("message", async message => {
       })
       .then(collected => {
         const reaction = collected.first();
-
         if (reaction.emoji.name === '❓') {
           message.delete().catch(O_o => {});
         } else {}
@@ -321,15 +318,12 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "r6") {
-
     let input = args.join(" ");
     let res = input.split(" ");
     let username = res[0];
     let platform = res[1];
-
     const id = await r6api.getId(platform, username).then(el => el[0].userId);
     const stats = await r6api.getStats(platform, id).then(el => el[0]);
-
     let kdr = (stats.pvp.general.kills / stats.pvp.general.deaths).toPrecision(3);
     let wlr = (stats.pvp.general.wins / stats.pvp.general.losses).toPrecision(3);
 
@@ -337,9 +331,8 @@ client.on("message", async message => {
       .setTitle(`${username}'s Rainbow Six Siege Stats`)
       .setDescription("For PVE stats, use ∼r6pve")
       .setColor([251, 204, 23])
-      .setFooter("blitzbot", 'https://raw.githubusercontent.com/blitzbot-public/blitzbot/master/blitzbot.png')
+      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
-
       .addField("‏‎🔫‎", "**PVP**")
       .addField("Wins:", `${stats.pvp.general.wins}`, true)
       .addField("Losses:", `${stats.pvp.general.losses}`, true)
@@ -366,24 +359,20 @@ client.on("message", async message => {
   }
 
   //////////////////////////////////////////////////////
-
   if (command === "r6pve") {
-
     let input = args.join(" ");
     let res = input.split(" ");
     let username = res[0];
     let platform = res[1];
-
     const id = await r6api.getId(platform, username).then(el => el[0].userId);
     const stats = await r6api.getStats(platform, id).then(el => el[0]);
-
     let pvekdr = (stats.pve.general.kills / stats.pve.general.deaths).toPrecision(3);
     let pvewlr = (stats.pve.general.wins / stats.pve.general.losses).toPrecision(3);
 
     const embed = new Discord.RichEmbed()
       .setTitle(`${username}'s Rainbow Six Siege PVE Stats`)
       .setColor([251, 204, 23])
-      .setFooter("blitzbot", 'https://raw.githubusercontent.com/blitzbot-public/blitzbot/master/blitzbot.png')
+      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
 
       .addField("‏‎🔪‎", "**PVE**")
@@ -398,9 +387,7 @@ client.on("message", async message => {
     message.channel.send({
       embed
     });
-
   }
-
   //////////////////////////////////////////////////////
 });
 client.login(config.token);
