@@ -12,7 +12,6 @@ const {
 const R6API = require('r6api.js');
 const r6api = new R6API('justokuydu@enayu.com', 'Hello12345!');
 
-let botadmin = "botadmin";
 //Designed by Arnav Dashaputra, https://dashaputra.com, arnav74#0884
 
 client.on("ready", () => {
@@ -123,26 +122,12 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "about") {
-    message.reply(`Currently using blitzbot version 0.0.4. Last updated 04/22/2020. Support: https://discord.gg/uwcgjYw. Currently serving ${client.users.size} users in ${client.channels.size} channels of ${client.guilds.size} servers.`)
-  }
-  //////////////////////////////////////////////////////
-  if (command === "botrole") {
-    if (!message.member.roles.some(r => [botadmin].includes(r.name))) { //check perm
-      message.reply("Sorry, you don't have permissions to use this!");
-      return message.reply("If you have locked out the admin role, check the current role using !botrole and assign it to yourself.");
-    }
-    const newadmin = args.join(" ");
-    if (!newadmin) {
-      message.reply(`current bot admin role: ${botadmin}`)
-    } else {
-      message.reply(`old bot admin role: ${botadmin}`)
-      botadmin = newadmin;
-      message.reply(`new bot admin role: ${botadmin}`)
-      return message.reply("Remember, roles are case-sensitive and must be precise!");
-    }
+    message.reply(`Currently using blitzbot version 0.0.5. Last updated 04/22/2020. Support: https://discord.gg/uwcgjYw. Currently serving ${client.users.size} users in ${client.channels.size} channels of ${client.guilds.size} servers.`)
   }
   //////////////////////////////////////////////////////
   if (command === "say") {
+    if (!message.member.hasPermission("MANAGE_MESSAGES"))
+      return message.reply("Sorry, you don't have permissions to use this!");
     const sayMessage = args.join(" ");
     message.delete().catch(O_o => {});
     if (!sayMessage) {
@@ -151,7 +136,7 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "kick") {
-    if (!message.member.roles.some(r => [botadmin].includes(r.name))) //check perm
+    if (!message.member.hasPermission("KICK_MEMBERS"))
       return message.reply("Sorry, you don't have permissions to use this!");
     let member = message.mentions.members.first() || message.guild.members.get(args[0]);
     if (!member)
@@ -168,7 +153,7 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "ban") {
-    if (!message.member.roles.some(r => [botadmin].includes(r.name)))
+    if (!message.member.hasPermission("BAN_MEMBERS"))
       return message.reply("Sorry, you don't have permissions to use this!");
     let member = message.mentions.members.first();
     if (!member)
@@ -183,7 +168,7 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "purge") {
-    if (!message.member.roles.some(r => [botadmin].includes(r.name))) //check perm
+    if (!message.member.hasPermission("MANAGE_MESSAGES"))
       return message.reply("Sorry, you don't have permissions to use this!");
     const deleteCount = parseInt(args[0], 10);
     if (!deleteCount || deleteCount < 2 || deleteCount > 200)
@@ -197,7 +182,7 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "mute") {
-    if (!message.member.roles.some(r => [botadmin].includes(r.name))) //check perm
+    if (!message.member.hasPermission("MANAGE_ROLES") || !message.member.hasPermission("KICK_MEMBERS"))
       return message.reply("Sorry, you don't have permissions to use this!");
     let tomute = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
     if (!tomute) return message.reply("Couldn't find user.");
@@ -278,22 +263,20 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "nickname") {
+    if (!message.member.hasPermission('CHANGE_NICKNAME'))
+      return message.reply("Sorry, you don't have permissions to use this!");
     let input = args.join(" ");
     if (!input) {
       message.reply(`Please enter a string.`)
     } else {
-      if (!message.guild.me.hasPermission('MANAGE_NICKNAMES'))
-        return message.channel.send('I don\'t have permission to change your nickname!');
-      else {
-        message.member.setNickname(input);
-        return message.reply(`Your nickname is now set to ${input}.`)
-      }
+      message.member.setNickname(input);
+      return message.reply(`Your nickname is now set to ${input}.`)
     }
   }
   //////////////////////////////////////////////////////
   if (command === "nickreset") {
-    if (!message.guild.me.hasPermission('MANAGE_NICKNAMES'))
-      return message.channel.send('I don\'t have permission to change your nickname!');
+    if (!message.member.hasPermission('CHANGE_NICKNAME'))
+      return message.reply("Sorry, you don't have permissions to use this!");
     else {
       message.member.setNickname(message.author.username);
       return message.reply(`Your nickname is now set to ${message.author.username}.`)
