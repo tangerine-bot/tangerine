@@ -9,6 +9,8 @@ const {
   getAllEmoji,
   getThemes
 } = require('random-text-meme');
+const R6API = require('r6api.js');
+const r6api = new R6API('justokuydu@enayu.com', 'Hello12345!');
 
 let botadmin = "botadmin";
 //Designed by Arnav Dashaputra, https://dashaputra.com, arnav74#0884
@@ -20,17 +22,14 @@ client.on("ready", () => {
     type: 'WATCHING'
   }); //PLAYING, LISTENING, WATCHING
   client.user.setStatus('online'); //online, idle, invisible, dnd
-  //client.user.setActivity(`Serving ${client.guilds.size} servers`);
 });
 
 client.on("guildCreate", guild => {
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-  client.user.setActivity(`Serving ${client.guilds.size} servers`);
 });
 
 client.on("guildDelete", guild => {
   console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-  client.user.setActivity(`Serving ${client.guilds.size} servers`);
 });
 
 client.on("message", async message => {
@@ -50,8 +49,8 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle("blitzbot's list of commands")
       .setColor([251, 204, 23])
-      .setDescription("For administration commands, use ~advanced.")
-      .setFooter("blitzbot", 'https://raw.githubusercontent.com/ArnavD74/blitzbot/master/blitzbot.png?token=AEFUVFY2DOW3KYAU5NRLDOK6VCEWA')
+      .setDescription("For administration commands, use ~advanced. For games commands, use ~games.")
+      .setFooter("blitzbot", 'https://raw.githubusercontent.com/blitzbot-public/blitzbot/master/blitzbot.png')
       .setTimestamp()
 
       .addBlankField(false)
@@ -68,14 +67,32 @@ client.on("message", async message => {
 
       .addBlankField(false)
       .addField("‏‏‎😊‎", "**FUN**")
+      .addField("`games`", "prints out all of the game tracking commands", true)
       .addField("`ascii` <string(message)>", "prints your message in ASCII art", true)
       .addField("`diceroll` <none, int(sides of dice)>", "rolls a dice with specified number of sides", true)
       .addField("`guess` <int(max number), int(guess)>", "picks a number 0 to max and checks if the guessed number matches it", true)
       .addField("`randomword`", "prints a random English word", true)
-      .addField("`asciimoji`", "prints a random ascii emoji", true)
+      .addField("`asciiart`", "prints a random ascii emoji", true)
       .addField("`useless`", "no idea what this one does", true)
-      //.addField("'CMD'", "DESC", true)
+    //.addField("'CMD'", "DESC", true)
 
+
+    message.channel.send({
+      embed
+    });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "games") {
+    const embed = new Discord.RichEmbed()
+      .setTitle("blitzbot's list of game trackers")
+      .setColor([251, 204, 23])
+      .setFooter("blitzbot", 'https://raw.githubusercontent.com/blitzbot-public/blitzbot/master/blitzbot.png')
+      .setTimestamp()
+
+      .addBlankField(false)
+      .addField("🌈 ", "**Rainbow Six Siege**")
+      .addField("`r6` <username, uplay|xb1|psn>", "Rainbow Six Siege PVP stats", true)
+      .addField("`r6pve` <username, uplay|xb1|psn>", "Rainbow Six Siege PVE stats", true)
 
     message.channel.send({
       embed
@@ -106,7 +123,7 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "about") {
-    message.reply("Currently using blitzbot version 0.0.1. Last updated 04/21/2020. Dev: arnav74#0884.")
+    message.reply(`Currently using blitzbot version 0.0.4. Last updated 04/22/2020. Support: https://discord.gg/uwcgjYw. Currently serving ${client.users.size} users in ${client.channels.size} channels of ${client.guilds.size} servers.`)
   }
   //////////////////////////////////////////////////////
   if (command === "botrole") {
@@ -312,6 +329,88 @@ client.on("message", async message => {
         } else {}
       })
   }
+  //////////////////////////////////////////////////////
+  if (command === "r6") {
+
+    let input = args.join(" ");
+    let res = input.split(" ");
+    let username = res[0];
+    let platform = res[1];
+
+    const id = await r6api.getId(platform, username).then(el => el[0].userId);
+    const stats = await r6api.getStats(platform, id).then(el => el[0]);
+
+    let kdr = (stats.pvp.general.kills / stats.pvp.general.deaths).toPrecision(3);
+    let wlr = (stats.pvp.general.wins / stats.pvp.general.losses).toPrecision(3);
+
+    const embed = new Discord.RichEmbed()
+      .setTitle(`${username}'s Rainbow Six Siege Stats`)
+      .setDescription("For PVE stats, use ~r6pve")
+      .setColor([251, 204, 23])
+      .setFooter("blitzbot", 'https://raw.githubusercontent.com/blitzbot-public/blitzbot/master/blitzbot.png')
+      .setTimestamp()
+
+      .addField("‏‎🔫‎", "**PVP**")
+      .addField("Wins:", `${stats.pvp.general.wins}`, true)
+      .addField("Losses:", `${stats.pvp.general.losses}`, true)
+      .addField("WLR:", `${wlr}`, true)
+      .addField("Kills:", `${stats.pvp.general.kills}`, true)
+      .addField("Deaths:", `${stats.pvp.general.deaths}`, true)
+      .addField("KDR:", `${kdr}`, true)
+      .addField("Matches:", `${stats.pvp.general.matches}`, true)
+      .addField("Assists:", `${stats.pvp.general.assists}`, true)
+      .addField("Headshots:", `${stats.pvp.general.headshots}`, true)
+      .addField("Melee Kills:", `${stats.pvp.general.meleeKills}`, true)
+      .addField("Wallbangs:", `${stats.pvp.general.penetrationKills}`, true)
+      .addField("Blind Kills:", `${stats.pvp.general.blindKills}`, true)
+      .addField("DBNOs:", `${stats.pvp.general.dbno}`, true)
+      .addField("DBNO Assists:", `${stats.pvp.general.dbnoAssists}`, true)
+      .addField("Revives:", `${stats.pvp.general.revives}`, true)
+      .addField("Gadgets Broken:", `${stats.pvp.general.gadgetsDestroyed}`, true)
+      .addField("Barricades:", `${stats.pvp.general.barricadesDeployed}`, true)
+      .addField("Suicides:", `${stats.pvp.general.suicides}`, true)
+      .addField("Playtime:", `${((stats.pvp.general.playtime)/60/60).toPrecision(3)} Hours`, true)
+    message.channel.send({
+      embed
+    });
+  }
+
+  //////////////////////////////////////////////////////
+
+  if (command === "r6pve") {
+
+    let input = args.join(" ");
+    let res = input.split(" ");
+    let username = res[0];
+    let platform = res[1];
+
+    const id = await r6api.getId(platform, username).then(el => el[0].userId);
+    const stats = await r6api.getStats(platform, id).then(el => el[0]);
+
+    let pvekdr = (stats.pve.general.kills / stats.pve.general.deaths).toPrecision(3);
+    let pvewlr = (stats.pve.general.wins / stats.pve.general.losses).toPrecision(3);
+
+    const embed = new Discord.RichEmbed()
+      .setTitle(`${username}'s Rainbow Six Siege PVE Stats`)
+      .setColor([251, 204, 23])
+      .setFooter("blitzbot", 'https://raw.githubusercontent.com/blitzbot-public/blitzbot/master/blitzbot.png')
+      .setTimestamp()
+
+      .addField("‏‎🔪‎", "**PVE**")
+      .addField("Wins:", `${stats.pve.general.wins}`, true)
+      .addField("Losses:", `${stats.pve.general.losses}`, true)
+      .addField("WLR:", `${pvewlr}`, true)
+      .addField("Kills:", `${stats.pve.general.kills}`, true)
+      .addField("Deaths:", `${stats.pve.general.deaths}`, true)
+      .addField("KDR:", `${pvekdr}`, true)
+      .addField("Matches:", `${stats.pve.general.matches}`, true)
+
+    message.channel.send({
+      embed
+    });
+
+  }
+
   //////////////////////////////////////////////////////
 });
 client.login(config.token);
