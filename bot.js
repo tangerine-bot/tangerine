@@ -102,17 +102,18 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle("blitzbot's administration commands")
       .setColor([251, 204, 23])
-      .setDescription("You must have the the bot's admin role to carry out these commands. It can be found using ~botrole.")
-      .setFooter("blitzbot", 'https://raw.githubusercontent.com/ArnavD74/blitzbot/master/blitzbot.png?token=AEFUVFY2DOW3KYAU5NRLDOK6VCEWA')
+      .setDescription("You must have special permissions to run these commands. View the master list here: bit.ly/blitzbotAdmin")
+      .setFooter("blitzbot", 'https://raw.githubusercontent.com/blitzbot-public/blitzbot/master/blitzbot.png')
       .setTimestamp()
       .addBlankField(true)
       .addField("‏‏‎⚡‎", "**ADMINISTRATION**")
-      .addField("`say` <string(message)>", "prints a repeat of the message")
-      .addField("`kick` <@user, string(reason)>", "kicks the specified user")
-      .addField("`ban` <@user, string(reason)>", "bans the specified user")
-      .addField("`purge` <int(messages)>", "purges the specified amount of messages from the channel")
-      .addField("`mute` <@user, int(milliseconds)>", "mutes the specified user for the specified amount of time")
-      .addField("`botrole` <none, string(new bot admin role)>", "prints or edits the current role used for assigning bot permissions")
+      .addField("`say` <string(message)>", "prints a repeat of the message. Requires MANAGE_MESSAGES.")
+      .addField("`kick` <@user, string(reason)>", "kicks the specified user. Requires KICK_MEMBERS.")
+      .addField("`ban` <@user, string(reason)>", "bans the specified user. Requires BAN_MEMBERS.")
+      .addField("`purge` <int(messages)>", "purges the specified amount of messages from the channel. Requires MANAGE_MESSAGES.")
+      .addField("`mute` <@user, int(milliseconds)>", "mutes the specified user for the specified amount of time. Requires MANAGE_ROLES.")
+      .addField("`someone` <@user, int(milliseconds)>", "pings a random user in the server. Requires ADMINISTRATOR.")
+
     //.addField("cmd", "desc")
     //.addBlankField(true)
 
@@ -122,7 +123,7 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "about") {
-    message.reply(`Currently using blitzbot version 0.0.5. Last updated 04/22/2020. Support: https://discord.gg/uwcgjYw. Currently serving ${client.users.size} users in ${client.channels.size} channels of ${client.guilds.size} servers.`)
+    message.reply(`Currently using blitzbot version 0.0.7. Last updated 04/22/2020. Support: https://discord.gg/uwcgjYw. Currently serving ${client.users.size} users in ${client.channels.size} channels of ${client.guilds.size} servers.`)
   }
   //////////////////////////////////////////////////////
   if (command === "say") {
@@ -289,6 +290,12 @@ client.on("message", async message => {
   //////////////////////////////////////////////////////
   if (command === "asciiart") {
     message.reply(getEmoji());
+  }
+  //////////////////////////////////////////////////////
+  if (command === "someone") {
+    if (!message.member.hasPermission('ADMINISTRATOR'))
+    return message.reply("Sorry, you don't have permissions to use this!");
+    message.reply(`the selected person is: ${message.guild.members.random()}`);
   }
   //////////////////////////////////////////////////////
   if (command === "useless") {
