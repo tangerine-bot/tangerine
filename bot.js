@@ -11,6 +11,11 @@ const {
 } = require('random-text-meme');
 const R6API = require('r6api.js');
 const r6api = new R6API('justokuydu@enayu.com', 'Hello12345!');
+const moment = require("moment-timezone");
+const clock = require("node-emoji-clock");
+
+const tangerineVersion = ("0.1.2");
+const lastUpdated = ("04/22/2020");
 
 //Designed by Arnav Dashaputra, https://dashaputra.com, arnav74#0884
 
@@ -47,35 +52,33 @@ client.on("message", async message => {
   if (command === "help") {
     const embed = new Discord.RichEmbed()
       .setTitle("tangerine's list of commands")
-      .setColor([251, 204, 23])
+      .setColor([253, 144, 43])
       .setDescription("For administration commands, use ∼advanced. For games commands, use ∼games.")
       .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
 
       .addBlankField(false)
       .addField("‏‏‎👋", "**GENERAL**")
-      .addField("`help` <none>", "the page you are on right now!", true)
-      .addField("`about` <none>", "prints the about and developer contact page", true)
-      .addField("`ping` <none>", "prints the bot's network latency", true)
-      .addField("`advanced` <none>", "prints advanced help for server admins", true)
+      .addField("`help`", "the page you are on right now!", true)
+      .addField("`about`", "prints the about and developer contact page", true)
+      .addField("`ping`", "prints the bot's network latency", true)
+      .addField("`advanced`", "prints advanced help for server admins", true)
 
       .addBlankField(false)
       .addField("‏‎🛠️‎", "**UTILITY**")
       .addField("`nickname` <string(nickname)>", "changes your nickname to the specified string", true)
-      .addField("`nickreset` <none>", "resets your nickname", true)
+      .addField("`nickreset`", "resets your nickname", true)
+      .addField("`time` <none | string(est|ct|mt|pt)>", "prints the current time", true)
 
       .addBlankField(false)
       .addField("‏‏‎😊‎", "**FUN**")
       .addField("`games`", "prints out all of the game tracking commands", true)
       .addField("`ascii` <string(message)>", "prints your message in ASCII art", true)
       .addField("`diceroll` <none, int(sides of dice)>", "rolls a dice with specified number of sides", true)
-      .addField("`guess` <int(max number), int(guess)>", "picks a number 0 to max and checks if the guessed number matches it", true)
+      .addField("`guess` <int(max number), int(guess)>", "checks if picked number matches guessed number", true)
       .addField("`randomword`", "prints a random English word", true)
       .addField("`asciiart`", "prints a random ascii emoji", true)
-      .addField("`useless`", "no idea what this one does", true)
-    //.addField("'CMD'", "DESC", true)
-
-
+      .addField("`useless`", "this is pretty uselss", true)
     message.channel.send({
       embed
     });
@@ -84,15 +87,13 @@ client.on("message", async message => {
   if (command === "games") {
     const embed = new Discord.RichEmbed()
       .setTitle("tangerine's list of game trackers")
-      .setColor([251, 204, 23])
+      .setColor([253, 144, 43])
       .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
-
       .addBlankField(false)
       .addField("🌈 ", "**Rainbow Six Siege**")
       .addField("`r6` <username, uplay|xb1|psn>", "Rainbow Six Siege PVP stats", true)
       .addField("`r6pve` <username, uplay|xb1|psn>", "Rainbow Six Siege PVE stats", true)
-
     message.channel.send({
       embed
     });
@@ -101,7 +102,7 @@ client.on("message", async message => {
   if (command === "advanced") {
     const embed = new Discord.RichEmbed()
       .setTitle("tangerine's administration commands")
-      .setColor([251, 204, 23])
+      .setColor([253, 144, 43])
       .setDescription("You must have special permissions to run these commands. View the master list here: bit.ly/tangerineAdmin")
       .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
@@ -111,19 +112,30 @@ client.on("message", async message => {
       .addField("`kick` <@user, string(reason)>", "kicks the specified user. Requires KICK_MEMBERS.")
       .addField("`ban` <@user, string(reason)>", "bans the specified user. Requires BAN_MEMBERS.")
       .addField("`purge` <int(messages)>", "purges the specified amount of messages from the channel. Requires MANAGE_MESSAGES.")
-      .addField("`mute` <@user, int(milliseconds)>", "mutes the specified user for the specified amount of time. Requires MANAGE_ROLES.")
-      .addField("`someone` <@user, int(milliseconds)>", "pings a random user in the server. Requires ADMINISTRATOR.")
-
-    //.addField("cmd", "desc")
-    //.addBlankField(true)
-
+      .addField("`mute` <@user, int(seconds)>", "mutes the specified user for the specified amount of time. Requires MANAGE_ROLES.")
+      .addField("`someone`", "pings a random user in the server. Requires ADMINISTRATOR.")
     message.channel.send({
       embed
     });
   }
   //////////////////////////////////////////////////////
   if (command === "about") {
-    message.reply(`Currently using tangerine version 0.1.0. Last updated 04/22/2020. Support: https://discord.gg/uwcgjYw. Currently serving ${client.users.size} users in ${client.channels.size} channels of ${client.guilds.size} servers.`)
+    const embed = new Discord.RichEmbed()
+      .setTitle(`tangerine ${tangerineVersion}`)
+      .setColor([253, 144, 43])
+      .setDescription(`Last updated ${lastUpdated}.`)
+      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setTimestamp()
+      .addBlankField(true)
+      .addField("Support server", "[Tangerine Support](https://discord.gg/uwcgjYw)")
+      .addField("Invite to your own server", "[Tangerine Bot](https://bit.ly/tangerineBot)")
+      .setImage('https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_banner.png')
+      .addField("Users using:", `${client.users.size} users`, true)
+      .addField("Channels channeling:", `${client.channels.size} channels`, true)
+      .addField("Servers serving:", `${client.guilds.size} servers`, true)
+    message.channel.send({
+      embed
+    });
   }
   //////////////////////////////////////////////////////
   if (command === "say") {
@@ -173,8 +185,8 @@ client.on("message", async message => {
       return message.reply("Sorry, you don't have permissions to use this!");
     let deleteCountPrimary = parseInt(args[0], 10);
     let deleteCount = deleteCountPrimary + 1;
-    if (!deleteCount || deleteCount < 2 || deleteCount > 200)
-      return message.reply("Please provide a number between 2 and 200 for the number of messages to delete");
+    if (!deleteCount || deleteCount < 2 || deleteCount > 51)
+      return message.reply("Please provide a number between 1 and 50 for the number of messages to delete");
 
     const fetched = await message.channel.fetchMessages({ //deletes
       limit: deleteCount
@@ -330,7 +342,7 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle(`${username}'s Rainbow Six Siege Stats`)
       .setDescription("For PVE stats, use ∼r6pve")
-      .setColor([251, 204, 23])
+      .setColor([253, 144, 43])
       .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
       .addField("‏‎🔫‎", "**PVP**")
@@ -357,7 +369,6 @@ client.on("message", async message => {
       embed
     });
   }
-
   //////////////////////////////////////////////////////
   if (command === "r6pve") {
     let input = args.join(" ");
@@ -368,13 +379,11 @@ client.on("message", async message => {
     const stats = await r6api.getStats(platform, id).then(el => el[0]);
     let pvekdr = (stats.pve.general.kills / stats.pve.general.deaths).toPrecision(3);
     let pvewlr = (stats.pve.general.wins / stats.pve.general.losses).toPrecision(3);
-
     const embed = new Discord.RichEmbed()
       .setTitle(`${username}'s Rainbow Six Siege PVE Stats`)
-      .setColor([251, 204, 23])
+      .setColor([253, 144, 43])
       .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
-
       .addField("‏‎🔪‎", "**PVE**")
       .addField("Wins:", `${stats.pve.general.wins}`, true)
       .addField("Losses:", `${stats.pve.general.losses}`, true)
@@ -383,10 +392,80 @@ client.on("message", async message => {
       .addField("Deaths:", `${stats.pve.general.deaths}`, true)
       .addField("KDR:", `${pvekdr}`, true)
       .addField("Matches:", `${stats.pve.general.matches}`, true)
-
     message.channel.send({
       embed
     });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "time") {
+    var et = moment().tz("America/New_York");
+    var ct = moment().tz("America/Chicago");
+    var mdt = moment().tz("America/Denver");
+    var pt = moment().tz("America/Los_Angeles");
+
+    var etF = clock.timeToEmoji(et) + " \`" + et.format("HH:mm ") + "Eastern Daylight Time\`\n"
+    var ctF = clock.timeToEmoji(ct) + " \`" + ct.format("HH:mm ") + "Central Daylight Time\`\n"
+    var mdtF = clock.timeToEmoji(mdt) + " \`" + mdt.format("HH:mm ") + "Mountain Daylight Time\`\n"
+    var ptF = clock.timeToEmoji(pt) + " \`" + pt.format("HH:mm ") + "Pacific Daylight Time\`"
+
+    if (args.length === 0) {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`All American times`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+        .setTimestamp()
+        .addField("Eastern:", `${etF}`)
+        .addField("Central:", `${ctF}`)
+        .addField("Mountain:", `${mdtF}`)
+        .addField("Pacific:", `${ptF}`)
+      message.channel.send({
+        embed
+      });
+
+    } else if (args == "EST" || args == "est" || args == "ET" || args == "et") {
+
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Eastern Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+        .setTimestamp()
+        .addField("It is currently:", `${etF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "CT" || args == "ct" || args == "CST" || args == "cst") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Central Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+        .setTimestamp()
+        .addField("It is currently:", `${ctF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "MDT" || args == "mdt" || args == "MST" || args == "mst" || args == "MT" || args == "mt") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Mountain Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+        .setTimestamp()
+        .addField("It is currently:", `${mdtF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "PST" || args == "pst" || args == "PT" || args == "pt") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Pacific Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+        .setTimestamp()
+        .addField("It is currently:", `${ptF}`)
+      message.channel.send({
+        embed
+      });
+    } else {
+      return message.reply("Please use one of the American time zones: \`EST, CT, MST, PST\`")
+    }
   }
   //////////////////////////////////////////////////////
 });
