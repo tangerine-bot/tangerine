@@ -7,7 +7,5 @@ Public discord utility and moderation bot.      
 
 
 **Links**:
-
-[Support Server](https://discord.gg/uwcgjYw)
-
+[Support Server](https://discord.gg/uwcgjYw) | 
 [Vote for our bot here at top.gg!](https://top.gg/bot/701793346225700934/vote)
