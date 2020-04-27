@@ -9,31 +9,104 @@ const {
   getAllEmoji,
   getThemes
 } = require('random-text-meme');
+const {
+  r6username,
+  r6password
+} = require('./keys/r6.json');
 const R6API = require('r6api.js');
-const r6api = new R6API('justokuydu@enayu.com', 'Hello12345!');
+const r6api = new R6API(r6username, r6password);
 const moment = require("moment-timezone");
 const clock = require("node-emoji-clock");
+const hypixeljs = require('hypixeljs');
+const mojangjs = require('mojangjs');
+const fetch = require('node-fetch');
+const dogeify = require('dogeify-js');
+const uwufy = require('uwufy');
+const Chance = require('chance');
+const chance = new Chance();
+const {dblusername} = require('./keys/dbl.json');
+const DBL = require("dblapi.js");
+const dbl = new DBL(dblusername, client);
+const {hypixelusername} = require('./keys/hypixel.json')
+hypixeljs.login(hypixelusername);
+const tangerineVersion = ("0.1.8");
+const lastUpdated = ("04/26/2020");
+const numberOfCommands = ("39");
 
-const tangerineVersion = ("0.1.2");
-const lastUpdated = ("04/22/2020");
+//Designed by the Tangerine team, https://discord.gg/uwcgjYw or arnav74#0884
 
-//Designed by Arnav Dashaputra, https://dashaputra.com, arnav74#0884
+function thousands_separators(num) {
+  var num_parts = num.toString().split(".");
+  num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return num_parts.join(".");
+}
 
 client.on("ready", () => {
   // This event will run if the bot starts, and logs in, successfully.
-  console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
-  client.user.setActivity(`memes. Use ∼help. Serving ${client.users.size} users.`, {
+  console.log(`Bot has started, with ${thousands_separators(client.users.size)} users, in ${thousands_separators(client.channels.size)} channels of ${thousands_separators(client.guilds.size)} guilds.`);
+  client.user.setActivity(`memes. Use ∼help. Serving ${thousands_separators(client.users.size)} users.`, {
     type: 'WATCHING'
   }); //PLAYING, LISTENING, WATCHING
   client.user.setStatus('online'); //online, idle, invisible, dnd
 });
 
+dbl.on('posted', () => {
+  console.log('Server count posted!');
+})
+
+client.on('ready', () => {
+  setInterval(() => {
+    dbl.postStats(client.guilds.size, client.shards.Id, client.shards.total);
+  }, 1800000);
+});
+
+dbl.on('error', e => {
+  console.log(`Oops! ${e}`);
+})
+
 client.on("guildCreate", guild => {
-  console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
+  console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${thousands_separators(guild.memberCount)} members!`);
+  let channel = client.channels.get(
+    guild.channels
+    .filter(
+      c =>
+      c.permissionsFor(client.user).has("SEND_MESSAGES") &&
+      c.type === "text"
+    )
+    .map(r => r.id)[0]
+  );
+  const embed = new Discord.RichEmbed()
+    .setTitle("welcome to tangerine!")
+    .setColor([253, 144, 43])
+    .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+    .setImage('https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine.gif')
+    .setTimestamp()
+    .addField("**Made by the Tangerine team**", "❤️‏‏‎")
+  channel.send({
+    embed
+  });
 });
 
 client.on("guildDelete", guild => {
   console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
+});
+
+const prefix = '~';
+const escapeRegex = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+client.on('message', message => {
+  const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`);
+  if (!prefixRegex.test(message.content)) return;
+
+  const [, matchedPrefix] = message.content.match(prefixRegex);
+  const args = message.content.slice(matchedPrefix.length).trim().split(/ +/);
+  const command = args.shift().toLowerCase();
+
+  if (command === '') {
+    message.channel.send('My prefix is ∼, use ∼help to begin.');
+  } else if (command === 'prefix') {
+    message.reply(`you can either ping me or use \`${prefix}\` as my prefix.`);
+  }
 });
 
 client.on("message", async message => {
@@ -44,40 +117,99 @@ client.on("message", async message => {
   const command = args.shift().toLowerCase();
   //////////////////////////////////////////////////////
   if (command === "ping") { //asynchronous guild ping
+    let input = args.join(" ");
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
     const m = await message.channel.send("Ping?");
-    m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ping)}ms`);
+    m.edit(`Pong! Network Latency: ${m.createdTimestamp - message.createdTimestamp}ms. API Latency: ${Math.round(client.ping)}ms`);
   }
 
   //////////////////////////////////////////////////////
   if (command === "help") {
+    let input = args.join(" ");
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
     const embed = new Discord.RichEmbed()
       .setTitle("tangerine's list of commands")
       .setColor([253, 144, 43])
-      .setDescription("For administration commands, use ∼advanced. For games commands, use ∼games.")
+      .setDescription(`For more help use ~about and join the support server!`)
       .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
-
       .addBlankField(false)
-      .addField("‏‏‎👋", "**GENERAL**")
       .addField("`help`", "the page you are on right now!", true)
+      .addField("`general`", "prints out all of the general commands", true)
+      .addField("`utility`", "prints out all of the utility commands", true)
+      .addField("`fun`", "prints out all of the fun commands", true)
+      .addField("`games`", "prints out all of the game tracking commands, includes MC and R6", true)
+      .addField("`random`", "prints out all of the random generation commands", true)
+      .addField("`advanced`", "prints out all of the administration commands that require special permissions", true)
+    message.channel.send({
+      embed
+    });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "general") {
+    let input = args.join(" ");
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
+    const embed = new Discord.RichEmbed()
+      .setTitle("tangerine's list of general commands")
+      .setColor([253, 144, 43])
+      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setTimestamp()
+      .addField("`help`", "prints out all of the main tangerine commands", true)
       .addField("`about`", "prints the about and developer contact page", true)
       .addField("`ping`", "prints the bot's network latency", true)
-      .addField("`advanced`", "prints advanced help for server admins", true)
-
-      .addBlankField(false)
-      .addField("‏‎🛠️‎", "**UTILITY**")
+    message.channel.send({
+      embed
+    });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "utility") {
+    let input = args.join(" ");
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
+    const embed = new Discord.RichEmbed()
+      .setTitle("tangerine's list of utility commands")
+      .setColor([253, 144, 43])
+      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setTimestamp()
       .addField("`nickname` <string(nickname)>", "changes your nickname to the specified string", true)
       .addField("`nickreset`", "resets your nickname", true)
       .addField("`time` <none | string(est|ct|mt|pt)>", "prints the current time", true)
-
-      .addBlankField(false)
-      .addField("‏‏‎😊‎", "**FUN**")
-      .addField("`games`", "prints out all of the game tracking commands", true)
+    message.channel.send({
+      embed
+    });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "fun") {
+    let input = args.join(" ");
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
+    const embed = new Discord.RichEmbed()
+      .setTitle("tangerine's list of fun commands")
+      .setColor([253, 144, 43])
+      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setTimestamp()
+      .addField("`meme`", "prints a random meme from r/funny", true)
+      .addField("`doge` <string(message)>", "doge-ifies your message", true)
+      .addField("`uwu` <string(message)>", "uwu-ifies your message", true)
       .addField("`ascii` <string(message)>", "prints your message in ASCII art", true)
-      .addField("`diceroll` <none, int(sides of dice)>", "rolls a dice with specified number of sides", true)
-      .addField("`guess` <int(max number), int(guess)>", "checks if picked number matches guessed number", true)
-      .addField("`randomword`", "prints a random English word", true)
-      .addField("`asciiart`", "prints a random ascii emoji", true)
       .addField("`useless`", "this is pretty uselss", true)
     message.channel.send({
       embed
@@ -85,29 +217,71 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "games") {
+    let input = args.join(" ");
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
     const embed = new Discord.RichEmbed()
       .setTitle("tangerine's list of game trackers")
       .setColor([253, 144, 43])
       .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
-      .addBlankField(false)
       .addField("🌈 ", "**Rainbow Six Siege**")
-      .addField("`r6` <username, uplay|xb1|psn>", "Rainbow Six Siege PVP stats", true)
-      .addField("`r6pve` <username, uplay|xb1|psn>", "Rainbow Six Siege PVE stats", true)
+      .addField("`r6` <username, pc|psn>", "Rainbow Six Siege PVP stats", true)
+      .addField("`r6pve` <username, pc|psn>", "Rainbow Six Siege PVE stats", true)
+      .addBlankField(false)
+      .addField("⛏️ ", "**Minecraft**")
+      .addField("`head` <username>", "Fetches and prints the user's head", true)
+      .addField("`names` <username>", "Fetches and prints all of the user's names", true)
+      .addField("`skin` <username>", "Fetches and prints the user's skin", true)
+      .addField("`rawskin` <username>", "Fetches and prints the user's raw skin", true)
+    message.channel.send({
+      embed
+    });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "random") {
+    let input = args.join(" ");
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
+    const embed = new Discord.RichEmbed()
+      .setTitle("tangerine's list of random commands")
+      .setColor([253, 144, 43])
+      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setTimestamp()
+      .addField("`asciiart`", "prints a random ascii emoji", true)
+      .addField("`animal`", "prints a random animal name", true)
+      .addField("`color`", "prints and displays a random color", true)
+      .addField("`coin`", "flips a coin", true)
+      .addField("`word`", "prints a random English word", true)
+      .addField("`dice` <none, int(sides of dice)>", "rolls a dice with specified number of sides", true)
+      .addField("`rpg` <string(roll sequence, e.g. 5d20)>", "rolls die with specified number of sides", true)
+      .addField("`guess` <int(max number), int(guess)>", "checks if picked number matches guessed number", true)
+      .addField("`integer`", "prints a random integer", true)
+      .addField("`prime`", "prints a prime number", true)
     message.channel.send({
       embed
     });
   }
   //////////////////////////////////////////////////////
   if (command === "advanced") {
+    let input = args.join(" ");
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
     const embed = new Discord.RichEmbed()
       .setTitle("tangerine's administration commands")
       .setColor([253, 144, 43])
       .setDescription("You must have special permissions to run these commands. View the master list here: bit.ly/tangerineAdmin")
       .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
-      .addBlankField(true)
-      .addField("‏‏‎⚡‎", "**ADMINISTRATION**")
       .addField("`say` <string(message)>", "prints a repeat of the message. Requires MANAGE_MESSAGES.")
       .addField("`kick` <@user, string(reason)>", "kicks the specified user. Requires KICK_MEMBERS.")
       .addField("`ban` <@user, string(reason)>", "bans the specified user. Requires BAN_MEMBERS.")
@@ -120,6 +294,12 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "about") {
+    let input = args.join(" ");
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
     const embed = new Discord.RichEmbed()
       .setTitle(`tangerine ${tangerineVersion}`)
       .setColor([253, 144, 43])
@@ -127,12 +307,13 @@ client.on("message", async message => {
       .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
       .addBlankField(true)
+      .addField("Official Website", "[Tangerine Website](https://dashaputra.com/tangerine)")
       .addField("Support server", "[Tangerine Support](https://discord.gg/uwcgjYw)")
       .addField("Invite to your own server", "[Tangerine Bot](https://bit.ly/tangerineBot)")
-      .setImage('https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_banner.png')
-      .addField("Users using:", `${client.users.size} users`, true)
-      .addField("Channels channeling:", `${client.channels.size} channels`, true)
-      .addField("Servers serving:", `${client.guilds.size} servers`, true)
+      .setImage('https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine.gif')
+      .addField("Users using:", `${thousands_separators(client.users.size)} users`, true)
+      .addField("Channels channeling:", `${thousands_separators(client.channels.size)} channels`, true)
+      .addField("Servers serving:", `${thousands_separators(client.guilds.size)} servers`, true)
     message.channel.send({
       embed
     });
@@ -144,7 +325,7 @@ client.on("message", async message => {
     const sayMessage = args.join(" ");
     message.delete().catch(O_o => {});
     if (!sayMessage) {
-      message.reply("Please input an argument")
+      message.reply("You must input a message.")
     } else message.channel.send(sayMessage);
   }
   //////////////////////////////////////////////////////
@@ -187,7 +368,6 @@ client.on("message", async message => {
     let deleteCount = deleteCountPrimary + 1;
     if (!deleteCount || deleteCount < 2 || deleteCount > 51)
       return message.reply("Please provide a number between 1 and 50 for the number of messages to delete");
-
     const fetched = await message.channel.fetchMessages({ //deletes
       limit: deleteCount
     });
@@ -200,7 +380,7 @@ client.on("message", async message => {
       return message.reply("Sorry, you don't have permissions to use this!");
     let tomute = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
     if (!tomute) return message.reply("Couldn't find user.");
-    if (tomute.hasPermission("MANAGE_MESSAGES")) return message.reply("Can't mute them!");
+    if (tomute.hasPermission("MANAGE_MESSAGES")) return message.reply("Can't mute this user! Perhaps check permissions?");
     let muterole = message.guild.roles.find(muterole => muterole.name === "muted");
     //start of create role
     if (!muterole) {
@@ -231,8 +411,12 @@ client.on("message", async message => {
     }, ms(mutetime));
   }
   //////////////////////////////////////////////////////
-  if (command === "diceroll") {
+  if (command === "dice") {
+    let input = args.join(" ");
     let diceSides = args.join(" ");
+    if (args.length !== 0 || args.length !== 1) {
+      return message.reply(`You must provide either no inputs or 1 number.`)
+    }
     if (!diceSides) {
       diceSides = 6;
       let value = Math.round(Math.random() * diceSides)
@@ -248,8 +432,8 @@ client.on("message", async message => {
     let res = input.split(" ");
     let total = res[0];
     let guess = res[1];
-    if (!input) {
-      return message.reply(`Please guess a number.`)
+    if (args.length !== 2) {
+      return message.reply(`You must provide 2 numbers.`)
     } else {
       let value = Math.round(Math.random() * total)
       if (value == guess) {
@@ -263,7 +447,7 @@ client.on("message", async message => {
   if (command === "ascii") {
     let input = args.join(" ");
     if (!input) {
-      message.reply(`Please enter a string.`)
+      message.reply(`You must provide a message.`)
     } else {
       figlet(input, function (err, data) {
         if (err) {
@@ -277,6 +461,11 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "nickname") {
+    if (args.length === 0) {
+      return message.reply(
+        'You must provide a nickname.'
+      );
+    }
     if (!message.member.hasPermission('CHANGE_NICKNAME'))
       return message.reply("Sorry, you don't have permissions to use this!");
     let input = args.join(" ");
@@ -289,6 +478,11 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "nickreset") {
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
     if (!message.member.hasPermission('CHANGE_NICKNAME'))
       return message.reply("Sorry, you don't have permissions to use this!");
     else {
@@ -297,21 +491,45 @@ client.on("message", async message => {
     }
   }
   //////////////////////////////////////////////////////
-  if (command === "randomword") {
+  if (command === "word") {
+    let input = args.join(" ");
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
     message.reply(randomWord());
   }
   //////////////////////////////////////////////////////
   if (command === "asciiart") {
-    message.reply(getEmoji());
+    let input = args.join(" ");
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
+    message.reply(`\`${getEmoji()}\``);
   }
   //////////////////////////////////////////////////////
   if (command === "someone") {
+    let input = args.join(" ");
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
     if (!message.member.hasPermission('ADMINISTRATOR'))
       return message.reply("Sorry, you don't have permissions to use this!");
     message.reply(`the selected person is: ${message.guild.members.random()}`);
   }
   //////////////////////////////////////////////////////
   if (command === "useless") {
+    let input = args.join(" ");
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
     message.react('❓');
     const filter = (reaction, user) => {
       return ['❓'].includes(reaction.emoji.name) && user.id === message.author.id;
@@ -332,13 +550,27 @@ client.on("message", async message => {
   if (command === "r6") {
     let input = args.join(" ");
     let res = input.split(" ");
+    if (args.length != 2) {
+      return message.reply('Please provide the username and platform of the player.')
+    }
     let username = res[0];
     let platform = res[1];
+    if (platform === "pc" || platform === "PC" || platform == "Pc") {
+      platform = "uplay";
+    }
+    // if (platform === "xb1" || platform === "XB1" || platform === "Xb1" || platform === "xbox" || platform === "XBOX" || platform === "Xbox" || platform === "xbl" || platform === "XBL") {
+    //   platform = "xbl";
+    //   console.log(typeof username);
+    //   console.log("old username: " + username);
+    //   username = username.replace("_", " ");
+    //   console.log("new username: " + username);
+    // }
     const id = await r6api.getId(platform, username).then(el => el[0].userId);
     const stats = await r6api.getStats(platform, id).then(el => el[0]);
     let kdr = (stats.pvp.general.kills / stats.pvp.general.deaths).toPrecision(3);
     let wlr = (stats.pvp.general.wins / stats.pvp.general.losses).toPrecision(3);
-
+    let hsr = ((stats.pvp.general.headshots / stats.pvp.general.kills) * 100).toPrecision(4);
+    let totalassists = (stats.pvp.general.assists + stats.pvp.general.dbnoAssists);
     const embed = new Discord.RichEmbed()
       .setTitle(`${username}'s Rainbow Six Siege Stats`)
       .setDescription("For PVE stats, use ∼r6pve")
@@ -353,19 +585,19 @@ client.on("message", async message => {
       .addField("Deaths:", `${stats.pvp.general.deaths}`, true)
       .addField("KDR:", `${kdr}`, true)
       .addField("Matches:", `${stats.pvp.general.matches}`, true)
-      .addField("Assists:", `${stats.pvp.general.assists}`, true)
+      .addField("Assists:", `${totalassists}`, true)
+      .addField("Revives:", `${stats.pvp.general.revives}`, true)
       .addField("Headshots:", `${stats.pvp.general.headshots}`, true)
-      .addField("Melee Kills:", `${stats.pvp.general.meleeKills}`, true)
+      .addField("Headshot%:", `${hsr}%`, true)
+      .addField("Melees:", `${stats.pvp.general.meleeKills}`, true)
       .addField("Wallbangs:", `${stats.pvp.general.penetrationKills}`, true)
       .addField("Blind Kills:", `${stats.pvp.general.blindKills}`, true)
       .addField("DBNOs:", `${stats.pvp.general.dbno}`, true)
-      .addField("DBNO Assists:", `${stats.pvp.general.dbnoAssists}`, true)
-      .addField("Revives:", `${stats.pvp.general.revives}`, true)
       .addField("Gadgets Broken:", `${stats.pvp.general.gadgetsDestroyed}`, true)
       .addField("Barricades:", `${stats.pvp.general.barricadesDeployed}`, true)
       .addField("Suicides:", `${stats.pvp.general.suicides}`, true)
       .addField("Playtime:", `${((stats.pvp.general.playtime)/60/60).toPrecision(3)} Hours`, true)
-    message.channel.send({
+    return message.channel.send({
       embed
     });
   }
@@ -373,12 +605,20 @@ client.on("message", async message => {
   if (command === "r6pve") {
     let input = args.join(" ");
     let res = input.split(" ");
+    if (args.length != 2) {
+      return message.reply('Please provide the username and platform of the player.')
+    }
     let username = res[0];
     let platform = res[1];
+    if (platform === "pc" || platform === "PC" || platform == "Pc") {
+      platform = "uplay";
+    }
     const id = await r6api.getId(platform, username).then(el => el[0].userId);
     const stats = await r6api.getStats(platform, id).then(el => el[0]);
     let pvekdr = (stats.pve.general.kills / stats.pve.general.deaths).toPrecision(3);
     let pvewlr = (stats.pve.general.wins / stats.pve.general.losses).toPrecision(3);
+    let pvehsr = ((stats.pve.general.headshots / stats.pve.general.kills) * 100).toPrecision(4);
+    let pvetotalassists = (stats.pvp.general.assists + stats.pvp.general.dbnoAssists);
     const embed = new Discord.RichEmbed()
       .setTitle(`${username}'s Rainbow Six Siege PVE Stats`)
       .setColor([253, 144, 43])
@@ -392,7 +632,19 @@ client.on("message", async message => {
       .addField("Deaths:", `${stats.pve.general.deaths}`, true)
       .addField("KDR:", `${pvekdr}`, true)
       .addField("Matches:", `${stats.pve.general.matches}`, true)
-    message.channel.send({
+      .addField("Assists:", `${pvetotalassists}`, true)
+      .addField("Revives:", `${stats.pve.general.revives}`, true)
+      .addField("Headshots:", `${stats.pve.general.headshots}`, true)
+      .addField("Headshot %:", `${pvehsr}%`, true)
+      .addField("Melee Kills:", `${stats.pve.general.meleeKills}`, true)
+      .addField("Wallbangs:", `${stats.pve.general.penetrationKills}`, true)
+      .addField("Blind Kills:", `${stats.pve.general.blindKills}`, true)
+      .addField("DBNOs:", `${stats.pve.general.dbno}`, true)
+      .addField("Gadgets Broken:", `${stats.pve.general.gadgetsDestroyed}`, true)
+      .addField("Barricades:", `${stats.pve.general.barricadesDeployed}`, true)
+      .addField("Suicides:", `${stats.pve.general.suicides}`, true)
+      .addField("Playtime:", `${((stats.pve.general.playtime)/60/60).toPrecision(3)} Hours`, true)
+    return message.channel.send({
       embed
     });
   }
@@ -402,12 +654,10 @@ client.on("message", async message => {
     var ct = moment().tz("America/Chicago");
     var mdt = moment().tz("America/Denver");
     var pt = moment().tz("America/Los_Angeles");
-
     var etF = clock.timeToEmoji(et) + " \`" + et.format("HH:mm ") + "Eastern Daylight Time\`\n"
     var ctF = clock.timeToEmoji(ct) + " \`" + ct.format("HH:mm ") + "Central Daylight Time\`\n"
     var mdtF = clock.timeToEmoji(mdt) + " \`" + mdt.format("HH:mm ") + "Mountain Daylight Time\`\n"
     var ptF = clock.timeToEmoji(pt) + " \`" + pt.format("HH:mm ") + "Pacific Daylight Time\`"
-
     if (args.length === 0) {
       const embed = new Discord.RichEmbed()
         .setTitle(`All American times`)
@@ -421,9 +671,7 @@ client.on("message", async message => {
       message.channel.send({
         embed
       });
-
     } else if (args == "EST" || args == "est" || args == "ET" || args == "et") {
-
       const embed = new Discord.RichEmbed()
         .setTitle(`Eastern Time`)
         .setColor([253, 144, 43])
@@ -466,6 +714,259 @@ client.on("message", async message => {
     } else {
       return message.reply("Please use one of the American time zones: \`EST, CT, MST, PST\`")
     }
+  }
+  //////////////////////////////////////////////////////
+  if (command === "skin") {
+    let input = args.join(" ");
+    let res = input.split(" ");
+    if (args.length !== 1) {
+      return message.reply(
+        'You must only provide a username after this command.'
+      );
+    }
+    let nickname = res[0];
+    mojangjs
+      .getUUID(nickname)
+      .then(uuid => {
+        message.channel.send(
+          new Discord.RichEmbed()
+          .setTitle(`${nickname}'s Skin`)
+          .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
+          .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+          .setColor([253, 144, 43])
+          .addField(`${nickname}'s UUID`, uuid)
+          .setImage(`https://crafatar.com/renders/body/${uuid}`)
+          .addField('Instructions', 'To download the skin, click on it, click "open original", then right click, and save.')
+
+        );
+      }).catch(console.error);
+  }
+  //////////////////////////////////////////////////////
+  if (command === "head") {
+    let input = args.join(" ");
+    let res = input.split(" ");
+    if (args.length !== 1) {
+      return message.reply(
+        'You must only provide a username after this command.'
+      );
+    }
+    let nickname = res[0];
+    mojangjs
+      .getUUID(nickname)
+      .then(uuid => {
+        message.channel.send(
+          new Discord.RichEmbed()
+          .setTitle(`${nickname}'s Head`)
+          .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
+          .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+          .setColor([253, 144, 43])
+          .addField(`${nickname}'s UUID`, uuid)
+          .setImage(`https://crafatar.com/renders/head/${uuid}`)
+          .addField('Instructions', 'To download the skin, click on it, click "open original", then right click, and save.')
+        );
+      }).catch(console.error);
+  }
+  //////////////////////////////////////////////////////
+  if (command === "rawskin") {
+    let input = args.join(" ");
+    let res = input.split(" ");
+    if (args.length !== 1) {
+      return message.reply(
+        'You must only provide a username after this command.'
+      );
+    }
+    let nickname = res[0];
+    mojangjs
+      .getUUID(nickname)
+      .then(uuid => {
+        message.channel.send(
+          new Discord.RichEmbed()
+          .setTitle(`${nickname}'s Skin`)
+          .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
+          .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+          .setColor([253, 144, 43])
+          .addField(`${nickname}'s UUID`, uuid)
+          .setImage(`https://crafatar.com/skins/${uuid}`)
+          .addField('Instructions', 'To download the skin, click on it, click "open original", then right click, and save.')
+        );
+      }).catch(console.error);
+  }
+  //////////////////////////////////////////////////////
+  if (command === "names") {
+    let input = args.join(" ");
+    if (args.length !== 1) {
+      return message.reply(
+        'You must only provide a username after this command.'
+      );
+    }
+
+    function joinNames(playerNameHistory) {
+      let allNames = '';
+      for (let i = 0; i < playerNameHistory.length; i++) {
+        if (i + 1 !== playerNameHistory.length) {
+          allNames += playerNameHistory[i].name + ', ';
+        } else {
+          allNames += playerNameHistory[i].name;
+        }
+      }
+      return allNames;
+    }
+
+    mojangjs
+      .getUUID(args[0])
+      .then(uuid => {
+        mojangjs.nameHistory
+          .byUUID(uuid)
+          .then(namehistory => {
+            const playerHistory = new Discord.RichEmbed()
+              .setTitle(`**${args[0]}'s** Names`)
+              .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+              .setThumbnail(`https://crafatar.com/renders/head/${uuid}`)
+              .setColor([253, 144, 43])
+            for (
+              let i = 0; i < (namehistory.length <= 5 ? namehistory.length : 5); i++
+            ) {
+              if (namehistory[i].changedToAt === undefined) {
+                playerHistory.addField(
+                  'Registered name',
+                  namehistory[i].name
+                );
+              } else {
+                playerHistory.addField(
+                  `${moment(
+										parseInt(namehistory[i].changedToAt)
+									).format('MMMM Do, YYYY')}`,
+                  namehistory[i].name
+                );
+              }
+            }
+            if (namehistory.length > 5) {
+              playerHistory.addField(
+                `${args[0]} has too many names for discord formatting`,
+                `All of **${args[0]}'s** names are: ${joinNames(namehistory)}`
+              );
+            }
+            message.channel.send(playerHistory);
+          })
+      })
+  }
+  //////////////////////////////////////////////////////
+  if (command === "meme") {
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
+    let url = "https://meme-api.herokuapp.com/gimme";
+    let settings = {
+      method: "Get"
+    };
+    fetch(url, settings)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (json) {
+        message.channel.send(
+          new Discord.RichEmbed()
+          .setTitle(`${json.title}`)
+          .addField(`from r/${json.subreddit}`, `[link](${json.postLink})`, true)
+          .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+          .setColor([253, 144, 43])
+          .setImage(`${json.url}`)
+        );
+      });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "doge") {
+    if (args.length === 0) {
+      return message.reply(
+        'You must provide a message.'
+      );
+    }
+    let input = args.join(" ");
+    message.reply(await dogeify(input));
+  }
+  //////////////////////////////////////////////////////
+  if (command === "uwu") {
+    if (args.length === 0) {
+      return message.reply(
+        'You must provide a message.'
+      );
+    }
+    let input = args.join(" ");
+    message.reply(uwufy(input));
+  }
+
+  //////////////////////////////////////////////////////
+  if (command === "animal") {
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
+    message.reply(chance.animal());
+  }
+  //////////////////////////////////////////////////////
+  if (command === "color") {
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
+    var randomColor = Math.floor(Math.random() * 16777215).toString(16).toUpperCase();
+    message.reply(
+      new Discord.RichEmbed()
+      .setTitle(`Your random color is #${randomColor}.`)
+      .setColor(randomColor)
+    );
+  }
+  //////////////////////////////////////////////////////
+  if (command === "coin") {
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
+    var coin = chance.coin();
+    return message.reply(
+      new Discord.RichEmbed()
+      .setTitle(`Your coin flipped: ${coin}.`)
+      .setColor([253, 144, 43])
+      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+    );
+  }
+  //////////////////////////////////////////////////////
+  if (command === "rpg") {
+    let input = args.join(" ");
+    if (args.length !== 1) {
+      return message.reply(
+        'You must only provide a roll argument, ex: 3d10. (amount of die to roll + d + max value of each die)'
+      );
+    }
+    return message.reply(
+      new Discord.RichEmbed()
+      .setTitle(`Your die rolled: ${chance.rpg(input)}.`)
+      .setColor([253, 144, 43])
+      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+    );
+  }
+  //////////////////////////////////////////////////////
+  if (command === "integer") {
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
+    return message.reply(`your integer is \`${chance.natural()}\``);
+  }
+  //////////////////////////////////////////////////////
+  if (command === "prime") {
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
+    return message.reply(`your prime number is \`${chance.prime()}\``);
   }
   //////////////////////////////////////////////////////
 });

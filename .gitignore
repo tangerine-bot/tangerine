@@ -21,6 +21,8 @@ Thumbs.db
 .nvm-version
 .vscode
 node_modules
+keys
+/keys/
 npm-debug.log
 debug.log
 /tags
