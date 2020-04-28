@@ -16,13 +16,17 @@
   "dependencies": {
     "ascii-art-font": "^1.0.2",
     "discord.js": "^11.5.1",
+    "dog-facts": "^1.0.3",
     "dotenv": "^8.2.0",
     "figlet": "^1.3.0",
     "moment-timezone": "^0.5.28",
     "ms": "^2.1.2",
     "node-emoji-clock": "^0.1.0",
+    "panda-facts": "^1.0.3",
     "r6api.js": "^1.3.0",
     "random-text-meme": "^1.1.9",
-    "random-word-by-length": "^0.1.0"
+    "random-word-by-length": "^0.1.0",
+    "turl": "^1.1.2",
+    "wikipics-api": "^1.0.2"
   }
 }

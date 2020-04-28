@@ -24,14 +24,23 @@ const dogeify = require('dogeify-js');
 const uwufy = require('uwufy');
 const Chance = require('chance');
 const chance = new Chance();
-const {dblusername} = require('./keys/dbl.json');
+const {
+  dblusername
+} = require('./keys/dbl.json');
 const DBL = require("dblapi.js");
 const dbl = new DBL(dblusername, client);
-const {hypixelusername} = require('./keys/hypixel.json')
+const {
+  hypixelusername
+} = require('./keys/hypixel.json')
 hypixeljs.login(hypixelusername);
-const tangerineVersion = ("0.1.8");
-const lastUpdated = ("04/26/2020");
-const numberOfCommands = ("39");
+const wikipics = require('wikipics-api');
+const turl = require('turl');
+const dogFacts = require('dog-facts');
+const pandaFacts = require('panda-facts');
+
+const tangerineVersion = ("0.1.10");
+const lastUpdated = ("04/28/2020");
+const numberOfCommands = ("46");
 
 //Designed by the Tangerine team, https://discord.gg/uwcgjYw or arnav74#0884
 
@@ -41,24 +50,29 @@ function thousands_separators(num) {
   return num_parts.join(".");
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
 client.on("ready", () => {
-  // This event will run if the bot starts, and logs in, successfully.
   console.log(`Bot has started, with ${thousands_separators(client.users.size)} users, in ${thousands_separators(client.channels.size)} channels of ${thousands_separators(client.guilds.size)} guilds.`);
-  client.user.setActivity(`memes. Use ∼help. Serving ${thousands_separators(client.users.size)} users.`, {
+  client.user.setActivity(`memes. 🍊 ∼help. Serving ${thousands_separators(client.users.size)} users.`, {
     type: 'WATCHING'
   }); //PLAYING, LISTENING, WATCHING
   client.user.setStatus('online'); //online, idle, invisible, dnd
 });
-
-dbl.on('posted', () => {
-  console.log('Server count posted!');
-})
 
 client.on('ready', () => {
   setInterval(() => {
     dbl.postStats(client.guilds.size, client.shards.Id, client.shards.total);
   }, 1800000);
 });
+
+dbl.on('posted', () => {
+  console.log('Server count posted!');
+})
 
 dbl.on('error', e => {
   console.log(`Oops! ${e}`);
@@ -93,19 +107,29 @@ client.on("guildDelete", guild => {
 
 const prefix = '~';
 const escapeRegex = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
 client.on('message', message => {
   const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`);
   if (!prefixRegex.test(message.content)) return;
-
   const [, matchedPrefix] = message.content.match(prefixRegex);
   const args = message.content.slice(matchedPrefix.length).trim().split(/ +/);
   const command = args.shift().toLowerCase();
-
-  if (command === '') {
-    message.channel.send('My prefix is ∼, use ∼help to begin.');
-  } else if (command === 'prefix') {
+  if (command === 'prefix') {
     message.reply(`you can either ping me or use \`${prefix}\` as my prefix.`);
+  }
+  if (command === '') {
+    message.reply(`you can either ping me or use \`${prefix}\` as my prefix.`);
+  }
+});
+
+const tangerine = '🍊';
+client.on('message', async message => {
+  const prefixRegexT = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(tangerine)})\\s*`);
+  if (!prefixRegexT.test(message.content)) return;
+  const [, matchedPrefixT] = message.content.match(prefixRegexT);
+  const args = message.content.slice(matchedPrefixT.length).trim().split(/ +/);
+  const command = args.shift().toLowerCase();
+  if (command === '') {
+    message.react('🍊');
   }
 });
 
@@ -189,6 +213,10 @@ client.on("message", async message => {
       .addField("`nickname` <string(nickname)>", "changes your nickname to the specified string", true)
       .addField("`nickreset`", "resets your nickname", true)
       .addField("`time` <none | string(est|ct|mt|pt)>", "prints the current time", true)
+      .addField("`shorten` <string(URL)>", "shortens the given URL using tinyurl", true)
+      .addField("`shout` <string(message)>", "converts your message into regional indicator characters", true)
+      .addField("`emojis`", "lists all of the custom emojis on the server", true)
+
     message.channel.send({
       embed
     });
@@ -211,6 +239,8 @@ client.on("message", async message => {
       .addField("`uwu` <string(message)>", "uwu-ifies your message", true)
       .addField("`ascii` <string(message)>", "prints your message in ASCII art", true)
       .addField("`useless`", "this is pretty uselss", true)
+      .addField("`wikipic`", "displays Wikipedia's picture of the day", true)
+
     message.channel.send({
       embed
     });
@@ -264,6 +294,8 @@ client.on("message", async message => {
       .addField("`guess` <int(max number), int(guess)>", "checks if picked number matches guessed number", true)
       .addField("`integer`", "prints a random integer", true)
       .addField("`prime`", "prints a prime number", true)
+      .addField("`dog`", "prints a random dog fact", true)
+      .addField("`panda`", "prints a random panda fact", true)
     message.channel.send({
       embed
     });
@@ -307,9 +339,11 @@ client.on("message", async message => {
       .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
       .setTimestamp()
       .addBlankField(true)
+      .addField("The Tangerine Team", "arnav74#0884 and EpicN#5997")
       .addField("Official Website", "[Tangerine Website](https://dashaputra.com/tangerine)")
       .addField("Support server", "[Tangerine Support](https://discord.gg/uwcgjYw)")
       .addField("Invite to your own server", "[Tangerine Bot](https://bit.ly/tangerineBot)")
+      .addField("Vote for us on top.gg!", "[Tangerine Voting](https://top.gg/bot/701793346225700934/vote)")
       .setImage('https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine.gif')
       .addField("Users using:", `${thousands_separators(client.users.size)} users`, true)
       .addField("Channels channeling:", `${thousands_separators(client.channels.size)} channels`, true)
@@ -462,9 +496,7 @@ client.on("message", async message => {
   //////////////////////////////////////////////////////
   if (command === "nickname") {
     if (args.length === 0) {
-      return message.reply(
-        'You must provide a nickname.'
-      );
+      return message.reply('You must provide a nickname.');
     }
     if (!message.member.hasPermission('CHANGE_NICKNAME'))
       return message.reply("Sorry, you don't have permissions to use this!");
@@ -479,9 +511,7 @@ client.on("message", async message => {
   //////////////////////////////////////////////////////
   if (command === "nickreset") {
     if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+      return message.reply('You must not provide any arguments.');
     }
     if (!message.member.hasPermission('CHANGE_NICKNAME'))
       return message.reply("Sorry, you don't have permissions to use this!");
@@ -494,9 +524,7 @@ client.on("message", async message => {
   if (command === "word") {
     let input = args.join(" ");
     if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+      return message.reply('You must not provide any arguments.');
     }
     message.reply(randomWord());
   }
@@ -504,9 +532,7 @@ client.on("message", async message => {
   if (command === "asciiart") {
     let input = args.join(" ");
     if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+      return message.reply('You must not provide any arguments.');
     }
     message.reply(`\`${getEmoji()}\``);
   }
@@ -514,9 +540,7 @@ client.on("message", async message => {
   if (command === "someone") {
     let input = args.join(" ");
     if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+      return message.reply('You must not provide any arguments.');
     }
     if (!message.member.hasPermission('ADMINISTRATOR'))
       return message.reply("Sorry, you don't have permissions to use this!");
@@ -526,9 +550,7 @@ client.on("message", async message => {
   if (command === "useless") {
     let input = args.join(" ");
     if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+      return message.reply('You must not provide any arguments.');
     }
     message.react('❓');
     const filter = (reaction, user) => {
@@ -720,9 +742,7 @@ client.on("message", async message => {
     let input = args.join(" ");
     let res = input.split(" ");
     if (args.length !== 1) {
-      return message.reply(
-        'You must only provide a username after this command.'
-      );
+      return message.reply('You must only provide a username after this command.');
     }
     let nickname = res[0];
     mojangjs
@@ -746,9 +766,7 @@ client.on("message", async message => {
     let input = args.join(" ");
     let res = input.split(" ");
     if (args.length !== 1) {
-      return message.reply(
-        'You must only provide a username after this command.'
-      );
+      return message.reply('You must only provide a username after this command.');
     }
     let nickname = res[0];
     mojangjs
@@ -771,9 +789,7 @@ client.on("message", async message => {
     let input = args.join(" ");
     let res = input.split(" ");
     if (args.length !== 1) {
-      return message.reply(
-        'You must only provide a username after this command.'
-      );
+      return message.reply('You must only provide a username after this command.');
     }
     let nickname = res[0];
     mojangjs
@@ -795,9 +811,7 @@ client.on("message", async message => {
   if (command === "names") {
     let input = args.join(" ");
     if (args.length !== 1) {
-      return message.reply(
-        'You must only provide a username after this command.'
-      );
+      return message.reply('You must only provide a username after this command.');
     }
 
     function joinNames(playerNameHistory) {
@@ -853,9 +867,7 @@ client.on("message", async message => {
   //////////////////////////////////////////////////////
   if (command === "meme") {
     if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+      return message.reply('You must not provide any arguments.');
     }
     let url = "https://meme-api.herokuapp.com/gimme";
     let settings = {
@@ -879,9 +891,7 @@ client.on("message", async message => {
   //////////////////////////////////////////////////////
   if (command === "doge") {
     if (args.length === 0) {
-      return message.reply(
-        'You must provide a message.'
-      );
+      return message.reply('You must provide a message.');
     }
     let input = args.join(" ");
     message.reply(await dogeify(input));
@@ -889,9 +899,7 @@ client.on("message", async message => {
   //////////////////////////////////////////////////////
   if (command === "uwu") {
     if (args.length === 0) {
-      return message.reply(
-        'You must provide a message.'
-      );
+      return message.reply('You must provide a message.');
     }
     let input = args.join(" ");
     message.reply(uwufy(input));
@@ -900,18 +908,14 @@ client.on("message", async message => {
   //////////////////////////////////////////////////////
   if (command === "animal") {
     if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+      return message.reply('You must not provide any arguments.');
     }
     message.reply(chance.animal());
   }
   //////////////////////////////////////////////////////
   if (command === "color") {
     if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+      return message.reply('You must not provide any arguments.');
     }
     var randomColor = Math.floor(Math.random() * 16777215).toString(16).toUpperCase();
     message.reply(
@@ -923,9 +927,7 @@ client.on("message", async message => {
   //////////////////////////////////////////////////////
   if (command === "coin") {
     if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+      return message.reply('You must not provide any arguments.');
     }
     var coin = chance.coin();
     return message.reply(
@@ -939,10 +941,15 @@ client.on("message", async message => {
   if (command === "rpg") {
     let input = args.join(" ");
     if (args.length !== 1) {
-      return message.reply(
-        'You must only provide a roll argument, ex: 3d10. (amount of die to roll + d + max value of each die)'
-      );
+      return message.reply('You must only provide a roll argument, ex: 3d10. (amount of die to roll + d + max value of each die)');
     }
+    roll = input.match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g);
+    num1 = roll[0];
+    num2 = roll[2];
+    if (num1 < 1 || num1 > 20 || num2 > 200 || num2 < 1) {
+      return message.reply('The maximum roll sequence is 20d200, and the minimum 1d1. Please try again.');
+    }
+
     return message.reply(
       new Discord.RichEmbed()
       .setTitle(`Your die rolled: ${chance.rpg(input)}.`)
@@ -953,21 +960,117 @@ client.on("message", async message => {
   //////////////////////////////////////////////////////
   if (command === "integer") {
     if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+      return message.reply('You must not provide any arguments.');
     }
     return message.reply(`your integer is \`${chance.natural()}\``);
   }
   //////////////////////////////////////////////////////
   if (command === "prime") {
     if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+      return message.reply('You must not provide any arguments.');
     }
     return message.reply(`your prime number is \`${chance.prime()}\``);
   }
   //////////////////////////////////////////////////////
+  if (command === "wikipic") {
+    if (args.length !== 0) {
+      return message.reply('You must not provide any arguments')
+    }
+    wikipics().then(data => {
+      return message.reply(
+        new Discord.RichEmbed()
+        .setTitle(`Todays wikipedia picture of the day`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+        .setImage(`${data.image}`)
+      );
+    });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "shorten") {
+    let input = args.join(" ");
+    if (args.length !== 1) {
+      return message.reply('You must provide only one link!')
+    }
+    turl.shorten(`${input}`).then((res) => {
+      return message.reply(
+        new Discord.RichEmbed()
+        .setTitle(`Your shortened link:`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+        .setDescription(`${res}`)
+      );
+    });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "dog") {
+    if (args.length !== 0) {
+      return message.reply('You must not provide any arguments')
+    }
+    message.reply(dogFacts.random());
+  }
+  //////////////////////////////////////////////////////
+  if (command === "panda") {
+    if (args.length !== 0) {
+      return message.reply('You must not provide any arguments')
+    }
+    message.reply(pandaFacts.random());
+  }
+  //////////////////////////////////////////////////////
+  if (command === 'emojis') {
+    if (args.length !== 0) {
+      return message.reply('You must not provide any arguments')
+    }
+    const emojiList = message.guild.emojis.map(e => e.toString()).join(" ");
+    message.channel.send(`List of emojis on this server: ${emojiList}`);
+  }
+  //////////////////////////////////////////////////////
+  if (command === 'shout') {
+    if (args.length === 0) {
+      return message.reply('You must provide a message')
+    }
+    let words = [];
+    const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const numbers = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+
+    let bannerize = (wordLetters) => {
+      let num = /([0-9])/;
+      let alph = /([a-z])/;
+      let string = [];
+      wordLetters.map((wordSet, i1) => {
+        wordSet.map((word, i2) => {
+          if (word === ' ') {
+            string.push(`  `);
+          } else if (alph.test(word)) {
+            string.push(`:regional_indicator_${word}:`);
+          } else if (num.test(word)) {
+            for (var i = 0; i < digits.length; i++) {
+              if (digits[i] === word) {
+                string.push(`:${numbers[i]}:`);
+                break;
+              }
+            }
+          }
+        });
+      });
+      let response = (`${string}`);
+      let reply = response.replace(/,/g, "");
+      message.reply(reply);
+    };
+
+    let prepMessage = () => {
+      let wordLetters = [];
+      words.shift();
+      words.map((word) => {
+        wordLetters.push([...word]);
+      });
+      bannerize(wordLetters);
+    };
+
+    words = message.content.toLowerCase().split(/(\S+\s+)/).filter(n => n);
+    prepMessage();
+  }
+  //////////////////////////////////////////////////////
+
 });
 client.login(config.token);
