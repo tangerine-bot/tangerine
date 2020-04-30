@@ -37,10 +37,13 @@ const wikipics = require('wikipics-api');
 const turl = require('turl');
 const dogFacts = require('dog-facts');
 const pandaFacts = require('panda-facts');
+const tangerineIcon = 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png';
 
-const tangerineVersion = ("0.1.10");
-const lastUpdated = ("04/28/2020");
-const numberOfCommands = ("46");
+
+const tangerineVersion = ("0.1.11");
+const lastUpdated = ("04/29/2020");
+const numberOfCommands = ("48");
+
 
 //Designed by the Tangerine team, https://discord.gg/uwcgjYw or arnav74#0884
 
@@ -58,7 +61,7 @@ function sleep(ms) {
 
 client.on("ready", () => {
   console.log(`Bot has started, with ${thousands_separators(client.users.size)} users, in ${thousands_separators(client.channels.size)} channels of ${thousands_separators(client.guilds.size)} guilds.`);
-  client.user.setActivity(`memes. 🍊 ∼help. Serving ${thousands_separators(client.users.size)} users.`, {
+  client.user.setActivity(`memes. 🍊 ∼help. Serving ${thousands_separators(client.users.size)} users. tangerinebot.com`, {
     type: 'WATCHING'
   }); //PLAYING, LISTENING, WATCHING
   client.user.setStatus('online'); //online, idle, invisible, dnd
@@ -92,7 +95,7 @@ client.on("guildCreate", guild => {
   const embed = new Discord.RichEmbed()
     .setTitle("welcome to tangerine!")
     .setColor([253, 144, 43])
-    .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+    .setFooter("tangerine", `${tangerineIcon}`)
     .setImage('https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine.gif')
     .setTimestamp()
     .addField("**Made by the Tangerine team**", "❤️‏‏‎")
@@ -141,7 +144,6 @@ client.on("message", async message => {
   const command = args.shift().toLowerCase();
   //////////////////////////////////////////////////////
   if (command === "ping") { //asynchronous guild ping
-    let input = args.join(" ");
     if (args.length !== 0) {
       return message.reply(
         'You must not provide any arguments.'
@@ -153,7 +155,6 @@ client.on("message", async message => {
 
   //////////////////////////////////////////////////////
   if (command === "help") {
-    let input = args.join(" ");
     if (args.length !== 0) {
       return message.reply(
         'You must not provide any arguments.'
@@ -163,7 +164,7 @@ client.on("message", async message => {
       .setTitle("tangerine's list of commands")
       .setColor([253, 144, 43])
       .setDescription(`For more help use ~about and join the support server!`)
-      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setFooter("tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addBlankField(false)
       .addField("`help`", "the page you are on right now!", true)
@@ -179,7 +180,6 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "general") {
-    let input = args.join(" ");
     if (args.length !== 0) {
       return message.reply(
         'You must not provide any arguments.'
@@ -188,7 +188,7 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle("tangerine's list of general commands")
       .setColor([253, 144, 43])
-      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setFooter("tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("`help`", "prints out all of the main tangerine commands", true)
       .addField("`about`", "prints the about and developer contact page", true)
@@ -199,7 +199,6 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "utility") {
-    let input = args.join(" ");
     if (args.length !== 0) {
       return message.reply(
         'You must not provide any arguments.'
@@ -208,11 +207,14 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle("tangerine's list of utility commands")
       .setColor([253, 144, 43])
-      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setFooter("tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("`nickname` <string(nickname)>", "changes your nickname to the specified string", true)
       .addField("`nickreset`", "resets your nickname", true)
       .addField("`time` <none | string(est|ct|mt|pt)>", "prints the current time", true)
+      .addField("`timeEU` <none | string(wet|cet|eet)>", "prints the current time", true)
+      .addField("`timeAS` <none | string(mst|sst|ist|bst|mt|it|cst|kst|jst)>", "prints the current time", true)
+
       .addField("`shorten` <string(URL)>", "shortens the given URL using tinyurl", true)
       .addField("`shout` <string(message)>", "converts your message into regional indicator characters", true)
       .addField("`emojis`", "lists all of the custom emojis on the server", true)
@@ -223,7 +225,6 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "fun") {
-    let input = args.join(" ");
     if (args.length !== 0) {
       return message.reply(
         'You must not provide any arguments.'
@@ -232,7 +233,7 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle("tangerine's list of fun commands")
       .setColor([253, 144, 43])
-      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setFooter("tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("`meme`", "prints a random meme from r/funny", true)
       .addField("`doge` <string(message)>", "doge-ifies your message", true)
@@ -247,7 +248,6 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "games") {
-    let input = args.join(" ");
     if (args.length !== 0) {
       return message.reply(
         'You must not provide any arguments.'
@@ -256,7 +256,7 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle("tangerine's list of game trackers")
       .setColor([253, 144, 43])
-      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setFooter("tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("🌈 ", "**Rainbow Six Siege**")
       .addField("`r6` <username, pc|psn>", "Rainbow Six Siege PVP stats", true)
@@ -273,7 +273,6 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "random") {
-    let input = args.join(" ");
     if (args.length !== 0) {
       return message.reply(
         'You must not provide any arguments.'
@@ -282,7 +281,7 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle("tangerine's list of random commands")
       .setColor([253, 144, 43])
-      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setFooter("tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("`asciiart`", "prints a random ascii emoji", true)
       .addField("`animal`", "prints a random animal name", true)
@@ -302,7 +301,6 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "advanced") {
-    let input = args.join(" ");
     if (args.length !== 0) {
       return message.reply(
         'You must not provide any arguments.'
@@ -312,7 +310,7 @@ client.on("message", async message => {
       .setTitle("tangerine's administration commands")
       .setColor([253, 144, 43])
       .setDescription("You must have special permissions to run these commands. View the master list here: bit.ly/tangerineAdmin")
-      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setFooter("tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("`say` <string(message)>", "prints a repeat of the message. Requires MANAGE_MESSAGES.")
       .addField("`kick` <@user, string(reason)>", "kicks the specified user. Requires KICK_MEMBERS.")
@@ -326,7 +324,6 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "about") {
-    let input = args.join(" ");
     if (args.length !== 0) {
       return message.reply(
         'You must not provide any arguments.'
@@ -336,13 +333,13 @@ client.on("message", async message => {
       .setTitle(`tangerine ${tangerineVersion}`)
       .setColor([253, 144, 43])
       .setDescription(`Last updated ${lastUpdated}.`)
-      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setFooter("tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addBlankField(true)
       .addField("The Tangerine Team", "arnav74#0884 and EpicN#5997")
-      .addField("Official Website", "[Tangerine Website](https://dashaputra.com/tangerine)")
-      .addField("Support server", "[Tangerine Support](https://discord.gg/uwcgjYw)")
-      .addField("Invite to your own server", "[Tangerine Bot](https://bit.ly/tangerineBot)")
+      .addField("Official Website", "[Tangerine Website](https://tangerinebot.com)")
+      .addField("Support Server", "[Tangerine Support](https://discord.gg/uwcgjYw)")
+      .addField("Invite Link", "[Tangerine Bot](https://discordapp.com/api/oauth2/authorize?client_id=701793346225700934&permissions=470281334&scope=bot)")
       .addField("Vote for us on top.gg!", "[Tangerine Voting](https://top.gg/bot/701793346225700934/vote)")
       .setImage('https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine.gif')
       .addField("Users using:", `${thousands_separators(client.users.size)} users`, true)
@@ -446,18 +443,18 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "dice") {
-    let input = args.join(" ");
     let diceSides = args.join(" ");
-    if (args.length !== 0 || args.length !== 1) {
-      return message.reply(`You must provide either no inputs or 1 number.`)
-    }
-    if (!diceSides) {
-      diceSides = 6;
-      let value = Math.round(Math.random() * diceSides)
-      return message.reply(`Defaulting to a six-side dice. You rolled: ${value}`)
+    if (args.length === 0 || args.length === 1) {
+      if (!diceSides) {
+        diceSides = 6;
+        let value = Math.round(Math.random() * diceSides)
+        return message.reply(`Defaulting to a six-side dice. You rolled: ${value}`)
+      } else {
+        let value = Math.round(Math.random() * diceSides)
+        return message.reply(`Number of sides: ${diceSides}. You rolled: ${value}`)
+      }
     } else {
-      let value = Math.round(Math.random() * diceSides)
-      return message.reply(`Number of sides: ${diceSides}. You rolled: ${value}`)
+      return message.reply(`You must provide either no inputs or 1 number.`)
     }
   }
   //////////////////////////////////////////////////////
@@ -522,7 +519,6 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "word") {
-    let input = args.join(" ");
     if (args.length !== 0) {
       return message.reply('You must not provide any arguments.');
     }
@@ -530,7 +526,6 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "asciiart") {
-    let input = args.join(" ");
     if (args.length !== 0) {
       return message.reply('You must not provide any arguments.');
     }
@@ -538,7 +533,6 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "someone") {
-    let input = args.join(" ");
     if (args.length !== 0) {
       return message.reply('You must not provide any arguments.');
     }
@@ -548,7 +542,6 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "useless") {
-    let input = args.join(" ");
     if (args.length !== 0) {
       return message.reply('You must not provide any arguments.');
     }
@@ -597,7 +590,7 @@ client.on("message", async message => {
       .setTitle(`${username}'s Rainbow Six Siege Stats`)
       .setDescription("For PVE stats, use ∼r6pve")
       .setColor([253, 144, 43])
-      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setFooter("tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("‏‎🔫‎", "**PVP**")
       .addField("Wins:", `${stats.pvp.general.wins}`, true)
@@ -644,7 +637,7 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle(`${username}'s Rainbow Six Siege PVE Stats`)
       .setColor([253, 144, 43])
-      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setFooter("tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("‏‎🔪‎", "**PVE**")
       .addField("Wins:", `${stats.pve.general.wins}`, true)
@@ -684,7 +677,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`All American times`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+        .setFooter("tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("Eastern:", `${etF}`)
         .addField("Central:", `${ctF}`)
@@ -697,7 +690,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Eastern Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+        .setFooter("tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${etF}`)
       message.channel.send({
@@ -707,7 +700,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Central Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+        .setFooter("tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${ctF}`)
       message.channel.send({
@@ -717,7 +710,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Mountain Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+        .setFooter("tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${mdtF}`)
       message.channel.send({
@@ -727,7 +720,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Pacific Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+        .setFooter("tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${ptF}`)
       message.channel.send({
@@ -735,6 +728,189 @@ client.on("message", async message => {
       });
     } else {
       return message.reply("Please use one of the American time zones: \`EST, CT, MST, PST\`")
+    }
+  }
+  //////////////////////////////////////////////////////
+  if (command === "timeeu") {
+    var wet = moment().tz("Europe/Lisbon");
+    var cet = moment().tz("Europe/Paris");
+    var eet = moment().tz("Europe/Athens");
+    var wetF = clock.timeToEmoji(wet) + " \`" + wet.format("HH:mm ") + "Western European Time\`\n"
+    var cetF = clock.timeToEmoji(cet) + " \`" + cet.format("HH:mm ") + "Central European Time\`\n"
+    var eetF = clock.timeToEmoji(eet) + " \`" + eet.format("HH:mm ") + "Eastern European Time\`\n"
+    if (args.length === 0) {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`All European times`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("Western:", `${wetF}`)
+        .addField("Central:", `${cetF}`)
+        .addField("Eastern:", `${eetF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "WET" || args == "wet" || args == "WT" || args == "wt") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Western Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("It is currently:", `${wetF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "CET" || args == "cet" || args == "CT" || args == "ct") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Central Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("It is currently:", `${cetF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "EET" || args == "eet" || args == "ET" || args == "et") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Eastern Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("It is currently:", `${eetF}`)
+      message.channel.send({
+        embed
+      });
+    } else {
+      return message.reply("Please use one of the European time zones: \`CET, WET, EET\`")
+    }
+  }
+  //////////////////////////////////////////////////////
+  if (command === "timeas") {
+    var mst = moment().tz("Europe/Moscow"); // +3 Moscow Standard Time
+    var sst = moment().tz("Europe/Samara"); // +4 Samara Standard Time
+    var ist = moment().tz("Asia/Calcutta"); // +5:30 India Standard Time
+    var bst = moment().tz("Asia/Dhaka"); // +6 Bangladesh
+    var mt = moment().tz("Asia/Yangon"); // +6:30 Myanmar
+    var it = moment().tz("Asia/Vientiane"); // +7 Indochina (Vietnam)
+    var cst = moment().tz("Asia/Shanghai"); // +8 China
+    var kst = moment().tz("Asia/Seoul"); // +9 Korea/Japan (JST)
+    var mstF = clock.timeToEmoji(mst) + " \`" + mst.format("HH:mm ") + "Moscow Standard Time\`\n"
+    var sstF = clock.timeToEmoji(sst) + " \`" + sst.format("HH:mm ") + "Samara Standard Time\`\n"
+    var istF = clock.timeToEmoji(ist) + " \`" + ist.format("HH:mm ") + "India Standard Time\`\n"
+    var bstF = clock.timeToEmoji(bst) + " \`" + bst.format("HH:mm ") + "Bangladesh Time\`\n"
+    var mtF = clock.timeToEmoji(mt) + " \`" + mt.format("HH:mm ") + "Myanmar Time\`\n"
+    var itF = clock.timeToEmoji(it) + " \`" + it.format("HH:mm ") + "Indochina Time\`\n"
+    var cstF = clock.timeToEmoji(cst) + " \`" + cst.format("HH:mm ") + "China Standard Time\`\n"
+    var kstF = clock.timeToEmoji(kst) + " \`" + kst.format("HH:mm ") + "Japan/Korea Standard Time\`\n"
+    if (args.length === 0) {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`All European times`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("Moscow (+3):", `${mstF}`)
+        .addField("Samara (+4):", `${sstF}`)
+        .addField("India (+5:30):", `${istF}`)
+        .addField("Bangladesh (+6):", `${bstF}`)
+        .addField("Myanmar (+6:30):", `${mtF}`)
+        .addField("Indochina (+7):", `${itF}`)
+        .addField("China (+8):", `${cstF}`)
+        .addField("Japan/Korea (+9):", `${kstF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "MST" || args == "mst") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Moscow Standard Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("It is currently:", `${mstF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "SST" || args == "sst") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Samara Standard Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("It is currently:", `${sstF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "IST" || args == "ist") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`India Standard Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("It is currently:", `${istF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "BST" || args == "bst" || args == "BT" || args == "bt") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Bangladesh Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("It is currently:", `${bstF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "MT" || args == "mt") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Myanmar Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("It is currently:", `${mtF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "IT" || args == "it") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Indochina Standard Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("It is currently:", `${itF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "CST" || args == "cst" || args == "CT" || args == "ct") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`China Standard Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("It is currently:", `${cstF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "KST" || args == "kst" || args == "JST" || args == "jst") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Korea/Japan Standard Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("It is currently:", `${kstF}`)
+      message.channel.send({
+        embed
+      });
+    } else if (args == "MST" || args == "mst") {
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Moscow Standard Time`)
+        .setColor([253, 144, 43])
+        .setFooter("tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("It is currently:", `${mstF}`)
+      message.channel.send({
+        embed
+      });
+    } else {
+      return message.reply("Please use one of the Asian time zones: \`MST, SST, IST, BST, MT, IT, CST, KST/JST\`")
     }
   }
   //////////////////////////////////////////////////////
@@ -752,7 +928,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${nickname}'s Skin`)
           .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
-          .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+          .setFooter("tangerine", `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .addField(`${nickname}'s UUID`, uuid)
           .setImage(`https://crafatar.com/renders/body/${uuid}`)
@@ -776,7 +952,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${nickname}'s Head`)
           .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
-          .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+          .setFooter("tangerine", `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .addField(`${nickname}'s UUID`, uuid)
           .setImage(`https://crafatar.com/renders/head/${uuid}`)
@@ -799,7 +975,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${nickname}'s Skin`)
           .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
-          .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+          .setFooter("tangerine", `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .addField(`${nickname}'s UUID`, uuid)
           .setImage(`https://crafatar.com/skins/${uuid}`)
@@ -809,7 +985,6 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "names") {
-    let input = args.join(" ");
     if (args.length !== 1) {
       return message.reply('You must only provide a username after this command.');
     }
@@ -834,7 +1009,7 @@ client.on("message", async message => {
           .then(namehistory => {
             const playerHistory = new Discord.RichEmbed()
               .setTitle(`**${args[0]}'s** Names`)
-              .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+              .setFooter("tangerine", `${tangerineIcon}`)
               .setThumbnail(`https://crafatar.com/renders/head/${uuid}`)
               .setColor([253, 144, 43])
             for (
@@ -882,7 +1057,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${json.title}`)
           .addField(`from r/${json.subreddit}`, `[link](${json.postLink})`, true)
-          .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+          .setFooter("tangerine", `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .setImage(`${json.url}`)
         );
@@ -934,7 +1109,7 @@ client.on("message", async message => {
       new Discord.RichEmbed()
       .setTitle(`Your coin flipped: ${coin}.`)
       .setColor([253, 144, 43])
-      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setFooter("tangerine", `${tangerineIcon}`)
     );
   }
   //////////////////////////////////////////////////////
@@ -954,7 +1129,7 @@ client.on("message", async message => {
       new Discord.RichEmbed()
       .setTitle(`Your die rolled: ${chance.rpg(input)}.`)
       .setColor([253, 144, 43])
-      .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+      .setFooter("tangerine", `${tangerineIcon}`)
     );
   }
   //////////////////////////////////////////////////////
@@ -981,7 +1156,7 @@ client.on("message", async message => {
         new Discord.RichEmbed()
         .setTitle(`Todays wikipedia picture of the day`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+        .setFooter("tangerine", `${tangerineIcon}`)
         .setImage(`${data.image}`)
       );
     });
@@ -997,7 +1172,7 @@ client.on("message", async message => {
         new Discord.RichEmbed()
         .setTitle(`Your shortened link:`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png')
+        .setFooter("tangerine", `${tangerineIcon}`)
         .setDescription(`${res}`)
       );
     });
@@ -1032,7 +1207,6 @@ client.on("message", async message => {
     let words = [];
     const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     const numbers = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
-
     let bannerize = (wordLetters) => {
       let num = /([0-9])/;
       let alph = /([a-z])/;
@@ -1057,7 +1231,6 @@ client.on("message", async message => {
       let reply = response.replace(/,/g, "");
       message.reply(reply);
     };
-
     let prepMessage = () => {
       let wordLetters = [];
       words.shift();
@@ -1066,11 +1239,10 @@ client.on("message", async message => {
       });
       bannerize(wordLetters);
     };
-
     words = message.content.toLowerCase().split(/(\S+\s+)/).filter(n => n);
     prepMessage();
   }
   //////////////////////////////////////////////////////
-
+  
 });
 client.login(config.token);
