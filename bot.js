@@ -38,11 +38,24 @@ const turl = require('turl');
 const dogFacts = require('dog-facts');
 const pandaFacts = require('panda-facts');
 const tangerineIcon = 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png';
+const {
+  csgoKey
+} = require('./keys/csgo.json')
+const csgoStats = require('csgostatsnode');
+const csStats = new csgoStats({
+  "apikey": `${csgoKey}`
+});
+const csgoStatsFetch = require('csgo-stats');
+const SteamAPI = require('steamapi');
+const steam = new SteamAPI(`${csgoKey}`);
+const {
+  apexKey
+} = require('./keys/apex.json')
+const apex = require('apexlegendsjs')('9cfe50a1-33ca-42b7-9929-22bc6e0cc03b')
 
-
-const tangerineVersion = ("0.1.11");
-const lastUpdated = ("04/29/2020");
-const numberOfCommands = ("48");
+const tangerineVersion = ("0.1.13");
+const lastUpdated = ("05/07/2020");
+const numberOfCommands = ("50");
 
 
 //Designed by the Tangerine team, https://discord.gg/uwcgjYw or arnav74#0884
@@ -69,7 +82,7 @@ client.on("ready", () => {
 
 client.on('ready', () => {
   setInterval(() => {
-    dbl.postStats(client.guilds.size, client.shards.Id, client.shards.total);
+    dbl.postStats(client.guilds.size, client.shards.total);
   }, 1800000);
 });
 
@@ -267,6 +280,13 @@ client.on("message", async message => {
       .addField("`names` <username>", "Fetches and prints all of the user's names", true)
       .addField("`skin` <username>", "Fetches and prints the user's skin", true)
       .addField("`rawskin` <username>", "Fetches and prints the user's raw skin", true)
+      .addBlankField(false)
+      .addField("💥", "**Counter Strike: Global Offensive**")
+      .addField("`csgo` <steam vanity username>", "CS:GO stats", true)
+      .addBlankField(false)
+      .addField("🔺", "**APEX Legends**")
+      .addField("`apex` <username, pc|psn|xbox>", "APEX Legends stats", true)
+      .addBlankField(false)
     message.channel.send({
       embed
     });
@@ -1243,6 +1263,203 @@ client.on("message", async message => {
     prepMessage();
   }
   //////////////////////////////////////////////////////
-  
+  if (command === "csgo") {
+    let input = args.join(" ");
+    if (args.length != 1) {
+      return message.reply('You must provide a valid vanity URL.')
+    }
+    if (/\w*[A-z]\w*/.test(args[0]) == false) {
+      return message.reply('You must provide a valid vanity URL, not Steam ID.')
+    }
+    var username = input;
+    var id;
+    csStats.getMySteamID(`${username}`, function (data) {
+      id = data;
+      steam.getUserSummary(`${id}`).then(summary => {
+        const jsonSteam = JSON.stringify(summary);
+        let steamParse = JSON.parse(jsonSteam);
+        let icon = steamParse.avatar.medium;
+        csgoStatsFetch.load({
+          key: `${csgoKey}`,
+          id: id
+        }).then(r => {
+          const jsondata = JSON.stringify(r.body.playerstats.stats);
+          let parsed = JSON.parse(jsondata);
+          var total_matches_won; //total match wins
+          var total_matches_played; //total matches played
+          var total_matches_lost;
+          var wlr; //find at end
+          var total_kills;
+          var total_deaths;
+          var kdr; //end
+          var total_kills_headshot;
+          var headshot_kill_percent; //end
+          var total_kills_knife;
+          var total_planted_bombs;
+          var total_defused_bombs;
+          var total_mvps;
+          var total_rounds_played; //total rounds played
+          var total_wins; //total rounds won
+          var total_time_played;
+          var total_dominations;
+          var total_revenges;
+          var total_wins_pistolround;
+          var total_shots_fired;
+          var total_shots_hit;
+          var total_shot_accuracy; //end
+          var total_damage_done;
+          var total_money_earned;
+          var total_weapons_donated;
+          for (var i = 0; i < parsed.length; i++) {
+            if (parsed[i].name === "total_matches_won") {
+              total_matches_won = thousands_separators(parsed[i].value);
+              var total_matches_won1 = i;
+            }
+            if (parsed[i].name === "total_matches_played") {
+              total_matches_played = thousands_separators(parsed[i].value);
+              var total_matches_played1 = i;
+            }
+            if (parsed[i].name === "total_kills") {
+              total_kills = thousands_separators(parsed[i].value);
+              var total_kills1 = i;
+            }
+            if (parsed[i].name === "total_deaths") {
+              total_deaths = thousands_separators(parsed[i].value);
+              var total_deaths1 = i;
+            }
+            if (parsed[i].name === "total_kills_headshot") {
+              total_kills_headshot = thousands_separators(parsed[i].value);
+              total_kills_headshot1 = i;
+            }
+            if (parsed[i].name === "total_kills_knife")
+              total_kills_knife = thousands_separators(parsed[i].value);
+            if (parsed[i].name === "total_planted_bombs")
+              total_planted_bombs = thousands_separators(parsed[i].value);
+            if (parsed[i].name === "total_defused_bombs")
+              total_defused_bombs = thousands_separators(parsed[i].value);
+            if (parsed[i].name === "total_mvps")
+              total_mvps = thousands_separators(parsed[i].value);
+            if (parsed[i].name === "total_rounds_played")
+              total_rounds_played = thousands_separators(parsed[i].value);
+            if (parsed[i].name === "total_wins")
+              total_wins = thousands_separators(parsed[i].value);
+            if (parsed[i].name === "total_time_played") {
+              total_time_played = thousands_separators(parsed[i].value);
+              total_time_played1 = i;
+            }
+            if (parsed[i].name === "total_dominations")
+              total_dominations = thousands_separators(parsed[i].value);
+            if (parsed[i].name === "total_revenges")
+              total_revenges = thousands_separators(parsed[i].value);
+            if (parsed[i].name === "total_wins_pistolround")
+              total_wins_pistolround = thousands_separators(parsed[i].value);
+            if (parsed[i].name === "total_shots_fired") {
+              total_shots_fired = thousands_separators(parsed[i].value);
+              total_shots_fired1 = i;
+            }
+            if (parsed[i].name === "total_shots_hit") {
+              total_shots_hit = thousands_separators(parsed[i].value);
+              total_shots_hit1 = i;
+            }
+            if (parsed[i].name === "total_damage_done")
+              total_damage_done = thousands_separators(parsed[i].value);
+            if (parsed[i].name === "total_money_earned")
+              total_money_earned = thousands_separators(parsed[i].value);
+            if (parsed[i].name === "total_weapons_donated")
+              total_weapons_donated = thousands_separators(parsed[i].value);
+          }
+          total_matches_lost = thousands_separators(parsed[total_matches_played1].value - parsed[total_matches_won1].value);
+          wlr = thousands_separators((parsed[total_matches_won1].value / (parsed[total_matches_played1].value - parsed[total_matches_won1].value)).toPrecision(4));
+          kdr = thousands_separators((parsed[total_kills1].value / parsed[total_deaths1].value).toPrecision(4));
+          headshot_kill_percent = thousands_separators(((parsed[total_kills_headshot1].value / parsed[total_kills1].value) * 100).toPrecision(4));
+          total_time_played = thousands_separators((parsed[total_time_played1].value / 60 / 60).toPrecision(4))
+          total_shot_accuracy = thousands_separators(((parsed[total_shots_hit1].value / parsed[total_shots_fired1].value) * 100).toPrecision(4));
+          const embed = new Discord.RichEmbed()
+            .setTitle(`${username}'s CSGO Stats`)
+            .setColor([253, 144, 43])
+            .setFooter("tangerine", `${tangerineIcon}`)
+            .setTimestamp()
+            .setThumbnail(`${icon}`)
+            .addField("Wins:", `${total_matches_won}`, true)
+            .addField("Losses:", `${total_matches_lost}`, true)
+            .addField("WLR:", `${wlr}`, true)
+            .addField("Kills:", `${total_kills}`, true)
+            .addField("Deaths:", `${total_deaths}`, true)
+            .addField("KDR:", `${kdr}`, true)
+            .addField("Headshot Kills:", `${total_kills_headshot}`, true)
+            .addField("Headshot Kill%:", `${headshot_kill_percent}%`, true)
+            .addField("Knife Kills:", `${total_kills_knife}`, true)
+            .addField("Plants:", `${total_planted_bombs}`, true)
+            .addField("Defuses:", `${total_defused_bombs}`, true)
+            .addField("MVPs:", `${total_mvps}`, true)
+            .addField("Rounds Played:", `${total_rounds_played}`, true)
+            .addField("Rounds Won:", `${total_wins}`, true)
+            .addField("Time played:", `${total_time_played} hours`, true)
+            .addField("Dominations:", `${total_dominations}`, true)
+            .addField("Revenges:", `${total_revenges}`, true)
+            .addField("Pistol Round Wins:", `${total_wins_pistolround}`, true)
+            .addField("Shots Fired:", `${total_shots_fired}`, true)
+            .addField("Shots Hit:", `${total_shots_hit}`, true)
+            .addField("Accuracy:", `${total_shot_accuracy}%`, true)
+            .addField("Total Damage Done:", `${total_damage_done}`, true)
+            .addField("Total Money Collected:", `$${total_money_earned}`, true)
+            .addField("Total Weapons Donated:", `${total_weapons_donated}`, true)
+          return message.channel.send({
+            embed
+          });
+        }).catch(e => {
+          message.reply("That username does not exist, is private, or is too short. Make sure you are using the vanity URL, and you can visit steamcommunity.com/id/<username> in a browser.");
+        });
+      });
+    });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "apex") {
+    if (args.length != 2)
+      return message.reply('You must provide a username.')
+    if (/\w*[A-z]\w*/.test(args[0]) == false)
+      return message.reply('You must provide a valid vanity URL, not Steam ID.')
+    var platform;
+    if (args[1] === "PC" || args[1] === "pc")
+      platform = "PC";
+    if (args[1] === "xbox" || args[1] === "XBOX" || args[1] === "Xbox" || args[1] === "xBox")
+      platform = "XBOX";
+    if (args[1] === "playstation" || args[1] === "psn" || args[1] === "PSN")
+      platform = "PSN";
+    var username = args[0];
+    apex.getDetailedPlayer(`${username}`, `${platform}`)
+      .then((response) => {
+        var avatarUrl = response.metadata.avatarUrl
+        var level = thousands_separators(response.metadata.level);
+        var collections = thousands_separators(response.metadata.collections);
+        var rankName = response.metadata.rankName;
+        var rankImage = response.metadata.rankImage;
+        var accountID = response.metadata.accountId;
+        var countryCode = response.metadata.countryCode;
+        if (!response.metadata.countryCode)
+          countryCode = "Unavailable";
+        const embed = new Discord.RichEmbed()
+          .setTitle(`${username}'s APEX Legends Stats`)
+          .setColor([253, 144, 43])
+          .setFooter("tangerine", `${tangerineIcon}`)
+          .setDescription(`Account ID: \`${accountID}\``)
+          .setTimestamp()
+          .setThumbnail(`${avatarUrl}`)
+          .addField("Level:", `${level}`, true)
+          .addField("Collections:", `${collections}`, true)
+          .addField("Location:", `${countryCode}`, true)
+          .addField("Rank:", `${rankName}`, true)
+          .setImage(`${rankImage}`)
+        return message.channel.send({
+          embed
+        });
+      })
+      .catch((err) => {
+        return message.reply(
+          "Could not index that username. It is possible that the user has not played a match for a long time, or the username could not be found."
+        )
+      })
+  }
+  //////////////////////////////////////////////////////
 });
 client.login(config.token);
