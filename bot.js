@@ -1,3 +1,4 @@
+//Designed by the Tangerine team, https://discord.gg/uwcgjYw or arnav74#0884
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const config = require("./auth.json");
@@ -37,7 +38,6 @@ const wikipics = require('wikipics-api');
 const turl = require('turl');
 const dogFacts = require('dog-facts');
 const pandaFacts = require('panda-facts');
-const tangerineIcon = 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png';
 const {
   csgoKey
 } = require('./keys/csgo.json')
@@ -52,13 +52,17 @@ const {
   apexKey
 } = require('./keys/apex.json')
 const apex = require('apexlegendsjs')('9cfe50a1-33ca-42b7-9929-22bc6e0cc03b')
+const {
+  search
+} = require('gdprofiles');
+const {
+  admin1,
+  admin2
+} = require('./keys/admin.json')
 
-const tangerineVersion = ("0.1.13");
-const lastUpdated = ("05/07/2020");
-const numberOfCommands = ("50");
-
-
-//Designed by the Tangerine team, https://discord.gg/uwcgjYw or arnav74#0884
+const tangerineIcon = 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png';
+const tangerineVersion = ("0.1.17");
+const lastUpdated = ("05/14/2020");
 
 function thousands_separators(num) {
   var num_parts = num.toString().split(".");
@@ -66,36 +70,91 @@ function thousands_separators(num) {
   return num_parts.join(".");
 }
 
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
+client.on("ready", () => {
+  console.log(`Tangerine is online, with ${thousands_separators(client.users.size)} users, in ${thousands_separators(client.channels.size)} channels of ${thousands_separators(client.guilds.size)} servers.`);
+  client.user.setActivity(`memes. 🍊 ∼help. Serving ${thousands_separators(client.users.size)} users. tangerinebot.com`, {
+    type: 'WATCHING' //PLAYING, LISTENING, WATCHING
   });
-}
+  client.user.setStatus('online'); //online, idle, invisible, dnd
+});
 
 client.on("ready", () => {
-  console.log(`Bot has started, with ${thousands_separators(client.users.size)} users, in ${thousands_separators(client.channels.size)} channels of ${thousands_separators(client.guilds.size)} guilds.`);
-  client.user.setActivity(`memes. 🍊 ∼help. Serving ${thousands_separators(client.users.size)} users. tangerinebot.com`, {
-    type: 'WATCHING'
-  }); //PLAYING, LISTENING, WATCHING
-  client.user.setStatus('online'); //online, idle, invisible, dnd
+  const embed = new Discord.RichEmbed()
+    .setTitle(`You have been identified as: Admin 1`)
+    .setColor([255, 255, 255])
+  client.users.get(`${admin1}`).send({
+    embed
+  });
+});
+
+client.on("ready", () => {
+  const embed = new Discord.RichEmbed()
+    .setTitle(`You have been identified as: Admin 2`)
+    .setColor([255, 255, 255])
+  client.users.get(`${admin2}`).send({
+    embed
+  });
+});
+
+client.on('ready', () => {
+  var readyAt = client.readyAt;
+  for (var i = 0; i < `${client.readyAt}`.length; i++) {
+    if (`${client.readyAt}`.charAt(i) === "G") {
+      readyAt = `${client.readyAt}`.substring(0, i)
+    }
+  }
+  const embed = new Discord.RichEmbed()
+    .setTitle(`Tangerine \`${tangerineVersion}\` is now online  ✅`)
+    .setColor([253, 144, 43])
+    .setDescription(`Last updated \`${lastUpdated}\`.`)
+    .addField("Users:", `\`${thousands_separators(client.users.size)}\``, true)
+    .addField("Channels:", `\`${thousands_separators(client.channels.size)}\``, true)
+    .addField("Servers:", `\`${thousands_separators(client.guilds.size)}\``, true)
+    .addField("Ready at:", `\`${readyAt}\``)
+  client.users.get(`${admin1}`).send({
+    embed
+  });
+  client.users.get(`${admin2}`).send({
+    embed
+  });
 });
 
 client.on('ready', () => {
   setInterval(() => {
-    dbl.postStats(client.guilds.size, client.shards.total);
+    dbl.postStats(client.guilds.size);
   }, 1800000);
 });
 
 dbl.on('posted', () => {
-  console.log('Server count posted!');
+  console.log('Server count posted!  ✅');
+  const embed = new Discord.RichEmbed()
+    .setTitle(`DBL Server Status`)
+    .setColor([0, 255, 0])
+    .setDescription(`Server count updated to \`${thousands_separators(client.guilds.size)}\``)
+  client.users.get(`${admin1}`).send({
+    embed
+  });
+  client.users.get(`${admin2}`).send({
+    embed
+  });
 })
 
 dbl.on('error', e => {
-  console.log(`Oops! ${e}`);
+  console.log(`DBL Error! ${e}`)
+  const embed = new Discord.RichEmbed()
+    .setTitle(`DBL Server Status`)
+    .setColor([250, 0, 0])
+    .setDescription(`Server count update failed.   ❌`)
+    .addField(`Reason:`, `\`${e}\``, true)
+  client.users.get(`${admin1}`).send({
+    embed
+  });
+  client.users.get(`${admin2}`).send({
+    embed
+  });
 })
 
 client.on("guildCreate", guild => {
-  console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${thousands_separators(guild.memberCount)} members!`);
   let channel = client.channels.get(
     guild.channels
     .filter(
@@ -105,20 +164,33 @@ client.on("guildCreate", guild => {
     )
     .map(r => r.id)[0]
   );
+});
+
+client.on("guildCreate", guild => {
+  console.log(`Added to: ${guild.name} (id: ${guild.id}). This guild has ${thousands_separators(guild.memberCount)} members!`);
   const embed = new Discord.RichEmbed()
-    .setTitle("welcome to tangerine!")
-    .setColor([253, 144, 43])
-    .setFooter("tangerine", `${tangerineIcon}`)
-    .setImage('https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine.gif')
-    .setTimestamp()
-    .addField("**Made by the Tangerine team**", "❤️‏‏‎")
-  channel.send({
+    .setTitle(`Added to: ${guild.name} (id: ${guild.id})  ✅`)
+    .setColor([0, 255, 0])
+    .setDescription(`This guild has ${thousands_separators(guild.memberCount)} members!`)
+  client.users.get(`${admin1}`).send({
+    embed
+  });
+  client.users.get(`${admin2}`).send({
     embed
   });
 });
 
 client.on("guildDelete", guild => {
-  console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
+  console.log(`Removed from: ${guild.name} (id: ${guild.id})`);
+  const embed = new Discord.RichEmbed()
+    .setTitle(`Removed from: ${guild.name} (id: ${guild.id})   ❌`)
+    .setColor([250, 0, 0])
+  client.users.get(`${admin1}`).send({
+    embed
+  });
+  client.users.get(`${admin2}`).send({
+    embed
+  });
 });
 
 const prefix = '~';
@@ -155,6 +227,9 @@ client.on("message", async message => {
   if (message.content.indexOf(config.prefix) !== 0) return; //ignore messages without prefix
   const args = message.content.slice(config.prefix.length).trim().split(/ +/g); //separates command and arguments (first word from all other words)
   const command = args.shift().toLowerCase();
+  if (message.channel.type === "dm") {
+    return message.reply("Sorry, Tangerine does not work in DMs.");
+  }
   //////////////////////////////////////////////////////
   if (command === "ping") { //asynchronous guild ping
     if (args.length !== 0) {
@@ -165,7 +240,6 @@ client.on("message", async message => {
     const m = await message.channel.send("Ping?");
     m.edit(`Pong! Network Latency: ${m.createdTimestamp - message.createdTimestamp}ms. API Latency: ${Math.round(client.ping)}ms`);
   }
-
   //////////////////////////////////////////////////////
   if (command === "help") {
     if (args.length !== 0) {
@@ -174,10 +248,10 @@ client.on("message", async message => {
       );
     }
     const embed = new Discord.RichEmbed()
-      .setTitle("tangerine's list of commands")
+      .setTitle("Tangerine's list of commands")
       .setColor([253, 144, 43])
-      .setDescription(`For more help use ~about and join the support server!`)
-      .setFooter("tangerine", `${tangerineIcon}`)
+      .setDescription(`For more help use ~support or ~about, and join the support server!`)
+      .setFooter("Tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addBlankField(false)
       .addField("`help`", "the page you are on right now!", true)
@@ -199,13 +273,15 @@ client.on("message", async message => {
       );
     }
     const embed = new Discord.RichEmbed()
-      .setTitle("tangerine's list of general commands")
+      .setTitle("Tangerine's list of general commands")
       .setColor([253, 144, 43])
-      .setFooter("tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine", `${tangerineIcon}`)
       .setTimestamp()
-      .addField("`help`", "prints out all of the main tangerine commands", true)
+      .addField("`help`", "prints out all of the main Tangerine commands", true)
       .addField("`about`", "prints the about and developer contact page", true)
+      .addField("`status`", "prints a shorter form of the about page, with uptime", true)
       .addField("`ping`", "prints the bot's network latency", true)
+      .addField("`support`", "sends a message to the bot developers", true)
     message.channel.send({
       embed
     });
@@ -218,9 +294,9 @@ client.on("message", async message => {
       );
     }
     const embed = new Discord.RichEmbed()
-      .setTitle("tangerine's list of utility commands")
+      .setTitle("Tangerine's list of utility commands")
       .setColor([253, 144, 43])
-      .setFooter("tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("`nickname` <string(nickname)>", "changes your nickname to the specified string", true)
       .addField("`nickreset`", "resets your nickname", true)
@@ -244,9 +320,9 @@ client.on("message", async message => {
       );
     }
     const embed = new Discord.RichEmbed()
-      .setTitle("tangerine's list of fun commands")
+      .setTitle("Tangerine's list of fun commands")
       .setColor([253, 144, 43])
-      .setFooter("tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("`meme`", "prints a random meme from r/funny", true)
       .addField("`doge` <string(message)>", "doge-ifies your message", true)
@@ -267,13 +343,15 @@ client.on("message", async message => {
       );
     }
     const embed = new Discord.RichEmbed()
-      .setTitle("tangerine's list of game trackers")
+      .setTitle("Tangerine's list of game trackers")
       .setColor([253, 144, 43])
-      .setFooter("tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("🌈 ", "**Rainbow Six Siege**")
-      .addField("`r6` <username, pc|psn>", "Rainbow Six Siege PVP stats", true)
-      .addField("`r6pve` <username, pc|psn>", "Rainbow Six Siege PVE stats", true)
+      .addField("`r6` <username, pc|psn>", "Fetches a player's R6 PVP stats", true)
+      .addField("`r6pve` <username, pc|psn>", "Fetches a player's R6 PVE stats", true)
+      .addField("`op`", "Prints a random 5v5 operator lineup", true)
+      .addField("`map` <rank|new|qm|none>", "Prints a random map in the specified pool", true)
       .addBlankField(false)
       .addField("⛏️ ", "**Minecraft**")
       .addField("`head` <username>", "Fetches and prints the user's head", true)
@@ -281,12 +359,10 @@ client.on("message", async message => {
       .addField("`skin` <username>", "Fetches and prints the user's skin", true)
       .addField("`rawskin` <username>", "Fetches and prints the user's raw skin", true)
       .addBlankField(false)
-      .addField("💥", "**Counter Strike: Global Offensive**")
+      .addField("💥", "**Other**")
       .addField("`csgo` <steam vanity username>", "CS:GO stats", true)
-      .addBlankField(false)
-      .addField("🔺", "**APEX Legends**")
       .addField("`apex` <username, pc|psn|xbox>", "APEX Legends stats", true)
-      .addBlankField(false)
+      .addField("`gd` <username>", "Geometry Dash stats", true)
     message.channel.send({
       embed
     });
@@ -299,9 +375,9 @@ client.on("message", async message => {
       );
     }
     const embed = new Discord.RichEmbed()
-      .setTitle("tangerine's list of random commands")
+      .setTitle("Tangerine's list of random commands")
       .setColor([253, 144, 43])
-      .setFooter("tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("`asciiart`", "prints a random ascii emoji", true)
       .addField("`animal`", "prints a random animal name", true)
@@ -327,10 +403,10 @@ client.on("message", async message => {
       );
     }
     const embed = new Discord.RichEmbed()
-      .setTitle("tangerine's administration commands")
+      .setTitle("Tangerine's administration commands")
       .setColor([253, 144, 43])
       .setDescription("You must have special permissions to run these commands. View the master list here: bit.ly/tangerineAdmin")
-      .setFooter("tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("`say` <string(message)>", "prints a repeat of the message. Requires MANAGE_MESSAGES.")
       .addField("`kick` <@user, string(reason)>", "kicks the specified user. Requires KICK_MEMBERS.")
@@ -350,17 +426,16 @@ client.on("message", async message => {
       );
     }
     const embed = new Discord.RichEmbed()
-      .setTitle(`tangerine ${tangerineVersion}`)
+      .setTitle(`Tangerine ${tangerineVersion}`)
       .setColor([253, 144, 43])
       .setDescription(`Last updated ${lastUpdated}.`)
-      .setFooter("tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addBlankField(true)
       .addField("The Tangerine Team", "arnav74#0884 and EpicN#5997")
       .addField("Official Website", "[Tangerine Website](https://tangerinebot.com)")
       .addField("Support Server", "[Tangerine Support](https://discord.gg/uwcgjYw)")
       .addField("Invite Link", "[Tangerine Bot](https://discordapp.com/api/oauth2/authorize?client_id=701793346225700934&permissions=470281334&scope=bot)")
-      .addField("Vote for us on top.gg!", "[Tangerine Voting](https://top.gg/bot/701793346225700934/vote)")
       .setImage('https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine.gif')
       .addField("Users using:", `${thousands_separators(client.users.size)} users`, true)
       .addField("Channels channeling:", `${thousands_separators(client.channels.size)} channels`, true)
@@ -370,8 +445,42 @@ client.on("message", async message => {
     });
   }
   //////////////////////////////////////////////////////
+  if (command === "status") {
+    if (args.length !== 0) {
+      return message.reply(
+        'You must not provide any arguments.'
+      );
+    }
+    let totalSeconds = (client.uptime / 1000);
+    let days = Math.floor(totalSeconds / 86400);
+    let hours = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    let minutes = Math.floor(totalSeconds / 60);
+    let seconds = thousands_separators((totalSeconds % 60).toPrecision(3));
+    let uptime = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`;
+    const embed = new Discord.RichEmbed()
+      .setTitle(`Tangerine ${tangerineVersion}`)
+      .setColor([253, 144, 43])
+      .setDescription(`Last updated ${lastUpdated}.`)
+      .setFooter("Tangerine", `${tangerineIcon}`)
+      .setTimestamp()
+      .addField("Users using:", `${thousands_separators(client.users.size)} users`, true)
+      .addField("Channels channeling:", `${thousands_separators(client.channels.size)} channels`, true)
+      .addField("Servers serving:", `${thousands_separators(client.guilds.size)} servers`, true)
+      .addField("Uptime:", `${uptime}`)
+    message.channel.send({
+      embed
+    });
+  }
+  //////////////////////////////////////////////////////  
+  if (command === "client") {
+    console.log(client);
+  }
+  //////////////////////////////////////////////////////
   if (command === "say") {
     if (!message.member.hasPermission("MANAGE_MESSAGES"))
+      return message.reply("Sorry, you don't have permissions to use this!");
+    if (!message.member.hasPermission("MENTION_EVERYONE"))
       return message.reply("Sorry, you don't have permissions to use this!");
     const sayMessage = args.join(" ");
     message.delete().catch(O_o => {});
@@ -605,32 +714,32 @@ client.on("message", async message => {
     let kdr = (stats.pvp.general.kills / stats.pvp.general.deaths).toPrecision(3);
     let wlr = (stats.pvp.general.wins / stats.pvp.general.losses).toPrecision(3);
     let hsr = ((stats.pvp.general.headshots / stats.pvp.general.kills) * 100).toPrecision(4);
-    let totalassists = (stats.pvp.general.assists + stats.pvp.general.dbnoAssists);
+    let totalassists = thousands_separators(stats.pvp.general.assists + stats.pvp.general.dbnoAssists);
     const embed = new Discord.RichEmbed()
       .setTitle(`${username}'s Rainbow Six Siege Stats`)
       .setDescription("For PVE stats, use ∼r6pve")
       .setColor([253, 144, 43])
-      .setFooter("tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("‏‎🔫‎", "**PVP**")
-      .addField("Wins:", `${stats.pvp.general.wins}`, true)
-      .addField("Losses:", `${stats.pvp.general.losses}`, true)
+      .addField("Wins:", `${thousands_separators(stats.pvp.general.wins)}`, true)
+      .addField("Losses:", `${thousands_separators(stats.pvp.general.losses)}`, true)
       .addField("WLR:", `${wlr}`, true)
-      .addField("Kills:", `${stats.pvp.general.kills}`, true)
-      .addField("Deaths:", `${stats.pvp.general.deaths}`, true)
+      .addField("Kills:", `${thousands_separators(stats.pvp.general.kills)}`, true)
+      .addField("Deaths:", `${thousands_separators(stats.pvp.general.deaths)}`, true)
       .addField("KDR:", `${kdr}`, true)
-      .addField("Matches:", `${stats.pvp.general.matches}`, true)
+      .addField("Matches:", `${thousands_separators(stats.pvp.general.matches)}`, true)
       .addField("Assists:", `${totalassists}`, true)
-      .addField("Revives:", `${stats.pvp.general.revives}`, true)
-      .addField("Headshots:", `${stats.pvp.general.headshots}`, true)
+      .addField("Revives:", `${thousands_separators(stats.pvp.general.revives)}`, true)
+      .addField("Headshots:", `${thousands_separators(stats.pvp.general.headshots)}`, true)
       .addField("Headshot%:", `${hsr}%`, true)
-      .addField("Melees:", `${stats.pvp.general.meleeKills}`, true)
-      .addField("Wallbangs:", `${stats.pvp.general.penetrationKills}`, true)
-      .addField("Blind Kills:", `${stats.pvp.general.blindKills}`, true)
-      .addField("DBNOs:", `${stats.pvp.general.dbno}`, true)
-      .addField("Gadgets Broken:", `${stats.pvp.general.gadgetsDestroyed}`, true)
-      .addField("Barricades:", `${stats.pvp.general.barricadesDeployed}`, true)
-      .addField("Suicides:", `${stats.pvp.general.suicides}`, true)
+      .addField("Melees:", `${thousands_separators(stats.pvp.general.meleeKills)}`, true)
+      .addField("Wallbangs:", `${thousands_separators(stats.pvp.general.penetrationKills)}`, true)
+      .addField("Blind Kills:", `${thousands_separators(stats.pvp.general.blindKills)}`, true)
+      .addField("DBNOs:", `${thousands_separators(stats.pvp.general.dbno)}`, true)
+      .addField("Gadgets Broken:", `${thousands_separators(stats.pvp.general.gadgetsDestroyed)}`, true)
+      .addField("Barricades:", `${thousands_separators(stats.pvp.general.barricadesDeployed)}`, true)
+      .addField("Suicides:", `${thousands_separators(stats.pvp.general.suicides)}`, true)
       .addField("Playtime:", `${((stats.pvp.general.playtime)/60/60).toPrecision(3)} Hours`, true)
     return message.channel.send({
       embed
@@ -653,31 +762,31 @@ client.on("message", async message => {
     let pvekdr = (stats.pve.general.kills / stats.pve.general.deaths).toPrecision(3);
     let pvewlr = (stats.pve.general.wins / stats.pve.general.losses).toPrecision(3);
     let pvehsr = ((stats.pve.general.headshots / stats.pve.general.kills) * 100).toPrecision(4);
-    let pvetotalassists = (stats.pvp.general.assists + stats.pvp.general.dbnoAssists);
+    let pvetotalassists = thousands_separators(stats.pvp.general.assists + stats.pvp.general.dbnoAssists);
     const embed = new Discord.RichEmbed()
       .setTitle(`${username}'s Rainbow Six Siege PVE Stats`)
       .setColor([253, 144, 43])
-      .setFooter("tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine", `${tangerineIcon}`)
       .setTimestamp()
       .addField("‏‎🔪‎", "**PVE**")
-      .addField("Wins:", `${stats.pve.general.wins}`, true)
-      .addField("Losses:", `${stats.pve.general.losses}`, true)
+      .addField("Wins:", `${thousands_separators(stats.pve.general.wins)}`, true)
+      .addField("Losses:", `${thousands_separators(stats.pve.general.losses)}`, true)
       .addField("WLR:", `${pvewlr}`, true)
-      .addField("Kills:", `${stats.pve.general.kills}`, true)
-      .addField("Deaths:", `${stats.pve.general.deaths}`, true)
+      .addField("Kills:", `${thousands_separators(stats.pve.general.kills)}`, true)
+      .addField("Deaths:", `${thousands_separators(stats.pve.general.deaths)}`, true)
       .addField("KDR:", `${pvekdr}`, true)
-      .addField("Matches:", `${stats.pve.general.matches}`, true)
+      .addField("Matches:", `${thousands_separators(stats.pve.general.matches)}`, true)
       .addField("Assists:", `${pvetotalassists}`, true)
-      .addField("Revives:", `${stats.pve.general.revives}`, true)
-      .addField("Headshots:", `${stats.pve.general.headshots}`, true)
+      .addField("Revives:", `${thousands_separators(stats.pve.general.revives)}`, true)
+      .addField("Headshots:", `${thousands_separators(stats.pve.general.headshots)}`, true)
       .addField("Headshot %:", `${pvehsr}%`, true)
-      .addField("Melee Kills:", `${stats.pve.general.meleeKills}`, true)
-      .addField("Wallbangs:", `${stats.pve.general.penetrationKills}`, true)
-      .addField("Blind Kills:", `${stats.pve.general.blindKills}`, true)
-      .addField("DBNOs:", `${stats.pve.general.dbno}`, true)
-      .addField("Gadgets Broken:", `${stats.pve.general.gadgetsDestroyed}`, true)
-      .addField("Barricades:", `${stats.pve.general.barricadesDeployed}`, true)
-      .addField("Suicides:", `${stats.pve.general.suicides}`, true)
+      .addField("Melee Kills:", `${thousands_separators(stats.pve.general.meleeKills)}`, true)
+      .addField("Wallbangs:", `${thousands_separators(stats.pve.general.penetrationKills)}`, true)
+      .addField("Blind Kills:", `${thousands_separators(stats.pve.general.blindKills)}`, true)
+      .addField("DBNOs:", `${thousands_separators(stats.pve.general.dbno)}`, true)
+      .addField("Gadgets Broken:", `${thousands_separators(stats.pve.general.gadgetsDestroyed)}`, true)
+      .addField("Barricades:", `${thousands_separators(stats.pve.general.barricadesDeployed)}`, true)
+      .addField("Suicides:", `${thousands_separators(stats.pve.general.suicides)}`, true)
       .addField("Playtime:", `${((stats.pve.general.playtime)/60/60).toPrecision(3)} Hours`, true)
     return message.channel.send({
       embed
@@ -697,7 +806,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`All American times`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("Eastern:", `${etF}`)
         .addField("Central:", `${ctF}`)
@@ -710,7 +819,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Eastern Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${etF}`)
       message.channel.send({
@@ -720,7 +829,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Central Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${ctF}`)
       message.channel.send({
@@ -730,7 +839,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Mountain Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${mdtF}`)
       message.channel.send({
@@ -740,7 +849,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Pacific Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${ptF}`)
       message.channel.send({
@@ -762,7 +871,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`All European times`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("Western:", `${wetF}`)
         .addField("Central:", `${cetF}`)
@@ -774,7 +883,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Western Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${wetF}`)
       message.channel.send({
@@ -784,7 +893,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Central Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${cetF}`)
       message.channel.send({
@@ -794,7 +903,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Eastern Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${eetF}`)
       message.channel.send({
@@ -826,7 +935,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`All European times`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("Moscow (+3):", `${mstF}`)
         .addField("Samara (+4):", `${sstF}`)
@@ -843,7 +952,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Moscow Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${mstF}`)
       message.channel.send({
@@ -853,7 +962,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Samara Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${sstF}`)
       message.channel.send({
@@ -863,7 +972,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`India Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${istF}`)
       message.channel.send({
@@ -873,7 +982,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Bangladesh Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${bstF}`)
       message.channel.send({
@@ -883,7 +992,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Myanmar Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${mtF}`)
       message.channel.send({
@@ -893,7 +1002,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Indochina Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${itF}`)
       message.channel.send({
@@ -903,7 +1012,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`China Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${cstF}`)
       message.channel.send({
@@ -913,7 +1022,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Korea/Japan Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${kstF}`)
       message.channel.send({
@@ -923,7 +1032,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Moscow Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${mstF}`)
       message.channel.send({
@@ -948,7 +1057,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${nickname}'s Skin`)
           .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
-          .setFooter("tangerine", `${tangerineIcon}`)
+          .setFooter("Tangerine", `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .addField(`${nickname}'s UUID`, uuid)
           .setImage(`https://crafatar.com/renders/body/${uuid}`)
@@ -972,7 +1081,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${nickname}'s Head`)
           .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
-          .setFooter("tangerine", `${tangerineIcon}`)
+          .setFooter("Tangerine", `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .addField(`${nickname}'s UUID`, uuid)
           .setImage(`https://crafatar.com/renders/head/${uuid}`)
@@ -995,7 +1104,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${nickname}'s Skin`)
           .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
-          .setFooter("tangerine", `${tangerineIcon}`)
+          .setFooter("Tangerine", `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .addField(`${nickname}'s UUID`, uuid)
           .setImage(`https://crafatar.com/skins/${uuid}`)
@@ -1029,7 +1138,7 @@ client.on("message", async message => {
           .then(namehistory => {
             const playerHistory = new Discord.RichEmbed()
               .setTitle(`**${args[0]}'s** Names`)
-              .setFooter("tangerine", `${tangerineIcon}`)
+              .setFooter("Tangerine", `${tangerineIcon}`)
               .setThumbnail(`https://crafatar.com/renders/head/${uuid}`)
               .setColor([253, 144, 43])
             for (
@@ -1077,7 +1186,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${json.title}`)
           .addField(`from r/${json.subreddit}`, `[link](${json.postLink})`, true)
-          .setFooter("tangerine", `${tangerineIcon}`)
+          .setFooter("Tangerine", `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .setImage(`${json.url}`)
         );
@@ -1129,7 +1238,7 @@ client.on("message", async message => {
       new Discord.RichEmbed()
       .setTitle(`Your coin flipped: ${coin}.`)
       .setColor([253, 144, 43])
-      .setFooter("tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine", `${tangerineIcon}`)
     );
   }
   //////////////////////////////////////////////////////
@@ -1149,7 +1258,7 @@ client.on("message", async message => {
       new Discord.RichEmbed()
       .setTitle(`Your die rolled: ${chance.rpg(input)}.`)
       .setColor([253, 144, 43])
-      .setFooter("tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine", `${tangerineIcon}`)
     );
   }
   //////////////////////////////////////////////////////
@@ -1176,7 +1285,7 @@ client.on("message", async message => {
         new Discord.RichEmbed()
         .setTitle(`Todays wikipedia picture of the day`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setImage(`${data.image}`)
       );
     });
@@ -1192,7 +1301,7 @@ client.on("message", async message => {
         new Discord.RichEmbed()
         .setTitle(`Your shortened link:`)
         .setColor([253, 144, 43])
-        .setFooter("tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine", `${tangerineIcon}`)
         .setDescription(`${res}`)
       );
     });
@@ -1377,7 +1486,7 @@ client.on("message", async message => {
           const embed = new Discord.RichEmbed()
             .setTitle(`${username}'s CSGO Stats`)
             .setColor([253, 144, 43])
-            .setFooter("tangerine", `${tangerineIcon}`)
+            .setFooter("Tangerine", `${tangerineIcon}`)
             .setTimestamp()
             .setThumbnail(`${icon}`)
             .addField("Wins:", `${total_matches_won}`, true)
@@ -1416,16 +1525,19 @@ client.on("message", async message => {
   //////////////////////////////////////////////////////
   if (command === "apex") {
     if (args.length != 2)
-      return message.reply('You must provide a username.')
+      return message.reply('You must provide a username and console. (PC, XBOX, PSN)')
     if (/\w*[A-z]\w*/.test(args[0]) == false)
       return message.reply('You must provide a valid vanity URL, not Steam ID.')
     var platform;
     if (args[1] === "PC" || args[1] === "pc")
       platform = "PC";
-    if (args[1] === "xbox" || args[1] === "XBOX" || args[1] === "Xbox" || args[1] === "xBox")
+    else if (args[1] === "xbox" || args[1] === "XBOX" || args[1] === "Xbox" || args[1] === "xBox")
       platform = "XBOX";
-    if (args[1] === "playstation" || args[1] === "psn" || args[1] === "PSN")
+    else if (args[1] === "playstation" || args[1] === "psn" || args[1] === "PSN")
       platform = "PSN";
+    else {
+      return message.reply("Sorry, that is not a valid console. (PC, XBOX, PSN)")
+    }
     var username = args[0];
     apex.getDetailedPlayer(`${username}`, `${platform}`)
       .then((response) => {
@@ -1441,7 +1553,7 @@ client.on("message", async message => {
         const embed = new Discord.RichEmbed()
           .setTitle(`${username}'s APEX Legends Stats`)
           .setColor([253, 144, 43])
-          .setFooter("tangerine", `${tangerineIcon}`)
+          .setFooter("Tangerine", `${tangerineIcon}`)
           .setDescription(`Account ID: \`${accountID}\``)
           .setTimestamp()
           .setThumbnail(`${avatarUrl}`)
@@ -1459,6 +1571,225 @@ client.on("message", async message => {
           "Could not index that username. It is possible that the user has not played a match for a long time, or the username could not be found."
         )
       })
+  }
+  //////////////////////////////////////////////////////
+  if (command === "gd") {
+    if (args.length != 1)
+      return message.reply('You must provide a username.')
+    if (/\w*[A-z]\w*/.test(args[0]) == false)
+      return message.reply('You must provide a username, not a user ID.')
+    var username = args[0];
+    let stats = await search(`${username}`);
+    if (!stats || stats === "null" || stats === null)
+      return message.reply("Sorry, that username was not found!")
+    let playerIcon = stats.img.player;
+    let ranking = thousands_separators(stats.top);
+    let stars = thousands_separators(stats.stars);
+    let diamonds = thousands_separators(stats.diamonds);
+    let demons = thousands_separators(stats.demons);
+    let secretCoins = thousands_separators(stats.secretCoins);
+    let userCoins = thousands_separators(stats.userCoins);
+    let recentLevel0name = stats.lastLevels[0].name;
+    let recentLevel1name = stats.lastLevels[1].name;
+    let recentLevel2name = stats.lastLevels[2].name;
+    var isMod;
+    if (stats.mod.is === true)
+      isMod = stats.mod.right;
+    else
+      isMod = "Not a mod";
+    const embed = new Discord.RichEmbed()
+      .setTitle(`${username}'s Geometry Dash Stats`)
+      .setColor([253, 144, 43])
+      .setFooter("Tangerine", `${tangerineIcon}`)
+      .setTimestamp()
+      .setThumbnail(`${playerIcon}`)
+      .setDescription(`Global Ranking: ${ranking}`)
+      .addField("Stars:", `${stars}`, true)
+      .addField("Diamonds:", `${diamonds}`, true)
+      .addField("Demons:", `${demons}`, true)
+      .addField("Secret Coins:", `${secretCoins}`, true)
+      .addField("User Coins:", `${userCoins}`, true)
+      .addField("Moderator?", `${isMod}`, true)
+      .addField("Recently Uploaded Level 1:", `${recentLevel0name}`)
+      .addField("Recently Uploaded Level 2:", `${recentLevel1name}`)
+      .addField("Recently Uploaded Level 3:", `${recentLevel2name}`)
+    return message.channel.send({
+      embed
+    });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "operators" || command === "operator" || command === "op") {
+    if (args.length != 0)
+      return message.reply('Do not provide any arguments.')
+    var attackers = ["Recruit", "Sledge", "Thatcher", "Ash", "Thermite", "Twitch", "Montagne", "Glaz", "Fuze", "Blitz", "IQ", "Buck", "Blackbeard", "Capitão", "Hibana", "Jackal", "Ying", "Zofia", "Dokkaebi", "Lion", "Finka", "Maverick", "Nomad", "Gridlock", "Nøkk", "Amaru", "Kali", "Iana"];
+    var defenders = ["Recruit", "Smoke", "Mute", "Castle", "Pulse", "Doc", "Rook", "Kapkan", "Tachanka", "Jäger", "Bandit", "Frost", "Valkyrie", "Caviera", "Echo", "Mira", "Lesion", "Ela", "Vigil", "Maestro", "Alibi", "Clash", "Kaid", "Mozzie", "Warden", "Goyo", "Wamai", "Oryx"];
+    var attacker1;
+    var attacker2;
+    var attacker3;
+    var attacker4;
+    var attacker5;
+    var defender1;
+    var defender2;
+    var defender3;
+    var defender4;
+    var defender5;
+    while (!defender1) {
+      let index = Math.round(Math.random() * defenders.length)
+      index = defenders[index];
+      if (!(index === defender2 || index === defender3 || index === defender4 || index === defender5)) {
+        defender1 = index;
+      }
+    }
+    while (!defender2) {
+      let index = Math.round(Math.random() * defenders.length)
+      index = defenders[index];
+      if (!(index === defender1 || index === defender3 || index === defender4 || index === defender5)) {
+        defender2 = index;
+      }
+    }
+    while (!defender3) {
+      let index = Math.round(Math.random() * defenders.length)
+      index = defenders[index];
+      if (!(index === defender2 || index === defender1 || index === defender4 || index === defender5)) {
+        defender3 = index;
+      }
+    }
+    while (!defender4) {
+      let index = Math.round(Math.random() * defenders.length)
+      index = defenders[index];
+      if (!(index === defender2 || index === defender3 || index === defender1 || index === defender5)) {
+        defender4 = index;
+      }
+    }
+    while (!defender5) {
+      let index = Math.round(Math.random() * defenders.length)
+      index = defenders[index];
+      if (!(index === defender2 || index === defender3 || index === defender4 || index === defender1)) {
+        defender5 = index;
+      }
+    }
+    while (!attacker1) {
+      let index = Math.round(Math.random() * attackers.length)
+      index = attackers[index];
+      if (!(index === attacker2 || index === attacker3 || index === attacker4 || index === attacker5)) {
+        attacker1 = index;
+      }
+    }
+    while (!attacker2) {
+      let index = Math.round(Math.random() * attackers.length)
+      index = attackers[index];
+      if (!(index === attacker1 || index === attacker3 || index === attacker4 || index === attacker5)) {
+        attacker2 = index;
+      }
+    }
+    while (!attacker3) {
+      let index = Math.round(Math.random() * attackers.length)
+      index = attackers[index];
+      if (!(index === attacker2 || index === attacker1 || index === attacker4 || index === attacker5)) {
+        attacker3 = index;
+      }
+    }
+    while (!attacker4) {
+      let index = Math.round(Math.random() * attackers.length)
+      index = attackers[index];
+      if (!(index === attacker2 || index === attacker3 || index === attacker1 || index === attacker5)) {
+        attacker4 = index;
+      }
+    }
+    while (!attacker5) {
+      let index = Math.round(Math.random() * attackers.length)
+      index = attackers[index];
+      if (!(index === attacker2 || index === attacker3 || index === attacker4 || index === attacker1)) {
+        attacker5 = index;
+      }
+    }
+    const embed = new Discord.RichEmbed()
+      .setTitle(`Random R6 Operator Picks`)
+      .setColor([253, 144, 43])
+      .setFooter("Tangerine", `${tangerineIcon}`)
+      .setTimestamp()
+      .addField("Attackers:", `**1. **${attacker1}\n**2. **${attacker2}\n**3. **${attacker3}\n**4. **${attacker4}\n**5. **${attacker5}`)
+      .addField("Defenders:", `**1. **${defender1}\n**2. **${defender2}\n**3. **${defender3}\n**4. **${defender4}\n**5. **${defender5}`)
+    return message.channel.send({
+      embed
+    });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "map") {
+    if (args.length != 0)
+      return message.reply('Do not provide any arguments.')
+    var all = ["Bank", "Border", "Chalet", "Clubhouse", "Coastline", "Consulate", "Favela", "Fortress", "Hereford Base", "House", "Kafe Dostoyevsky", "Kanal", "Oregon", "Outback", "Presidential Plane", "Skyscraper", "Theme Park", "Tower", "Villa", "Yacht"];
+    var quickmatch = ["Bank", "Border", "Chalet", "Clubhouse", "Coastline", "Consulate", "Favela", "Fortress", "Hereford Base", "House", "Kafe Dostoyevsky", "Oregon", "Outback", "Presidential Plane", "Skyscraper", "Theme Park", "Tower", "Villa", "Yacht"];
+    var newcomer = ["Bank", "Chalet", "Consulate"];
+    var ranked = ["Bank", "Border", "Chalet", "Clubhouse", "Coastline", "Consulate", "Kafe Dostoyevsky", "Kanal", "Oregon", "Outback", "Theme Park", "Villa"];
+    if (args[0] === "quickmatch" || args[0] === "qm" || args[0] === "quick") {
+      let index = Math.round(Math.random() * quickmatch.length)
+      index = quickmatch[index];
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Random R6 Quick Match Map`)
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("Map:", `${index}`)
+      return message.channel.send({
+        embed
+      });
+    }
+    if (args[0] === "newcomer" || args[0] === "new") {
+      let index = Math.round(Math.random() * newcomer.length)
+      index = newcomer[index];
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Random R6 Newcomer Match Map`)
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("Map:", `${index}`)
+      return message.channel.send({
+        embed
+      });
+    }
+    if (args[0] === "ranked" || args[0] === "rank") {
+      let index = Math.round(Math.random() * ranked.length)
+      index = ranked[index];
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Random R6 Ranked Match Map`)
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("Map:", `${index}`)
+      return message.channel.send({
+        embed
+      });
+    } else {
+      let index = Math.round(Math.random() * all.length)
+      index = all[index];
+      const embed = new Discord.RichEmbed()
+        .setTitle(`Random R6 Map`)
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("Map:", `${index}`)
+      return message.channel.send({
+        embed
+      });
+    }
+  }
+  //////////////////////////////////////////////////////
+  if (command === "support" || command === "ticket") {
+    let input = args.join(" ");
+    if (!input)
+      return message.reply('Please provide a message.')
+    const embed = new Discord.RichEmbed()
+      .setTitle(`Support message from \`${message.member.user.tag}\``)
+      .setDescription(`${input}`)
+      .setColor([89, 161, 255])
+    client.users.get(`${admin1}`).send({
+      embed
+    });
+    client.users.get(`${admin2}`).send({
+      embed
+    });
+    return message.reply("Your message has been recieved and will be looked at shortly. For additional help, please visit https://tangerinebot.com or run ~help.")
   }
   //////////////////////////////////////////////////////
 });
