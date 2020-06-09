@@ -1,4 +1,4 @@
-//Designed by the Tangerine team, https://discord.gg/uwcgjYw or arnav74#0884
+//Designed by the Tangerine team, https://discord.gg/uwcgjYw or ✘rnav#0001
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const config = require("./auth.json");
@@ -59,43 +59,38 @@ const {
   admin1,
   admin2
 } = require('./keys/admin.json')
-
 const tangerineIcon = 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png';
-const tangerineVersion = ("0.1.17");
-const lastUpdated = ("05/14/2020");
+const tangerineVersion = ("0.1.23");
+const lastUpdated = ("06/08/2020");
 
 function thousands_separators(num) {
   var num_parts = num.toString().split(".");
   num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return num_parts.join(".");
 }
-
 client.on("ready", () => {
   console.log(`Tangerine is online, with ${thousands_separators(client.users.size)} users, in ${thousands_separators(client.channels.size)} channels of ${thousands_separators(client.guilds.size)} servers.`);
-  client.user.setActivity(`memes. 🍊 ∼help. Serving ${thousands_separators(client.users.size)} users. tangerinebot.com`, {
+  client.user.setActivity(`tangerinebot.com. 🍊 ∼help. Serving ${thousands_separators(client.users.size)} users.`, {
     type: 'WATCHING' //PLAYING, LISTENING, WATCHING
   });
   client.user.setStatus('online'); //online, idle, invisible, dnd
 });
-
 client.on("ready", () => {
   const embed = new Discord.RichEmbed()
     .setTitle(`You have been identified as: Admin 1`)
-    .setColor([255, 255, 255])
+    .setColor([254, 254, 254])
   client.users.get(`${admin1}`).send({
     embed
   });
 });
-
 client.on("ready", () => {
   const embed = new Discord.RichEmbed()
     .setTitle(`You have been identified as: Admin 2`)
-    .setColor([255, 255, 255])
+    .setColor([254, 254, 254])
   client.users.get(`${admin2}`).send({
     embed
   });
 });
-
 client.on('ready', () => {
   var readyAt = client.readyAt;
   for (var i = 0; i < `${client.readyAt}`.length; i++) {
@@ -118,27 +113,22 @@ client.on('ready', () => {
     embed
   });
 });
-
 client.on('ready', () => {
   setInterval(() => {
     dbl.postStats(client.guilds.size);
-  }, 1800000);
+  }, 3600000);
 });
-
 dbl.on('posted', () => {
   console.log('Server count posted!  ✅');
+  client.user.setActivity(`tangerinebot.com. 🍊 ∼help. Serving ${thousands_separators(client.users.size)} users.`, {
+    type: 'WATCHING' //PLAYING, LISTENING, WATCHING
+  });
   const embed = new Discord.RichEmbed()
-    .setTitle(`DBL Server Status`)
+    .setTitle(`DBL Server Status  ✅`)
     .setColor([0, 255, 0])
-    .setDescription(`Server count updated to \`${thousands_separators(client.guilds.size)}\``)
-  client.users.get(`${admin1}`).send({
-    embed
-  });
-  client.users.get(`${admin2}`).send({
-    embed
-  });
+    .addField(`Server count updated:`, `\`${thousands_separators(client.guilds.size)}\``)
+    .addField(`Member count updated:`, `\`${thousands_separators(client.users.size)}\``)
 })
-
 dbl.on('error', e => {
   console.log(`DBL Error! ${e}`)
   const embed = new Discord.RichEmbed()
@@ -153,7 +143,6 @@ dbl.on('error', e => {
     embed
   });
 })
-
 client.on("guildCreate", guild => {
   let channel = client.channels.get(
     guild.channels
@@ -165,7 +154,6 @@ client.on("guildCreate", guild => {
     .map(r => r.id)[0]
   );
 });
-
 client.on("guildCreate", guild => {
   console.log(`Added to: ${guild.name} (id: ${guild.id}). This guild has ${thousands_separators(guild.memberCount)} members!`);
   const embed = new Discord.RichEmbed()
@@ -179,7 +167,6 @@ client.on("guildCreate", guild => {
     embed
   });
 });
-
 client.on("guildDelete", guild => {
   console.log(`Removed from: ${guild.name} (id: ${guild.id})`);
   const embed = new Discord.RichEmbed()
@@ -192,7 +179,6 @@ client.on("guildDelete", guild => {
     embed
   });
 });
-
 const prefix = '~';
 const escapeRegex = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 client.on('message', message => {
@@ -208,7 +194,6 @@ client.on('message', message => {
     message.reply(`you can either ping me or use \`${prefix}\` as my prefix.`);
   }
 });
-
 const tangerine = '🍊';
 client.on('message', async message => {
   const prefixRegexT = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(tangerine)})\\s*`);
@@ -220,7 +205,6 @@ client.on('message', async message => {
     message.react('🍊');
   }
 });
-
 client.on("message", async message => {
   // This event will run on every single message received, from any channel or DM.
   if (message.author.bot) return; //botception prevention
@@ -241,185 +225,173 @@ client.on("message", async message => {
     m.edit(`Pong! Network Latency: ${m.createdTimestamp - message.createdTimestamp}ms. API Latency: ${Math.round(client.ping)}ms`);
   }
   //////////////////////////////////////////////////////
-  if (command === "help") {
-    if (args.length !== 0) {
+  if (command === "help" || command === "commands") {
+    if (args.length > 1) {
       return message.reply(
-        'You must not provide any arguments.'
+        'You must not provide over one argument.'
       );
     }
-    const embed = new Discord.RichEmbed()
-      .setTitle("Tangerine's list of commands")
-      .setColor([253, 144, 43])
-      .setDescription(`For more help use ~support or ~about, and join the support server!`)
-      .setFooter("Tangerine", `${tangerineIcon}`)
-      .setTimestamp()
-      .addBlankField(false)
-      .addField("`help`", "the page you are on right now!", true)
-      .addField("`general`", "prints out all of the general commands", true)
-      .addField("`utility`", "prints out all of the utility commands", true)
-      .addField("`fun`", "prints out all of the fun commands", true)
-      .addField("`games`", "prints out all of the game tracking commands, includes MC and R6", true)
-      .addField("`random`", "prints out all of the random generation commands", true)
-      .addField("`advanced`", "prints out all of the administration commands that require special permissions", true)
-    message.channel.send({
-      embed
-    });
-  }
-  //////////////////////////////////////////////////////
-  if (command === "general") {
-    if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+    if (args.length == 0 || args[0] === 'help') {
+      const embed = new Discord.RichEmbed()
+        .setTitle("Tangerine's commands")
+        .setColor([253, 144, 43])
+        .setDescription(`To view the commands in a group, use: \n\`~help <group>\``)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setTimestamp()
+        //.addBlankField(false)
+        .addField("❓ `help`", "• 9 commands", true)
+        .addField("💬 `general`", "• 5 commands", true)
+        .addField("🔧 `utility`", "• 8 commands", true)
+        .addField("🎉 `fun`", "• 6 commands", true)
+        .addField("🔫 `r6`", "• 5 commands", true)
+        .addField("⛏️ `minecraft`", "• 4 commands", true)
+        .addField("🎮 `games`", "• 4 commands", true)
+        .addField("🤖 `generation`", "• 12 commands", true)
+        .addField("⚙️ `moderation`", "• 6 commands", true)
+      // .addField(`For more help use ~support or ~about, and join the support server!`, `text`, true)
+      return message.channel.send({
+        embed
+      });
     }
-    const embed = new Discord.RichEmbed()
-      .setTitle("Tangerine's list of general commands")
-      .setColor([253, 144, 43])
-      .setFooter("Tangerine", `${tangerineIcon}`)
-      .setTimestamp()
-      .addField("`help`", "prints out all of the main Tangerine commands", true)
-      .addField("`about`", "prints the about and developer contact page", true)
-      .addField("`status`", "prints a shorter form of the about page, with uptime", true)
-      .addField("`ping`", "prints the bot's network latency", true)
-      .addField("`support`", "sends a message to the bot developers", true)
-    message.channel.send({
-      embed
-    });
-  }
-  //////////////////////////////////////////////////////
-  if (command === "utility") {
-    if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+    if (args[0] === "general") {
+      const embed = new Discord.RichEmbed()
+        .setTitle("Tangerine's general commands")
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("`help`", "prints out all of the main Tangerine commands", true)
+        .addField("`about`", "prints the about and developer contact page", true)
+        .addField("`status`", "prints a shorter form of the about page", true)
+        .addField("`ping`", "prints the bot's network latency", true)
+        .addField("`support`", "sends a message to the bot developers", true)
+      return message.channel.send({
+        embed
+      });
     }
-    const embed = new Discord.RichEmbed()
-      .setTitle("Tangerine's list of utility commands")
-      .setColor([253, 144, 43])
-      .setFooter("Tangerine", `${tangerineIcon}`)
-      .setTimestamp()
-      .addField("`nickname` <string(nickname)>", "changes your nickname to the specified string", true)
-      .addField("`nickreset`", "resets your nickname", true)
-      .addField("`time` <none | string(est|ct|mt|pt)>", "prints the current time", true)
-      .addField("`timeEU` <none | string(wet|cet|eet)>", "prints the current time", true)
-      .addField("`timeAS` <none | string(mst|sst|ist|bst|mt|it|cst|kst|jst)>", "prints the current time", true)
-
-      .addField("`shorten` <string(URL)>", "shortens the given URL using tinyurl", true)
-      .addField("`shout` <string(message)>", "converts your message into regional indicator characters", true)
-      .addField("`emojis`", "lists all of the custom emojis on the server", true)
-
-    message.channel.send({
-      embed
-    });
-  }
-  //////////////////////////////////////////////////////
-  if (command === "fun") {
-    if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+    if (args[0] === "utility") {
+      const embed = new Discord.RichEmbed()
+        .setTitle("Tangerine's list of utility commands")
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("`nickname` <string(nickname)>", "changes your nickname to the specified string", true)
+        .addField("`nickreset`", "resets your nickname", true)
+        .addField("`time` <none | string(est|ct|mt|pt)>", "prints the current time", true)
+        .addField("`timeEU` <none | string(wet|cet|eet)>", "prints the current time", true)
+        .addField("`timeAS` <none | string(mst|sst|ist|bst|mt|it|cst|kst|jst)>", "prints the current time", true)
+        .addField("`shorten` <string(URL)>", "shortens the given URL using tinyurl", true)
+        .addField("`shout` <string(message)>", "converts your message into regional indicator characters", true)
+        .addField("`emojis`", "lists all of the custom emojis on the server", true)
+      return message.channel.send({
+        embed
+      });
     }
-    const embed = new Discord.RichEmbed()
-      .setTitle("Tangerine's list of fun commands")
-      .setColor([253, 144, 43])
-      .setFooter("Tangerine", `${tangerineIcon}`)
-      .setTimestamp()
-      .addField("`meme`", "prints a random meme from r/funny", true)
-      .addField("`doge` <string(message)>", "doge-ifies your message", true)
-      .addField("`uwu` <string(message)>", "uwu-ifies your message", true)
-      .addField("`ascii` <string(message)>", "prints your message in ASCII art", true)
-      .addField("`useless`", "this is pretty uselss", true)
-      .addField("`wikipic`", "displays Wikipedia's picture of the day", true)
-
-    message.channel.send({
-      embed
-    });
-  }
-  //////////////////////////////////////////////////////
-  if (command === "games") {
-    if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+    if (args[0] === "fun") {
+      const embed = new Discord.RichEmbed()
+        .setTitle("Tangerine's list of fun commands")
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("`meme`", "prints a random meme from r/funny", true)
+        .addField("`doge` <string(message)>", "doge-ifies your message", true)
+        .addField("`uwu` <string(message)>", "uwu-ifies your message", true)
+        .addField("`ascii` <string(message)>", "prints your message in ASCII art", true)
+        .addField("`useless`", "this is pretty uselss", true)
+        .addField("`wikipic`", "displays Wikipedia's picture of the day", true)
+      return message.channel.send({
+        embed
+      });
     }
-    const embed = new Discord.RichEmbed()
-      .setTitle("Tangerine's list of game trackers")
-      .setColor([253, 144, 43])
-      .setFooter("Tangerine", `${tangerineIcon}`)
-      .setTimestamp()
-      .addField("🌈 ", "**Rainbow Six Siege**")
-      .addField("`r6` <username, pc|psn>", "Fetches a player's R6 PVP stats", true)
-      .addField("`r6pve` <username, pc|psn>", "Fetches a player's R6 PVE stats", true)
-      .addField("`op`", "Prints a random 5v5 operator lineup", true)
-      .addField("`map` <rank|new|qm|none>", "Prints a random map in the specified pool", true)
-      .addBlankField(false)
-      .addField("⛏️ ", "**Minecraft**")
-      .addField("`head` <username>", "Fetches and prints the user's head", true)
-      .addField("`names` <username>", "Fetches and prints all of the user's names", true)
-      .addField("`skin` <username>", "Fetches and prints the user's skin", true)
-      .addField("`rawskin` <username>", "Fetches and prints the user's raw skin", true)
-      .addBlankField(false)
-      .addField("💥", "**Other**")
-      .addField("`csgo` <steam vanity username>", "CS:GO stats", true)
-      .addField("`apex` <username, pc|psn|xbox>", "APEX Legends stats", true)
-      .addField("`gd` <username>", "Geometry Dash stats", true)
-    message.channel.send({
-      embed
-    });
-  }
-  //////////////////////////////////////////////////////
-  if (command === "random") {
-    if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+    if (args[0] === "r6") {
+      const embed = new Discord.RichEmbed()
+        .setTitle("Tangerine's R6 commands")
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("🌈 ", "**Rainbow Six Siege (uPlay)**")
+        .addField("`r6` <username>", "Fetches a player's R6 PVP stats", true)
+        .addField("`r6pve` <username>", "Fetches a player's R6 PVE stats", true)
+        .addField("`r6compare` <username1, username2>", "Compares two players' R6 PVP stats", true)
+        .addField("`op`", "Prints a random 5v5 operator lineup", true)
+        .addField("`map` <rank|new|qm|none>", "Prints a random map in the specified pool", true)
+        .addBlankField(false)
+      return message.channel.send({
+        embed
+      });
     }
-    const embed = new Discord.RichEmbed()
-      .setTitle("Tangerine's list of random commands")
-      .setColor([253, 144, 43])
-      .setFooter("Tangerine", `${tangerineIcon}`)
-      .setTimestamp()
-      .addField("`asciiart`", "prints a random ascii emoji", true)
-      .addField("`animal`", "prints a random animal name", true)
-      .addField("`color`", "prints and displays a random color", true)
-      .addField("`coin`", "flips a coin", true)
-      .addField("`word`", "prints a random English word", true)
-      .addField("`dice` <none, int(sides of dice)>", "rolls a dice with specified number of sides", true)
-      .addField("`rpg` <string(roll sequence, e.g. 5d20)>", "rolls die with specified number of sides", true)
-      .addField("`guess` <int(max number), int(guess)>", "checks if picked number matches guessed number", true)
-      .addField("`integer`", "prints a random integer", true)
-      .addField("`prime`", "prints a prime number", true)
-      .addField("`dog`", "prints a random dog fact", true)
-      .addField("`panda`", "prints a random panda fact", true)
-    message.channel.send({
-      embed
-    });
-  }
-  //////////////////////////////////////////////////////
-  if (command === "advanced") {
-    if (args.length !== 0) {
-      return message.reply(
-        'You must not provide any arguments.'
-      );
+    if (args[0] === "minecraft") {
+      const embed = new Discord.RichEmbed()
+        .setTitle("Tangerine's Minecraft trackers")
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("⛏️ ", "**Minecraft**")
+        .addField("`head` <username>", "Fetches and prints the user's head", true)
+        .addField("`names` <username>", "Fetches and prints all of the user's names", true)
+        .addField("`skin` <username>", "Fetches and prints the user's skin", true)
+        .addField("`rawskin` <username>", "Fetches and prints the user's raw skin", true)
+        .addBlankField(false)
+      return message.channel.send({
+        embed
+      });
     }
-    const embed = new Discord.RichEmbed()
-      .setTitle("Tangerine's administration commands")
-      .setColor([253, 144, 43])
-      .setDescription("You must have special permissions to run these commands. View the master list here: bit.ly/tangerineAdmin")
-      .setFooter("Tangerine", `${tangerineIcon}`)
-      .setTimestamp()
-      .addField("`say` <string(message)>", "prints a repeat of the message. Requires MANAGE_MESSAGES.")
-      .addField("`kick` <@user, string(reason)>", "kicks the specified user. Requires KICK_MEMBERS.")
-      .addField("`ban` <@user, string(reason)>", "bans the specified user. Requires BAN_MEMBERS.")
-      .addField("`purge` <int(messages)>", "purges the specified amount of messages from the channel. Requires MANAGE_MESSAGES.")
-      .addField("`mute` <@user, int(seconds)>", "mutes the specified user for the specified amount of time. Requires MANAGE_ROLES.")
-      .addField("`someone`", "pings a random user in the server. Requires ADMINISTRATOR.")
-    message.channel.send({
-      embed
-    });
+    if (args[0] === "games") {
+      const embed = new Discord.RichEmbed()
+        .setTitle("Tangerine's list of other game tracking commands")
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("💥", "**Other**")
+        .addField("`csgo` <steam vanity username>", "CS:GO stats", true)
+        .addField("`csgocompare` <username1, username2>", "Compares two players' CS:GO stats", true)
+        .addField("`apex` <username, pc|psn|xbox>", "APEX Legends stats", true)
+        .addField("`gd` <username>", "Geometry Dash stats", true)
+      return message.channel.send({
+        embed
+      });
+    }
+    if (args[0] === "generation") {
+      const embed = new Discord.RichEmbed()
+        .setTitle("Tangerine's list of random commands")
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("`asciiart`", "prints a random ascii emoji", true)
+        .addField("`animal`", "prints a random animal name", true)
+        .addField("`color`", "prints and displays a random color", true)
+        .addField("`coin`", "flips a coin", true)
+        .addField("`word`", "prints a random English word", true)
+        .addField("`dice` <none, int(sides of dice)>", "rolls a dice with specified number of sides", true)
+        .addField("`rpg` <string(roll sequence, e.g. 5d20)>", "rolls die with specified number of sides", true)
+        .addField("`guess` <int(max number), int(guess)>", "checks if picked number matches guessed number", true)
+        .addField("`integer`", "prints a random integer", true)
+        .addField("`prime`", "prints a prime number", true)
+        .addField("`dog`", "prints a random dog fact", true)
+        .addField("`panda`", "prints a random panda fact", true)
+      return message.channel.send({
+        embed
+      });
+    }
+    if (args[0] === "moderation") {
+      const embed = new Discord.RichEmbed()
+        .setTitle("Tangerine's administration commands")
+        .setColor([253, 144, 43])
+        .setDescription("You must have special permissions to run these commands. View the master list here: bit.ly/tangerineAdmin")
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("`say` <string(message)>", "prints a repeat of the message. Requires MANAGE_MESSAGES.")
+        .addField("`kick` <@user, string(reason)>", "kicks the specified user. Requires KICK_MEMBERS.")
+        .addField("`ban` <@user, string(reason)>", "bans the specified user. Requires BAN_MEMBERS.")
+        .addField("`purge` <int(messages)>", "purges the specified amount of messages from the channel. Requires MANAGE_MESSAGES.")
+        .addField("`mute` <@user, int(seconds)>", "mutes the specified user for the specified amount of time. Requires MANAGE_ROLES.")
+        .addField("`someone`", "pings a random user in the server. Requires ADMINISTRATOR.")
+      return message.channel.send({
+        embed
+      });
+    }
   }
   //////////////////////////////////////////////////////
-  if (command === "about") {
+  if (command === 'about') {
     if (args.length !== 0) {
       return message.reply(
         'You must not provide any arguments.'
@@ -429,10 +401,10 @@ client.on("message", async message => {
       .setTitle(`Tangerine ${tangerineVersion}`)
       .setColor([253, 144, 43])
       .setDescription(`Last updated ${lastUpdated}.`)
-      .setFooter("Tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
       .setTimestamp()
       .addBlankField(true)
-      .addField("The Tangerine Team", "arnav74#0884 and EpicN#5997")
+      .addField("The Tangerine Team", "✘rnav#0001 and EpicN#5997")
       .addField("Official Website", "[Tangerine Website](https://tangerinebot.com)")
       .addField("Support Server", "[Tangerine Support](https://discord.gg/uwcgjYw)")
       .addField("Invite Link", "[Tangerine Bot](https://discordapp.com/api/oauth2/authorize?client_id=701793346225700934&permissions=470281334&scope=bot)")
@@ -462,12 +434,12 @@ client.on("message", async message => {
       .setTitle(`Tangerine ${tangerineVersion}`)
       .setColor([253, 144, 43])
       .setDescription(`Last updated ${lastUpdated}.`)
-      .setFooter("Tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
       .setTimestamp()
       .addField("Users using:", `${thousands_separators(client.users.size)} users`, true)
       .addField("Channels channeling:", `${thousands_separators(client.channels.size)} channels`, true)
       .addField("Servers serving:", `${thousands_separators(client.guilds.size)} servers`, true)
-      .addField("Uptime:", `${uptime}`)
+      .addField("Last refreshed:", `${uptime}`)
     message.channel.send({
       embed
     });
@@ -694,22 +666,14 @@ client.on("message", async message => {
   if (command === "r6") {
     let input = args.join(" ");
     let res = input.split(" ");
-    if (args.length != 2) {
-      return message.reply('Please provide the username and platform of the player.')
+    if (args.length != 1) {
+      return message.reply('Please provide the username of the player.')
     }
     let username = res[0];
-    let platform = res[1];
-    if (platform === "pc" || platform === "PC" || platform == "Pc") {
-      platform = "uplay";
-    }
-    // if (platform === "xb1" || platform === "XB1" || platform === "Xb1" || platform === "xbox" || platform === "XBOX" || platform === "Xbox" || platform === "xbl" || platform === "XBL") {
-    //   platform = "xbl";
-    //   console.log(typeof username);
-    //   console.log("old username: " + username);
-    //   username = username.replace("_", " ");
-    //   console.log("new username: " + username);
-    // }
-    const id = await r6api.getId(platform, username).then(el => el[0].userId);
+    let platform = "uplay";
+    const id = await r6api.getId(platform, username).then(el => el[0].userId).catch((err) => {
+      return message.reply("Could not find that name.")
+    });
     const stats = await r6api.getStats(platform, id).then(el => el[0]);
     let kdr = (stats.pvp.general.kills / stats.pvp.general.deaths).toPrecision(3);
     let wlr = (stats.pvp.general.wins / stats.pvp.general.losses).toPrecision(3);
@@ -719,7 +683,7 @@ client.on("message", async message => {
       .setTitle(`${username}'s Rainbow Six Siege Stats`)
       .setDescription("For PVE stats, use ∼r6pve")
       .setColor([253, 144, 43])
-      .setFooter("Tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
       .setTimestamp()
       .addField("‏‎🔫‎", "**PVP**")
       .addField("Wins:", `${thousands_separators(stats.pvp.general.wins)}`, true)
@@ -746,18 +710,158 @@ client.on("message", async message => {
     });
   }
   //////////////////////////////////////////////////////
-  if (command === "r6pve") {
+  if (command === "r6compare") {
     let input = args.join(" ");
     let res = input.split(" ");
     if (args.length != 2) {
-      return message.reply('Please provide the username and platform of the player.')
+      return message.reply('Please provide the usernames of the players.')
+    }
+    let username1 = res[0];
+    let username2 = res[1];
+    let platform = "uplay";
+    const id1 = await r6api.getId(platform, username1).then(el => el[0].userId).catch((err) => {
+      return message.reply("Could not player one's name.")
+    });
+    const stats1 = await r6api.getStats(platform, id1).then(el => el[0]);
+    const id2 = await r6api.getId(platform, username2).then(el => el[0].userId).catch((err) => {
+      return message.reply("Could not player two's name.")
+    });
+    const stats2 = await r6api.getStats(platform, id2).then(el => el[0]);
+    let left = "⬅️"
+    let right = "➡️"
+    var winsWinner;
+    if (stats1.pvp.general.wins > stats2.pvp.general.wins)
+      winsWinner = left
+    else
+      winsWinner = right
+    var wlrWinner;
+    if ((stats1.pvp.general.wins / stats1.pvp.general.losses).toPrecision(3) > (stats2.pvp.general.wins / stats2.pvp.general.losses).toPrecision(3))
+      wlrWinner = left
+    else
+      wlrWinner = right
+    var killsWinner;
+    if (stats1.pvp.general.kills > stats2.pvp.general.kills)
+      killsWinner = left
+    else
+      killsWinner = right
+    var kdrWinner;
+    if ((stats1.pvp.general.kills / stats1.pvp.general.deaths).toPrecision(3) > (stats2.pvp.general.kills / stats2.pvp.general.deaths).toPrecision(3))
+      kdrWinner = left
+    else
+      kdrWinner = right
+    var matchesWinner;
+    if (stats1.pvp.general.matches > stats2.pvp.general.matches)
+      matchesWinner = left
+    else
+      matchesWinner = right
+    var playtimeWinner;
+    if (((stats1.pvp.general.playtime) / 60 / 60).toPrecision(3) > ((stats2.pvp.general.playtime) / 60 / 60).toPrecision(3))
+      playtimeWinner = left
+    else
+      playtimeWinner = right
+    var revivesWinner;
+    if (stats1.pvp.general.revives > stats2.pvp.general.revives)
+      revivesWinner = left
+    else
+      revivesWinner = right
+    var hsWinner;
+    if (((stats1.pvp.general.headshots / stats1.pvp.general.kills) * 100).toPrecision(4) > ((stats2.pvp.general.headshots / stats2.pvp.general.kills) * 100).toPrecision(4))
+      hsWinner = left
+    else
+      hsWinner = right
+    var meleeWinner;
+    if (stats1.pvp.general.meleeKills > stats2.pvp.general.meleeKills)
+      meleeWinner = left
+    else
+      meleeWinner = right
+    var wallbangWinner;
+    if (stats1.pvp.general.penetrationKills > stats2.pvp.general.penetrationKills)
+      wallbangWinner = left
+    else
+      wallbangWinner = right
+    var dbnoWinner;
+    if (stats1.pvp.general.dbno > stats2.pvp.general.dbno)
+      dbnoWinner = left
+    else
+      dbnoWinner = right
+    var gadgetWinner;
+    if (stats1.pvp.general.gadgetsDestroyed > stats2.pvp.general.gadgetsDestroyed)
+      gadgetWinner = left
+    else
+      gadgetWinner = right
+    var suicideWinner;
+    if (stats1.pvp.general.suicides > stats2.pvp.general.suicides)
+      suicideWinner = left
+    else
+      suicideWinner = right
+    var embed = new Discord.RichEmbed()
+      .setTitle(`Rainbow Six Siege Stats Comparison`)
+      .setColor([253, 144, 43])
+      .addField("__Player One__", `**${username1}**`, true)
+      .addBlankField(true)
+      .addField("__Player Two__", `**${username2}**`, true)
+      .addField("Wins:", `${thousands_separators(stats1.pvp.general.wins)}`, true)
+      .addField("Winner", `${thousands_separators(winsWinner)}`, true)
+      .addField("Wins:", `${thousands_separators(stats2.pvp.general.wins)}`, true)
+      .addField("WLR:", `${thousands_separators((stats1.pvp.general.wins / stats1.pvp.general.losses).toPrecision(3))}`, true)
+      .addField("Winner", `${thousands_separators(wlrWinner)}`, true)
+      .addField("WLR:", `${thousands_separators((stats2.pvp.general.wins / stats2.pvp.general.losses).toPrecision(3))}`, true)
+      .addField("Kills:", `${thousands_separators(stats1.pvp.general.kills)}`, true)
+      .addField("Winner", `${thousands_separators(killsWinner)}`, true)
+      .addField("Kills:", `${thousands_separators(stats2.pvp.general.kills)}`, true)
+      .addField("KDR:", `${thousands_separators((stats1.pvp.general.kills / stats1.pvp.general.deaths).toPrecision(3))}`, true)
+      .addField("Winner", `${thousands_separators(kdrWinner)}`, true)
+      .addField("KDR:", `${thousands_separators((stats2.pvp.general.kills / stats2.pvp.general.deaths).toPrecision(3))}`, true)
+      .addField("Matches:", `${thousands_separators(stats1.pvp.general.matches)}`, true)
+      .addField("Winner", `${thousands_separators(matchesWinner)}`, true)
+      .addField("Matches:", `${thousands_separators(stats2.pvp.general.matches)}`, true)
+      .addField("Playtime:", `${((stats1.pvp.general.playtime)/60/60).toPrecision(3)} Hours`, true)
+      .addField("Winner", `${thousands_separators(killsWinner)}`, true)
+      .addField("Playtime:", `${((stats2.pvp.general.playtime)/60/60).toPrecision(3)} Hours`, true)
+    message.channel.send({
+      embed
+    });
+    embed = new Discord.RichEmbed() //revives, hs%, melee, wallbang, dbno, gadgets broken, suicides
+      .setColor([253, 144, 43])
+      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+      .setTimestamp()
+      .addField("Revives:", `${thousands_separators(stats1.pvp.general.revives)}`, true)
+      .addField("Winner", `${thousands_separators(revivesWinner)}`, true)
+      .addField("Revives:", `${thousands_separators(stats2.pvp.general.revives)}`, true)
+      .addField("Headshot%:", `${((stats1.pvp.general.headshots / stats1.pvp.general.kills) * 100).toPrecision(4)}%`, true)
+      .addField("Winner", `${thousands_separators(hsWinner)}`, true)
+      .addField("Headshot%:", `${((stats2.pvp.general.headshots / stats2.pvp.general.kills) * 100).toPrecision(4)}%`, true)
+      .addField("Melees:", `${thousands_separators(stats1.pvp.general.meleeKills)}`, true)
+      .addField("Winner", `${thousands_separators(kdrWinner)}`, true)
+      .addField("Melees:", `${thousands_separators(stats2.pvp.general.meleeKills)}`, true)
+      .addField("Wallbangs:", `${thousands_separators(stats1.pvp.general.penetrationKills)}`, true)
+      .addField("Winner", `${thousands_separators(wallbangWinner)}`, true)
+      .addField("Wallbangs:", `${thousands_separators(stats2.pvp.general.penetrationKills)}`, true)
+      .addField("DBNOs:", `${thousands_separators(stats1.pvp.general.dbno)}`, true)
+      .addField("Winner", `${thousands_separators(dbnoWinner)}`, true)
+      .addField("DBNOs:", `${thousands_separators(stats2.pvp.general.dbno)}`, true)
+      .addField("Gadgets Broken:", `${thousands_separators(stats1.pvp.general.gadgetsDestroyed)}`, true)
+      .addField("Winner", `${thousands_separators(gadgetWinner)}`, true)
+      .addField("Gadgets Broken:", `${thousands_separators(stats2.pvp.general.gadgetsDestroyed)}`, true)
+      .addField("Suicides:", `${thousands_separators(stats1.pvp.general.suicides)}`, true)
+      .addField("Winner", `${thousands_separators(suicideWinner)}`, true)
+      .addField("Suicides:", `${thousands_separators(stats2.pvp.general.suicides)}`, true)
+    return message.channel.send({
+      embed
+    });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "r6pve") {
+    let input = args.join(" ");
+    let res = input.split(" ");
+    if (args.length != 1) {
+      return message.reply('Please provide the username of the player.')
     }
     let username = res[0];
-    let platform = res[1];
-    if (platform === "pc" || platform === "PC" || platform == "Pc") {
-      platform = "uplay";
-    }
-    const id = await r6api.getId(platform, username).then(el => el[0].userId);
+    let platform = "uplay";
+    const id = await r6api.getId(platform, username).then(el => el[0].userId).catch((err) => {
+      return message.reply("Could not find that name.")
+    });
     const stats = await r6api.getStats(platform, id).then(el => el[0]);
     let pvekdr = (stats.pve.general.kills / stats.pve.general.deaths).toPrecision(3);
     let pvewlr = (stats.pve.general.wins / stats.pve.general.losses).toPrecision(3);
@@ -766,7 +870,7 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle(`${username}'s Rainbow Six Siege PVE Stats`)
       .setColor([253, 144, 43])
-      .setFooter("Tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
       .setTimestamp()
       .addField("‏‎🔪‎", "**PVE**")
       .addField("Wins:", `${thousands_separators(stats.pve.general.wins)}`, true)
@@ -806,7 +910,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`All American times`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("Eastern:", `${etF}`)
         .addField("Central:", `${ctF}`)
@@ -819,7 +923,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Eastern Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${etF}`)
       message.channel.send({
@@ -829,7 +933,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Central Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${ctF}`)
       message.channel.send({
@@ -839,7 +943,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Mountain Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${mdtF}`)
       message.channel.send({
@@ -849,7 +953,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Pacific Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${ptF}`)
       message.channel.send({
@@ -871,7 +975,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`All European times`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("Western:", `${wetF}`)
         .addField("Central:", `${cetF}`)
@@ -883,7 +987,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Western Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${wetF}`)
       message.channel.send({
@@ -893,7 +997,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Central Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${cetF}`)
       message.channel.send({
@@ -903,7 +1007,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Eastern Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${eetF}`)
       message.channel.send({
@@ -935,7 +1039,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`All European times`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("Moscow (+3):", `${mstF}`)
         .addField("Samara (+4):", `${sstF}`)
@@ -952,7 +1056,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Moscow Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${mstF}`)
       message.channel.send({
@@ -962,7 +1066,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Samara Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${sstF}`)
       message.channel.send({
@@ -972,7 +1076,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`India Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${istF}`)
       message.channel.send({
@@ -982,7 +1086,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Bangladesh Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${bstF}`)
       message.channel.send({
@@ -992,7 +1096,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Myanmar Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${mtF}`)
       message.channel.send({
@@ -1002,7 +1106,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Indochina Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${itF}`)
       message.channel.send({
@@ -1012,7 +1116,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`China Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${cstF}`)
       message.channel.send({
@@ -1022,7 +1126,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Korea/Japan Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${kstF}`)
       message.channel.send({
@@ -1032,7 +1136,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Moscow Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${mstF}`)
       message.channel.send({
@@ -1057,7 +1161,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${nickname}'s Skin`)
           .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
-          .setFooter("Tangerine", `${tangerineIcon}`)
+          .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .addField(`${nickname}'s UUID`, uuid)
           .setImage(`https://crafatar.com/renders/body/${uuid}`)
@@ -1081,7 +1185,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${nickname}'s Head`)
           .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
-          .setFooter("Tangerine", `${tangerineIcon}`)
+          .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .addField(`${nickname}'s UUID`, uuid)
           .setImage(`https://crafatar.com/renders/head/${uuid}`)
@@ -1104,7 +1208,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${nickname}'s Skin`)
           .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
-          .setFooter("Tangerine", `${tangerineIcon}`)
+          .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .addField(`${nickname}'s UUID`, uuid)
           .setImage(`https://crafatar.com/skins/${uuid}`)
@@ -1138,7 +1242,7 @@ client.on("message", async message => {
           .then(namehistory => {
             const playerHistory = new Discord.RichEmbed()
               .setTitle(`**${args[0]}'s** Names`)
-              .setFooter("Tangerine", `${tangerineIcon}`)
+              .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
               .setThumbnail(`https://crafatar.com/renders/head/${uuid}`)
               .setColor([253, 144, 43])
             for (
@@ -1186,7 +1290,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${json.title}`)
           .addField(`from r/${json.subreddit}`, `[link](${json.postLink})`, true)
-          .setFooter("Tangerine", `${tangerineIcon}`)
+          .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .setImage(`${json.url}`)
         );
@@ -1233,13 +1337,31 @@ client.on("message", async message => {
     if (args.length !== 0) {
       return message.reply('You must not provide any arguments.');
     }
-    var coin = chance.coin();
-    return message.reply(
-      new Discord.RichEmbed()
-      .setTitle(`Your coin flipped: ${coin}.`)
-      .setColor([253, 144, 43])
-      .setFooter("Tangerine", `${tangerineIcon}`)
-    );
+    var randomChance = Math.random() * (6000); 
+    if (randomChance === "3000") {
+      return message.reply(
+        new Discord.RichEmbed()
+        .setTitle(`Your coin flipped: HOLY F*** IT LANDED ON IT'S SIDE. THIS IS A 1/6000 CHANCE!!`)
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+      );
+    }
+    else if (0 <= randomChance && randomChance <= 2999) {
+      return message.reply(
+        new Discord.RichEmbed()
+        .setTitle(`Your coin flipped: Tails.`)
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+      );
+    }
+    else if (3001 <= randomChance && randomChance <= 6000) {
+      return message.reply(
+        new Discord.RichEmbed()
+        .setTitle(`Your coin flipped: Heads.`)
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+      );
+    }
   }
   //////////////////////////////////////////////////////
   if (command === "rpg") {
@@ -1258,7 +1380,7 @@ client.on("message", async message => {
       new Discord.RichEmbed()
       .setTitle(`Your die rolled: ${chance.rpg(input)}.`)
       .setColor([253, 144, 43])
-      .setFooter("Tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
     );
   }
   //////////////////////////////////////////////////////
@@ -1285,7 +1407,7 @@ client.on("message", async message => {
         new Discord.RichEmbed()
         .setTitle(`Todays wikipedia picture of the day`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setImage(`${data.image}`)
       );
     });
@@ -1301,7 +1423,7 @@ client.on("message", async message => {
         new Discord.RichEmbed()
         .setTitle(`Your shortened link:`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setDescription(`${res}`)
       );
     });
@@ -1438,7 +1560,7 @@ client.on("message", async message => {
             }
             if (parsed[i].name === "total_kills_headshot") {
               total_kills_headshot = thousands_separators(parsed[i].value);
-              total_kills_headshot1 = i;
+              var total_kills_headshot1 = i;
             }
             if (parsed[i].name === "total_kills_knife")
               total_kills_knife = thousands_separators(parsed[i].value);
@@ -1454,7 +1576,7 @@ client.on("message", async message => {
               total_wins = thousands_separators(parsed[i].value);
             if (parsed[i].name === "total_time_played") {
               total_time_played = thousands_separators(parsed[i].value);
-              total_time_played1 = i;
+              var total_time_played1 = i;
             }
             if (parsed[i].name === "total_dominations")
               total_dominations = thousands_separators(parsed[i].value);
@@ -1464,11 +1586,11 @@ client.on("message", async message => {
               total_wins_pistolround = thousands_separators(parsed[i].value);
             if (parsed[i].name === "total_shots_fired") {
               total_shots_fired = thousands_separators(parsed[i].value);
-              total_shots_fired1 = i;
+              var total_shots_fired1 = i;
             }
             if (parsed[i].name === "total_shots_hit") {
               total_shots_hit = thousands_separators(parsed[i].value);
-              total_shots_hit1 = i;
+              var total_shots_hit1 = i;
             }
             if (parsed[i].name === "total_damage_done")
               total_damage_done = thousands_separators(parsed[i].value);
@@ -1486,7 +1608,7 @@ client.on("message", async message => {
           const embed = new Discord.RichEmbed()
             .setTitle(`${username}'s CSGO Stats`)
             .setColor([253, 144, 43])
-            .setFooter("Tangerine", `${tangerineIcon}`)
+            .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
             .setTimestamp()
             .setThumbnail(`${icon}`)
             .addField("Wins:", `${total_matches_won}`, true)
@@ -1553,7 +1675,7 @@ client.on("message", async message => {
         const embed = new Discord.RichEmbed()
           .setTitle(`${username}'s APEX Legends Stats`)
           .setColor([253, 144, 43])
-          .setFooter("Tangerine", `${tangerineIcon}`)
+          .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
           .setDescription(`Account ID: \`${accountID}\``)
           .setTimestamp()
           .setThumbnail(`${avatarUrl}`)
@@ -1600,7 +1722,7 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle(`${username}'s Geometry Dash Stats`)
       .setColor([253, 144, 43])
-      .setFooter("Tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
       .setTimestamp()
       .setThumbnail(`${playerIcon}`)
       .setDescription(`Global Ranking: ${ranking}`)
@@ -1706,7 +1828,7 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle(`Random R6 Operator Picks`)
       .setColor([253, 144, 43])
-      .setFooter("Tangerine", `${tangerineIcon}`)
+      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
       .setTimestamp()
       .addField("Attackers:", `**1. **${attacker1}\n**2. **${attacker2}\n**3. **${attacker3}\n**4. **${attacker4}\n**5. **${attacker5}`)
       .addField("Defenders:", `**1. **${defender1}\n**2. **${defender2}\n**3. **${defender3}\n**4. **${defender4}\n**5. **${defender5}`)
@@ -1716,19 +1838,74 @@ client.on("message", async message => {
   }
   //////////////////////////////////////////////////////
   if (command === "map") {
-    if (args.length != 0)
+    const updatedOperation = "Operation Void Edge"
+    if (args.length > 1)
       return message.reply('Do not provide any arguments.')
     var all = ["Bank", "Border", "Chalet", "Clubhouse", "Coastline", "Consulate", "Favela", "Fortress", "Hereford Base", "House", "Kafe Dostoyevsky", "Kanal", "Oregon", "Outback", "Presidential Plane", "Skyscraper", "Theme Park", "Tower", "Villa", "Yacht"];
     var quickmatch = ["Bank", "Border", "Chalet", "Clubhouse", "Coastline", "Consulate", "Favela", "Fortress", "Hereford Base", "House", "Kafe Dostoyevsky", "Oregon", "Outback", "Presidential Plane", "Skyscraper", "Theme Park", "Tower", "Villa", "Yacht"];
     var newcomer = ["Bank", "Chalet", "Consulate"];
     var ranked = ["Bank", "Border", "Chalet", "Clubhouse", "Coastline", "Consulate", "Kafe Dostoyevsky", "Kanal", "Oregon", "Outback", "Theme Park", "Villa"];
+    var allString;
+    for (var i = 0; i < all.length; i++) {
+      if (i < all.length - 1)
+        allString += `${all[i]}, `
+      else
+        allString += `and ${all[i]}, `
+    }
+    allString = allString.substring(9, allString.length - 2)
+    allString += "."
+    var quickmatchString;
+    for (var i = 0; i < quickmatch.length; i++) {
+      if (i < quickmatch.length - 1)
+        quickmatchString += `${quickmatch[i]}, `
+      else
+        quickmatchString += `and ${quickmatch[i]}, `
+    }
+    quickmatchString = quickmatchString.substring(9, quickmatchString.length - 2)
+    quickmatchString += "."
+    var newcomerString;
+    for (var i = 0; i < newcomer.length; i++) {
+      if (i < newcomer.length - 1)
+        newcomerString += `${newcomer[i]}, `
+      else
+        newcomerString += `and ${newcomer[i]}, `
+    }
+    newcomerString = newcomerString.substring(9, newcomerString.length - 2)
+    newcomerString += "."
+    var rankedString;
+    for (var i = 0; i < ranked.length; i++) {
+      if (i < ranked.length - 1)
+        rankedString += `${ranked[i]}, `
+      else
+        rankedString += `and ${ranked[i]}, `
+    }
+    rankedString = rankedString.substring(9, rankedString.length - 2)
+    rankedString += "."
+    if (args[0] === "list" || !args[0]) {
+      let index = Math.round(Math.random() * quickmatch.length)
+      index = quickmatch[index];
+      const embed = new Discord.RichEmbed()
+        .setTitle(`All R6 Maps`)
+        .setDescription(`Last updated: ${updatedOperation}`)
+        .setColor([253, 144, 43])
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setTimestamp()
+        .addField("All:", `${allString}`)
+        .addField("Quick match:", `${quickmatchString}`)
+        .addField("Newcomer:", `${newcomerString}`)
+        .addField("Ranked:", `${rankedString}`)
+      return message.channel.send({
+        embed
+      });
+    }
     if (args[0] === "quickmatch" || args[0] === "qm" || args[0] === "quick") {
       let index = Math.round(Math.random() * quickmatch.length)
       index = quickmatch[index];
       const embed = new Discord.RichEmbed()
         .setTitle(`Random R6 Quick Match Map`)
+        .setDescription(`Last updated: ${updatedOperation}`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("Map:", `${index}`)
       return message.channel.send({
@@ -1740,8 +1917,9 @@ client.on("message", async message => {
       index = newcomer[index];
       const embed = new Discord.RichEmbed()
         .setTitle(`Random R6 Newcomer Match Map`)
+        .setDescription(`Last updated: ${updatedOperation}`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("Map:", `${index}`)
       return message.channel.send({
@@ -1753,8 +1931,9 @@ client.on("message", async message => {
       index = ranked[index];
       const embed = new Discord.RichEmbed()
         .setTitle(`Random R6 Ranked Match Map`)
+        .setDescription(`Last updated: ${updatedOperation}`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("Map:", `${index}`)
       return message.channel.send({
@@ -1764,9 +1943,10 @@ client.on("message", async message => {
       let index = Math.round(Math.random() * all.length)
       index = all[index];
       const embed = new Discord.RichEmbed()
+        .setDescription(`Last updated: ${updatedOperation}`)
         .setTitle(`Random R6 Map`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine", `${tangerineIcon}`)
+        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
         .addField("Map:", `${index}`)
       return message.channel.send({
@@ -1790,6 +1970,319 @@ client.on("message", async message => {
       embed
     });
     return message.reply("Your message has been recieved and will be looked at shortly. For additional help, please visit https://tangerinebot.com or run ~help.")
+  }
+  //////////////////////////////////////////////////////
+  if (command === "list") {
+    if (!(`${message.member.user.id}` === `${admin1}`) || !(`${message.member.user.id}` === `${admin1}`))
+      message.reply("Sorry, this command is reserved for Tangerine admin.");
+    var guilds = client.guilds.map(g => g.name)
+    message.reply("**List of servers I am currently in: **")
+    var serverlist;
+    for (var i = 0; i < client.guilds.size; i++)
+      serverlist += `${guilds[i]}, `
+    serverlist = serverlist.substring(9, serverlist.length)
+    message.channel.send(serverlist)
+  }
+  //////////////////////////////////////////////////////
+  if (command === "csgocompare") {
+    let input = args.join(" ");
+    if (args.length != 2) {
+      return message.reply('You must provide a valid vanity URL for two players.')
+    }
+    if ((/\w*[A-z]\w*/.test(args[0]) == false) && (/\w*[A-z]\w*/.test(args[1]) == false)) {
+      return message.reply('You must provide a valid vanity URL, not Steam ID.')
+    }
+    var username1 = args[0];
+    var username2 = args[1];
+    var id1;
+    var id2;
+    csStats.getMySteamID(`${username1}`, function (data) {
+      id1 = data;
+      steam.getUserSummary(`${id1}`).then(summary => {
+        const jsonSteam1 = JSON.stringify(summary);
+        let steamParse1 = JSON.parse(jsonSteam1);
+        let Aicon = steamParse1.avatar.medium;
+        csgoStatsFetch.load({
+          key: `${csgoKey}`,
+          id: id1
+        }).then(r => {
+          const jsondata1 = JSON.stringify(r.body.playerstats.stats);
+          let parsed1 = JSON.parse(jsondata1);
+          var Atotal_matches_won; //total match wins
+          var Atotal_matches_played; //total matches played
+          var Atotal_matches_lost;
+          var Awlr; //find at end
+          var Atotal_kills;
+          var Atotal_deaths;
+          var Akdr; //end
+          var Atotal_kills_headshot;
+          var Aheadshot_kill_percent; //end
+          var Atotal_kills_knife;
+          var Atotal_planted_bombs;
+          var Atotal_defused_bombs;
+          var Atotal_mvps;
+          var Atotal_rounds_played; //total rounds played
+          var Atotal_wins; //total rounds won
+          var Atotal_time_played;
+          var Atotal_dominations;
+          var Atotal_revenges;
+          var Atotal_wins_pistolround;
+          var Atotal_shots_fired;
+          var Atotal_shots_hit;
+          var Atotal_shot_accuracy; //end
+          var Atotal_damage_done;
+          var Atotal_money_earned;
+          var Atotal_weapons_donated;
+          for (var i = 0; i < parsed1.length; i++) {
+            if (parsed1[i].name === "total_matches_won") {
+              Atotal_matches_won = thousands_separators(parsed1[i].value);
+              var Atotal_matches_won1 = i;
+            }
+            if (parsed1[i].name === "total_matches_played") {
+              Atotal_matches_played = thousands_separators(parsed1[i].value);
+              var Atotal_matches_played1 = i;
+            }
+            if (parsed1[i].name === "total_kills") {
+              Atotal_kills = thousands_separators(parsed1[i].value);
+              var Atotal_kills1 = i;
+            }
+            if (parsed1[i].name === "total_deaths") {
+              Atotal_deaths = thousands_separators(parsed1[i].value);
+              var Atotal_deaths1 = i;
+            }
+            if (parsed1[i].name === "total_kills_headshot") {
+              Atotal_kills_headshot = thousands_separators(parsed1[i].value);
+              var Atotal_kills_headshot1 = i;
+            }
+            if (parsed1[i].name === "total_kills_knife")
+              Atotal_kills_knife = thousands_separators(parsed1[i].value);
+            if (parsed1[i].name === "total_planted_bombs")
+              Atotal_planted_bombs = thousands_separators(parsed1[i].value);
+            if (parsed1[i].name === "total_defused_bombs")
+              Atotal_defused_bombs = thousands_separators(parsed1[i].value);
+            if (parsed1[i].name === "total_mvps")
+              Atotal_mvps = thousands_separators(parsed1[i].value);
+            if (parsed1[i].name === "total_rounds_played") {
+              Atotal_rounds_played = thousands_separators(parsed1[i].value);
+              var Atotal_rounds_played1 = i;
+            }
+            if (parsed1[i].name === "total_wins")
+              Atotal_wins = thousands_separators(parsed1[i].value);
+            if (parsed1[i].name === "total_time_played") {
+              Atotal_time_played = thousands_separators(parsed1[i].value);
+              var Atotal_time_played1 = i;
+            }
+            if (parsed1[i].name === "total_dominations")
+              Atotal_dominations = thousands_separators(parsed1[i].value);
+            if (parsed1[i].name === "total_revenges")
+              Atotal_revenges = thousands_separators(parsed1[i].value);
+            if (parsed1[i].name === "total_wins_pistolround")
+              Atotal_wins_pistolround = thousands_separators(parsed1[i].value);
+            if (parsed1[i].name === "total_shots_fired") {
+              Atotal_shots_fired = thousands_separators(parsed1[i].value);
+              var Atotal_shots_fired1 = i;
+            }
+            if (parsed1[i].name === "total_shots_hit") {
+              Atotal_shots_hit = thousands_separators(parsed1[i].value);
+              var Atotal_shots_hit1 = i;
+            }
+            if (parsed1[i].name === "total_damage_done")
+              Atotal_damage_done = thousands_separators(parsed1[i].value);
+            if (parsed1[i].name === "total_money_earned")
+              Atotal_money_earned = thousands_separators(parsed1[i].value);
+            if (parsed1[i].name === "total_weapons_donated")
+              Atotal_weapons_donated = thousands_separators(parsed1[i].value);
+          }
+          Atotal_matches_lost = thousands_separators(parsed1[Atotal_matches_played1].value - parsed1[Atotal_matches_won1].value);
+          Awlr = thousands_separators((parsed1[Atotal_matches_won1].value / (parsed1[Atotal_matches_played1].value - parsed1[Atotal_matches_won1].value)).toPrecision(4));
+          Akdr = thousands_separators((parsed1[Atotal_kills1].value / parsed1[Atotal_deaths1].value).toPrecision(4));
+          Aheadshot_kill_percent = thousands_separators(((parsed1[Atotal_kills_headshot1].value / parsed1[Atotal_kills1].value) * 100).toPrecision(4));
+          Atotal_time_played = thousands_separators((parsed1[Atotal_time_played1].value / 60 / 60).toPrecision(4))
+          Atotal_shot_accuracy = thousands_separators(((parsed1[Atotal_shots_hit1].value / parsed1[Atotal_shots_fired1].value) * 100).toPrecision(4));
+          csStats.getMySteamID(`${username2}`, function (data) {
+            id2 = data;
+            steam.getUserSummary(`${id2}`).then(summary => {
+              const jsonSteam2 = JSON.stringify(summary);
+              let steamParse2 = JSON.parse(jsonSteam2);
+              let Bicon = steamParse2.avatar.medium;
+              csgoStatsFetch.load({
+                key: `${csgoKey}`,
+                id: id2
+              }).then(r => {
+                const jsondata2 = JSON.stringify(r.body.playerstats.stats);
+                let parsed2 = JSON.parse(jsondata2);
+                var Btotal_matches_won; //total match wins
+                var Btotal_matches_played; //total matches played
+                var Btotal_matches_lost;
+                var Bwlr; //find at end
+                var Btotal_kills;
+                var Btotal_deaths;
+                var Bkdr; //end
+                var Btotal_kills_headshot;
+                var Bheadshot_kill_percent; //end
+                var Btotal_kills_knife;
+                var Btotal_planted_bombs;
+                var Btotal_defused_bombs;
+                var Btotal_mvps;
+                var Btotal_rounds_played; //total rounds played
+                var Btotal_wins; //total rounds won
+                var Btotal_time_played;
+                var Btotal_dominations;
+                var Btotal_revenges;
+                var Btotal_wins_pistolround;
+                var Btotal_shots_fired;
+                var Btotal_shots_hit;
+                var Btotal_shot_accuracy; //end
+                var Btotal_damage_done;
+                var Btotal_money_earned;
+                var Btotal_weapons_donated;
+                for (var i = 0; i < parsed2.length; i++) {
+                  if (parsed2[i].name === "total_matches_won") {
+                    Btotal_matches_won = thousands_separators(parsed2[i].value);
+                    var Btotal_matches_won1 = i;
+                  }
+                  if (parsed2[i].name === "total_matches_played") {
+                    Btotal_matches_played = thousands_separators(parsed2[i].value);
+                    var Btotal_matches_played1 = i;
+                  }
+                  if (parsed2[i].name === "total_kills") {
+                    Btotal_kills = thousands_separators(parsed2[i].value);
+                    var Btotal_kills1 = i;
+                  }
+                  if (parsed2[i].name === "total_deaths") {
+                    Btotal_deaths = thousands_separators(parsed2[i].value);
+                    var Btotal_deaths1 = i;
+                  }
+                  if (parsed2[i].name === "total_kills_headshot") {
+                    Btotal_kills_headshot = thousands_separators(parsed2[i].value);
+                    var Btotal_kills_headshot1 = i;
+                  }
+                  if (parsed2[i].name === "total_kills_knife")
+                    Btotal_kills_knife = thousands_separators(parsed2[i].value);
+                  if (parsed2[i].name === "total_planted_bombs")
+                    Btotal_planted_bombs = thousands_separators(parsed2[i].value);
+                  if (parsed2[i].name === "total_defused_bombs")
+                    Btotal_defused_bombs = thousands_separators(parsed2[i].value);
+                  if (parsed2[i].name === "total_mvps")
+                    Btotal_mvps = thousands_separators(parsed2[i].value);
+                  if (parsed2[i].name === "total_rounds_played") {
+                    Btotal_rounds_played = thousands_separators(parsed2[i].value);
+                    var Btotal_rounds_played1 = i;
+                  }
+                  if (parsed2[i].name === "total_wins")
+                    Btotal_wins = thousands_separators(parsed2[i].value);
+                  if (parsed2[i].name === "total_time_played") {
+                    Btotal_time_played = thousands_separators(parsed2[i].value);
+                    var Btotal_time_played1 = i;
+                  }
+                  if (parsed2[i].name === "total_dominations")
+                    Btotal_dominations = thousands_separators(parsed2[i].value);
+                  if (parsed2[i].name === "total_revenges")
+                    Btotal_revenges = thousands_separators(parsed2[i].value);
+                  if (parsed2[i].name === "total_wins_pistolround")
+                    Btotal_wins_pistolround = thousands_separators(parsed2[i].value);
+                  if (parsed2[i].name === "total_shots_fired") {
+                    Btotal_shots_fired = thousands_separators(parsed2[i].value);
+                    var Btotal_shots_fired1 = i;
+                  }
+                  if (parsed2[i].name === "total_shots_hit") {
+                    Btotal_shots_hit = thousands_separators(parsed2[i].value);
+                    var Btotal_shots_hit1 = i;
+                  }
+                  if (parsed2[i].name === "total_damage_done")
+                    Btotal_damage_done = thousands_separators(parsed2[i].value);
+                  if (parsed2[i].name === "total_money_earned")
+                    Btotal_money_earned = thousands_separators(parsed2[i].value);
+                  if (parsed2[i].name === "total_weapons_donated")
+                    Btotal_weapons_donated = thousands_separators(parsed2[i].value);
+                }
+                Btotal_matches_lost = thousands_separators(parsed2[Btotal_matches_played1].value - parsed2[Btotal_matches_won1].value);
+                Bwlr = thousands_separators((parsed2[Btotal_matches_won1].value / (parsed2[Btotal_matches_played1].value - parsed2[Btotal_matches_won1].value)).toPrecision(4));
+                Bkdr = thousands_separators((parsed2[Btotal_kills1].value / parsed2[Btotal_deaths1].value).toPrecision(4));
+                Bheadshot_kill_percent = thousands_separators(((parsed2[Btotal_kills_headshot1].value / parsed2[Btotal_kills1].value) * 100).toPrecision(4));
+                Btotal_time_played = thousands_separators((parsed2[Btotal_time_played1].value / 60 / 60).toPrecision(4))
+                Btotal_shot_accuracy = thousands_separators(((parsed2[Btotal_shots_hit1].value / parsed2[Btotal_shots_fired1].value) * 100).toPrecision(4));
+                let left = "⬅️"
+                let right = "➡️"
+                var winsWinner;
+                if (parsed1[Atotal_matches_won1].value > parsed2[Btotal_matches_won1].value)
+                  winsWinner = left
+                else winsWinner = right
+                var wlrWinner;
+                if (Awlr > Bwlr)
+                  wlrWinner = left
+                else wlrWinner = right
+                var killsWinner;
+                if (parsed1[Atotal_kills1].value > parsed2[Btotal_kills1].value)
+                  killsWinner = left;
+                else killsWinner = right;
+                var kdrWinner;
+                if (Akdr > Bkdr)
+                  kdrWinner = left;
+                else kdrWinner = right;
+                var roundsWinner;
+                if (parsed1[Atotal_rounds_played1].value > parsed2[Btotal_rounds_played1].value)
+                  roundsWinner = left;
+                else roundsWinner = right;
+                var playtimeWinner;
+                if (parsed1[Atotal_time_played1].value > parsed2[Btotal_time_played1].value)
+                  playtimeWinner = left;
+                else playtimeWinner = right;
+                const embed = new Discord.RichEmbed()
+                  .setTitle(`${username1}'s CSGO Stats`)
+                  .setColor([253, 144, 43])
+                  .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+                  .setTimestamp()
+                  .setThumbnail('https://i.imgur.com/JP5mOFP.png')
+                  .addField("__Player One__", `**${username1}**`, true)
+                  .addBlankField(true)
+                  .addField("__Player Two__", `**${username2}**`, true)
+                  .addField("Wins:", `${Atotal_matches_won}`, true)
+                  .addField("Winner:", `${winsWinner}`, true)
+                  .addField("Wins:", `${Btotal_matches_won}`, true)
+                  .addField("WLR:", `${Awlr}`, true)
+                  .addField("Winner:", `${wlrWinner}`, true)
+                  .addField("WLR:", `${Bwlr}`, true)
+                  .addField("Kills:", `${Atotal_kills}`, true)
+                  .addField("Winner:", `${killsWinner}`, true)
+                  .addField("Kills:", `${Btotal_kills}`, true)
+                  .addField("KDR:", `${Akdr}`, true)
+                  .addField("Winner:", `${kdrWinner}`, true)
+                  .addField("KDR:", `${Bkdr}`, true)
+                  .addField("Rounds Played:", `${Atotal_rounds_played}`, true)
+                  .addField("Winner:", `${roundsWinner}`, true)
+                  .addField("Rounds Played:", `${Btotal_rounds_played}`, true)
+                  .addField("Time played:", `${Atotal_time_played} hours`, true)
+                  .addField("Winner:", `${playtimeWinner}`, true)
+                  .addField("Time played:", `${Btotal_time_played} hours`, true)
+                // .addField("Headshot Kills:", `${Atotal_kills_headshot}`, true)
+                // .addField("Headshot Kill%:", `${Aheadshot_kill_percent}%`, true)
+                // .addField("Knife Kills:", `${Atotal_kills_knife}`, true)
+                // .addField("Plants:", `${Atotal_planted_bombs}`, true)
+                // .addField("Defuses:", `${Atotal_defused_bombs}`, true)
+                // .addField("MVPs:", `${Atotal_mvps}`, true)
+                // .addField("Rounds Won:", `${Atotal_wins}`, true)
+                // .addField("Dominations:", `${Atotal_dominations}`, true)
+                // .addField("Revenges:", `${Atotal_revenges}`, true)
+                // .addField("Pistol Round Wins:", `${Atotal_wins_pistolround}`, true)
+                // .addField("Shots Fired:", `${Atotal_shots_fired}`, true)
+                // .addField("Shots Hit:", `${Atotal_shots_hit}`, true)
+                // .addField("Accuracy:", `${Atotal_shot_accuracy}%`, true)
+                // .addField("Total Damage Done:", `${Atotal_damage_done}`, true)
+                // .addField("Total Money Collected:", `$${Atotal_money_earned}`, true)
+                // .addField("Total Weapons Donated:", `${Atotal_weapons_donated}`, true)
+                return message.channel.send({
+                  embed
+                });
+              }).catch(e => {
+                message.reply("Those usernames do not exist, are private, or are too short. Make sure you are using the vanity URL, and you can visit steamcommunity.com/id/<username> in a browser.");
+                console.log(e);
+              });
+            });
+          });
+        });
+      });
+    });
   }
   //////////////////////////////////////////////////////
 });
