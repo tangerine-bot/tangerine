@@ -1037,7 +1037,7 @@ client.on("message", async message => {
     var kstF = clock.timeToEmoji(kst) + " \`" + kst.format("HH:mm ") + "Japan/Korea Standard Time\`\n"
     if (args.length === 0) {
       const embed = new Discord.RichEmbed()
-        .setTitle(`All European times`)
+        .setTitle(`All Asia times`)
         .setColor([253, 144, 43])
         .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
         .setTimestamp()
