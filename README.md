@@ -1,5 +1,7 @@
 # tangerine
-Public discord utility and moderation bot.      
+Public discord utility and moderation bot.  
+
+This repo/bot has now been privated. For any concerns or comments, please contact me directly at arugold1@gmail.com.    
 
 [![Discord Bots](https://top.gg/api/widget/status/701793346225700934.svg)](https://top.gg/bot/701793346225700934)   [![Discord Bots](https://top.gg/api/widget/servers/701793346225700934.svg)](https://top.gg/bot/701793346225700934)   [![Discord Bots](https://top.gg/api/widget/upvotes/701793346225700934.svg)](https://top.gg/bot/701793346225700934)   [![Discord Bots](https://top.gg/api/widget/lib/701793346225700934.svg)](https://top.gg/bot/701793346225700934)
 
