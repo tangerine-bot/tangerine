@@ -1,4 +1,4 @@
-//Designed by the Tangerine team, https://discord.gg/uwcgjYw or ✘rnav#0001
+//Designed by the Tangerine team, https://discord.gg/uwcgjYw or alt#0001
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const config = require("./auth.json");
@@ -18,7 +18,6 @@ const R6API = require('r6api.js');
 const r6api = new R6API(r6username, r6password);
 const moment = require("moment-timezone");
 const clock = require("node-emoji-clock");
-const hypixeljs = require('hypixeljs');
 const mojangjs = require('mojangjs');
 const fetch = require('node-fetch');
 const dogeify = require('dogeify-js');
@@ -30,10 +29,7 @@ const {
 } = require('./keys/dbl.json');
 const DBL = require("dblapi.js");
 const dbl = new DBL(dblusername, client);
-const {
-  hypixelusername
-} = require('./keys/hypixel.json')
-hypixeljs.login(hypixelusername);
+
 const wikipics = require('wikipics-api');
 const turl = require('turl');
 const dogFacts = require('dog-facts');
@@ -59,9 +55,17 @@ const {
   admin1,
   admin2
 } = require('./keys/admin.json')
-const tangerineIcon = 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon.png';
-const tangerineVersion = ("0.1.23");
-const lastUpdated = ("06/08/2020");
+const HypixelAPI = require('hypixel-api')
+const {
+  hypixelusername
+} = require('./keys/hypixel.json')
+const hyAPI = new HypixelAPI(hypixelusername)
+const fs = require('fs');
+
+const tangerineIcon = 'https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_transparent.png';
+const tangerineFooter = 'Tangerine // tangerinebot.com'
+const tangerineVersion = ("v26");
+const lastUpdated = ("07/18/2020");
 
 function thousands_separators(num) {
   var num_parts = num.toString().split(".");
@@ -70,7 +74,7 @@ function thousands_separators(num) {
 }
 client.on("ready", () => {
   console.log(`Tangerine is online, with ${thousands_separators(client.users.size)} users, in ${thousands_separators(client.channels.size)} channels of ${thousands_separators(client.guilds.size)} servers.`);
-  client.user.setActivity(`tangerinebot.com. 🍊 ∼help. Serving ${thousands_separators(client.users.size)} users.`, {
+  client.user.setActivity(`tangerinebot.com. 🍊 ∼help.`, {
     type: 'WATCHING' //PLAYING, LISTENING, WATCHING
   });
   client.user.setStatus('online'); //online, idle, invisible, dnd
@@ -120,7 +124,7 @@ client.on('ready', () => {
 });
 dbl.on('posted', () => {
   console.log('Server count posted!  ✅');
-  client.user.setActivity(`tangerinebot.com. 🍊 ∼help. Serving ${thousands_separators(client.users.size)} users.`, {
+  client.user.setActivity(`tangerinebot.com. 🍊 ∼help.`, {
     type: 'WATCHING' //PLAYING, LISTENING, WATCHING
   });
   const embed = new Discord.RichEmbed()
@@ -130,7 +134,7 @@ dbl.on('posted', () => {
     .addField(`Member count updated:`, `\`${thousands_separators(client.users.size)}\``)
 })
 dbl.on('error', e => {
-  console.log(`DBL Error! ${e}`)
+  //console.log(`DBL Error! ${e}`)
   const embed = new Discord.RichEmbed()
     .setTitle(`DBL Server Status`)
     .setColor([250, 0, 0])
@@ -236,7 +240,7 @@ client.on("message", async message => {
         .setTitle("Tangerine's commands")
         .setColor([253, 144, 43])
         .setDescription(`To view the commands in a group, use: \n\`~help <group>\``)
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         //.addBlankField(false)
         .addField("❓ `help`", "• 9 commands", true)
@@ -257,7 +261,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle("Tangerine's general commands")
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("`help`", "prints out all of the main Tangerine commands", true)
         .addField("`about`", "prints the about and developer contact page", true)
@@ -272,7 +276,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle("Tangerine's list of utility commands")
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("`nickname` <string(nickname)>", "changes your nickname to the specified string", true)
         .addField("`nickreset`", "resets your nickname", true)
@@ -290,7 +294,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle("Tangerine's list of fun commands")
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("`meme`", "prints a random meme from r/funny", true)
         .addField("`doge` <string(message)>", "doge-ifies your message", true)
@@ -306,7 +310,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle("Tangerine's R6 commands")
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("🌈 ", "**Rainbow Six Siege (uPlay)**")
         .addField("`r6` <username>", "Fetches a player's R6 PVP stats", true)
@@ -323,9 +327,10 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle("Tangerine's Minecraft trackers")
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("⛏️ ", "**Minecraft**")
+        .addField("`sw` <username>", "Fetches and prints the user's Hypixel Skywars stats.", true)
         .addField("`head` <username>", "Fetches and prints the user's head", true)
         .addField("`names` <username>", "Fetches and prints all of the user's names", true)
         .addField("`skin` <username>", "Fetches and prints the user's skin", true)
@@ -339,7 +344,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle("Tangerine's list of other game tracking commands")
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("💥", "**Other**")
         .addField("`csgo` <steam vanity username>", "CS:GO stats", true)
@@ -354,7 +359,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle("Tangerine's list of random commands")
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("`asciiart`", "prints a random ascii emoji", true)
         .addField("`animal`", "prints a random animal name", true)
@@ -377,7 +382,7 @@ client.on("message", async message => {
         .setTitle("Tangerine's administration commands")
         .setColor([253, 144, 43])
         .setDescription("You must have special permissions to run these commands. View the master list here: bit.ly/tangerineAdmin")
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("`say` <string(message)>", "prints a repeat of the message. Requires MANAGE_MESSAGES.")
         .addField("`kick` <@user, string(reason)>", "kicks the specified user. Requires KICK_MEMBERS.")
@@ -401,10 +406,10 @@ client.on("message", async message => {
       .setTitle(`Tangerine ${tangerineVersion}`)
       .setColor([253, 144, 43])
       .setDescription(`Last updated ${lastUpdated}.`)
-      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+      .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
       .setTimestamp()
       .addBlankField(true)
-      .addField("The Tangerine Team", "✘rnav#0001 and EpicN#5997")
+      .addField("The Tangerine Team", "alt#0001 and EpicN#5997")
       .addField("Official Website", "[Tangerine Website](https://tangerinebot.com)")
       .addField("Support Server", "[Tangerine Support](https://discord.gg/uwcgjYw)")
       .addField("Invite Link", "[Tangerine Bot](https://discordapp.com/api/oauth2/authorize?client_id=701793346225700934&permissions=470281334&scope=bot)")
@@ -434,7 +439,7 @@ client.on("message", async message => {
       .setTitle(`Tangerine ${tangerineVersion}`)
       .setColor([253, 144, 43])
       .setDescription(`Last updated ${lastUpdated}.`)
-      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+      .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
       .setTimestamp()
       .addField("Users using:", `${thousands_separators(client.users.size)} users`, true)
       .addField("Channels channeling:", `${thousands_separators(client.channels.size)} channels`, true)
@@ -683,7 +688,7 @@ client.on("message", async message => {
       .setTitle(`${username}'s Rainbow Six Siege Stats`)
       .setDescription("For PVE stats, use ∼r6pve")
       .setColor([253, 144, 43])
-      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+      .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
       .setTimestamp()
       .addField("‏‎🔫‎", "**PVP**")
       .addField("Wins:", `${thousands_separators(stats.pvp.general.wins)}`, true)
@@ -823,7 +828,7 @@ client.on("message", async message => {
     });
     embed = new Discord.RichEmbed() //revives, hs%, melee, wallbang, dbno, gadgets broken, suicides
       .setColor([253, 144, 43])
-      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+      .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
       .setTimestamp()
       .addField("Revives:", `${thousands_separators(stats1.pvp.general.revives)}`, true)
       .addField("Winner", `${thousands_separators(revivesWinner)}`, true)
@@ -870,7 +875,7 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle(`${username}'s Rainbow Six Siege PVE Stats`)
       .setColor([253, 144, 43])
-      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+      .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
       .setTimestamp()
       .addField("‏‎🔪‎", "**PVE**")
       .addField("Wins:", `${thousands_separators(stats.pve.general.wins)}`, true)
@@ -910,7 +915,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`All American times`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("Eastern:", `${etF}`)
         .addField("Central:", `${ctF}`)
@@ -923,7 +928,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Eastern Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${etF}`)
       message.channel.send({
@@ -933,7 +938,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Central Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${ctF}`)
       message.channel.send({
@@ -943,7 +948,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Mountain Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${mdtF}`)
       message.channel.send({
@@ -953,7 +958,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Pacific Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${ptF}`)
       message.channel.send({
@@ -975,7 +980,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`All European times`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("Western:", `${wetF}`)
         .addField("Central:", `${cetF}`)
@@ -987,7 +992,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Western Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${wetF}`)
       message.channel.send({
@@ -997,7 +1002,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Central Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${cetF}`)
       message.channel.send({
@@ -1007,7 +1012,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Eastern Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${eetF}`)
       message.channel.send({
@@ -1039,7 +1044,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`All Asia times`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("Moscow (+3):", `${mstF}`)
         .addField("Samara (+4):", `${sstF}`)
@@ -1056,7 +1061,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Moscow Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${mstF}`)
       message.channel.send({
@@ -1066,7 +1071,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Samara Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${sstF}`)
       message.channel.send({
@@ -1076,7 +1081,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`India Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${istF}`)
       message.channel.send({
@@ -1086,7 +1091,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Bangladesh Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${bstF}`)
       message.channel.send({
@@ -1096,7 +1101,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Myanmar Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${mtF}`)
       message.channel.send({
@@ -1106,7 +1111,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Indochina Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${itF}`)
       message.channel.send({
@@ -1116,7 +1121,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`China Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${cstF}`)
       message.channel.send({
@@ -1126,7 +1131,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Korea/Japan Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${kstF}`)
       message.channel.send({
@@ -1136,7 +1141,7 @@ client.on("message", async message => {
       const embed = new Discord.RichEmbed()
         .setTitle(`Moscow Standard Time`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("It is currently:", `${mstF}`)
       message.channel.send({
@@ -1161,7 +1166,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${nickname}'s Skin`)
           .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
-          .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+          .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .addField(`${nickname}'s UUID`, uuid)
           .setImage(`https://crafatar.com/renders/body/${uuid}`)
@@ -1185,7 +1190,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${nickname}'s Head`)
           .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
-          .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+          .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .addField(`${nickname}'s UUID`, uuid)
           .setImage(`https://crafatar.com/renders/head/${uuid}`)
@@ -1208,7 +1213,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${nickname}'s Skin`)
           .setDescription("If you can not access your skin, please try again later. There are currently restrictions and slowdowns on the Mojang API.")
-          .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+          .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .addField(`${nickname}'s UUID`, uuid)
           .setImage(`https://crafatar.com/skins/${uuid}`)
@@ -1242,7 +1247,7 @@ client.on("message", async message => {
           .then(namehistory => {
             const playerHistory = new Discord.RichEmbed()
               .setTitle(`**${args[0]}'s** Names`)
-              .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+              .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
               .setThumbnail(`https://crafatar.com/renders/head/${uuid}`)
               .setColor([253, 144, 43])
             for (
@@ -1290,7 +1295,7 @@ client.on("message", async message => {
           new Discord.RichEmbed()
           .setTitle(`${json.title}`)
           .addField(`from r/${json.subreddit}`, `[link](${json.postLink})`, true)
-          .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+          .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
           .setColor([253, 144, 43])
           .setImage(`${json.url}`)
         );
@@ -1337,29 +1342,27 @@ client.on("message", async message => {
     if (args.length !== 0) {
       return message.reply('You must not provide any arguments.');
     }
-    var randomChance = Math.random() * (6000); 
+    var randomChance = Math.random() * (6000);
     if (randomChance === "3000") {
       return message.reply(
         new Discord.RichEmbed()
         .setTitle(`Your coin flipped: HOLY F*** IT LANDED ON IT'S SIDE. THIS IS A 1/6000 CHANCE!!`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
       );
-    }
-    else if (0 <= randomChance && randomChance <= 2999) {
+    } else if (0 <= randomChance && randomChance <= 2999) {
       return message.reply(
         new Discord.RichEmbed()
         .setTitle(`Your coin flipped: Tails.`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
       );
-    }
-    else if (3001 <= randomChance && randomChance <= 6000) {
+    } else if (3001 <= randomChance && randomChance <= 6000) {
       return message.reply(
         new Discord.RichEmbed()
         .setTitle(`Your coin flipped: Heads.`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
       );
     }
   }
@@ -1380,7 +1383,7 @@ client.on("message", async message => {
       new Discord.RichEmbed()
       .setTitle(`Your die rolled: ${chance.rpg(input)}.`)
       .setColor([253, 144, 43])
-      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+      .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
     );
   }
   //////////////////////////////////////////////////////
@@ -1407,7 +1410,7 @@ client.on("message", async message => {
         new Discord.RichEmbed()
         .setTitle(`Todays wikipedia picture of the day`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setImage(`${data.image}`)
       );
     });
@@ -1423,7 +1426,7 @@ client.on("message", async message => {
         new Discord.RichEmbed()
         .setTitle(`Your shortened link:`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setDescription(`${res}`)
       );
     });
@@ -1608,7 +1611,7 @@ client.on("message", async message => {
           const embed = new Discord.RichEmbed()
             .setTitle(`${username}'s CSGO Stats`)
             .setColor([253, 144, 43])
-            .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+            .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
             .setTimestamp()
             .setThumbnail(`${icon}`)
             .addField("Wins:", `${total_matches_won}`, true)
@@ -1675,7 +1678,7 @@ client.on("message", async message => {
         const embed = new Discord.RichEmbed()
           .setTitle(`${username}'s APEX Legends Stats`)
           .setColor([253, 144, 43])
-          .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+          .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
           .setDescription(`Account ID: \`${accountID}\``)
           .setTimestamp()
           .setThumbnail(`${avatarUrl}`)
@@ -1722,7 +1725,7 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle(`${username}'s Geometry Dash Stats`)
       .setColor([253, 144, 43])
-      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+      .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
       .setTimestamp()
       .setThumbnail(`${playerIcon}`)
       .setDescription(`Global Ranking: ${ranking}`)
@@ -1828,7 +1831,7 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
       .setTitle(`Random R6 Operator Picks`)
       .setColor([253, 144, 43])
-      .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+      .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
       .setTimestamp()
       .addField("Attackers:", `**1. **${attacker1}\n**2. **${attacker2}\n**3. **${attacker3}\n**4. **${attacker4}\n**5. **${attacker5}`)
       .addField("Defenders:", `**1. **${defender1}\n**2. **${defender2}\n**3. **${defender3}\n**4. **${defender4}\n**5. **${defender5}`)
@@ -1888,7 +1891,7 @@ client.on("message", async message => {
         .setTitle(`All R6 Maps`)
         .setDescription(`Last updated: ${updatedOperation}`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("All:", `${allString}`)
         .addField("Quick match:", `${quickmatchString}`)
@@ -1905,7 +1908,7 @@ client.on("message", async message => {
         .setTitle(`Random R6 Quick Match Map`)
         .setDescription(`Last updated: ${updatedOperation}`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("Map:", `${index}`)
       return message.channel.send({
@@ -1919,7 +1922,7 @@ client.on("message", async message => {
         .setTitle(`Random R6 Newcomer Match Map`)
         .setDescription(`Last updated: ${updatedOperation}`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("Map:", `${index}`)
       return message.channel.send({
@@ -1933,7 +1936,7 @@ client.on("message", async message => {
         .setTitle(`Random R6 Ranked Match Map`)
         .setDescription(`Last updated: ${updatedOperation}`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("Map:", `${index}`)
       return message.channel.send({
@@ -1946,7 +1949,7 @@ client.on("message", async message => {
         .setDescription(`Last updated: ${updatedOperation}`)
         .setTitle(`Random R6 Map`)
         .setColor([253, 144, 43])
-        .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+        .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
         .setTimestamp()
         .addField("Map:", `${index}`)
       return message.channel.send({
@@ -2231,7 +2234,7 @@ client.on("message", async message => {
                 const embed = new Discord.RichEmbed()
                   .setTitle(`${username1}'s CSGO Stats`)
                   .setColor([253, 144, 43])
-                  .setFooter("Tangerine // tangerinebot.com", `${tangerineIcon}`)
+                  .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
                   .setTimestamp()
                   .setThumbnail('https://i.imgur.com/JP5mOFP.png')
                   .addField("__Player One__", `**${username1}**`, true)
@@ -2283,6 +2286,1051 @@ client.on("message", async message => {
         });
       });
     });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "sw") {
+    var username = "hypixel";
+    if (!args[0]) {
+      var current_DB;
+      fs.readFile('hypixel.json', 'utf8', (err, data) => {
+        if (err) {
+          console.log(err);
+        }
+        current_DB = JSON.parse(data);
+        var counter = 0;
+        for (var i = 0; i < current_DB.linkedAccounts.length; i++) {
+          if (current_DB.linkedAccounts[i].discordID === message.member.id) {
+            username = current_DB.linkedAccounts[i].hypixelID;
+            counter = 1;
+          }
+        }
+        if (counter = 0) {
+          return message.reply("You do not currently have a linked username. Use ~link <username>.")
+        }
+        hyAPI.getPlayer('name', `${username}`).then((player) => {
+          let soloNormalWins = player.player.stats.SkyWars.wins_solo_normal;
+          let soloNormalLosses = player.player.stats.SkyWars.losses_solo_normal;
+          let soloNormalKills = player.player.stats.SkyWars.kills_solo_normal;
+          let soloNormalDeaths = player.player.stats.SkyWars.deaths_solo_normal;
+          let soloNormalWLR = thousands_separators((soloNormalWins / soloNormalLosses).toPrecision(3));
+          let soloNormalKDR = thousands_separators((soloNormalKills / soloNormalDeaths).toPrecision(3));
+          let soloInsaneWins = player.player.stats.SkyWars.wins_solo_insane;
+          let soloInsaneLosses = player.player.stats.SkyWars.losses_solo_insane;
+          let soloInsaneKills = player.player.stats.SkyWars.kills_solo_insane;
+          let soloInsaneDeaths = player.player.stats.SkyWars.deaths_solo_insane;
+          let soloInsaneWLR = thousands_separators((soloInsaneWins / soloInsaneLosses).toPrecision(3));
+          let soloInsaneKDR = thousands_separators((soloInsaneKills / soloInsaneDeaths).toPrecision(3));
+          let teamNormalWins = player.player.stats.SkyWars.wins_team_normal;
+          let teamNormalLosses = player.player.stats.SkyWars.losses_team_normal;
+          let teamNormalKills = player.player.stats.SkyWars.kills_team_normal;
+          let teamNormalDeaths = player.player.stats.SkyWars.deaths_team_normal;
+          let teamNormalWLR = thousands_separators((teamNormalWins / teamNormalLosses).toPrecision(3));
+          let teamNormalKDR = thousands_separators((teamNormalKills / teamNormalDeaths).toPrecision(3));
+          let teamInsaneWins = player.player.stats.SkyWars.wins_team_insane;
+          let teamInsaneLosses = player.player.stats.SkyWars.losses_team_insane;
+          let teamInsaneKills = player.player.stats.SkyWars.kills_team_insane;
+          let teamInsaneDeaths = player.player.stats.SkyWars.deaths_team_insane;
+          let teamInsaneWLR = thousands_separators((teamInsaneWins / teamInsaneLosses).toPrecision(3));
+          let teamInsaneKDR = thousands_separators((teamInsaneKills / teamInsaneDeaths).toPrecision(3));
+          let megaWins = player.player.stats.SkyWars.wins_mega_normal;
+          let megaLosses = player.player.stats.SkyWars.losses_mega_normal;
+          let megaKills = player.player.stats.SkyWars.kills_mega_normal;
+          let megaDeaths = player.player.stats.SkyWars.deaths_mega_normal;
+          let megaWLR = thousands_separators((megaWins / megaLosses).toPrecision(3));
+          let megaKDR = thousands_separators((megaKills / megaDeaths).toPrecision(3));
+          let mega2Wins = player.player.stats.SkyWars.wins_mega_doubles;
+          let mega2Losses = player.player.stats.SkyWars.losses_mega_doubles;
+          let mega2Kills = player.player.stats.SkyWars.kills_mega_doubles;
+          let mega2Deaths = player.player.stats.SkyWars.deaths_mega_doubles;
+          let mega2WLR = thousands_separators((mega2Wins / mega2Losses).toPrecision(3));
+          let mega2KDR = thousands_separators((mega2Kills / mega2Deaths).toPrecision(3));
+          let labWins = player.player.stats.SkyWars.wins_lab;
+          let labLosses = player.player.stats.SkyWars.losses_lab;
+          let labKills = player.player.stats.SkyWars.kills_lab;
+          let labDeaths = player.player.stats.SkyWars.deaths_lab;
+          let labWLR = thousands_separators((labWins / labLosses).toPrecision(3));
+          let labKDR = thousands_separators((labKills / labDeaths).toPrecision(3));
+          let rankedWins = player.player.stats.SkyWars.wins_ranked;
+          let rankedLosses = player.player.stats.SkyWars.losses_ranked;
+          let rankedKills = player.player.stats.SkyWars.kills_ranked;
+          let rankedDeaths = player.player.stats.SkyWars.deaths_ranked;
+          let rankedWLR = thousands_separators((rankedWins / rankedLosses).toPrecision(3));
+          let rankedKDR = thousands_separators((rankedKills / rankedDeaths).toPrecision(3));
+          let rankedRating = player.player.stats.SkyWars.SkyWars_skywars_rating_6_20_rating;
+          let rankedPosition = player.player.stats.SkyWars.SkyWars_skywars_rating_6_20_position;
+          let rankedDivision = "None";
+          if (rankedPosition >= 1 && rankedPosition <= 10) {
+            rankedDivision = "Masters"
+          } else if (rankedPosition >= 11 && rankedPosition <= 200) {
+            rankedDivision = "Diamond"
+          } else if (rankedPosition >= 201 && rankedPosition <= 1500) {
+            rankedDivision = "Gold"
+          } else if (rankedPosition >= 1501 && rankedPosition <= 5000) {
+            rankedDivision = "Iron"
+          } else if (rankedPosition >= 5001 && rankedPosition <= 20000) {
+            rankedDivision = "Stone"
+          } else if (rankedPosition >= 20001 && rankedPosition <= 50000) {
+            rankedDivision = "Wood"
+          } else if (rankedPosition >= 50001) {
+            rankedDivision = "None"
+          }
+          let totalCoins = player.player.stats.SkyWars.coins;
+          totalCoins = thousands_separators(totalCoins);
+          let totalHeads = player.player.stats.SkyWars.heads;
+          let totalWins = player.player.stats.SkyWars.wins;
+          let totalLosses = player.player.stats.SkyWars.losses;
+          let totalKills = player.player.stats.SkyWars.kills;
+          let totalDeaths = player.player.stats.SkyWars.deaths;
+          let totalWLR = thousands_separators((totalWins / totalLosses).toPrecision(3));
+          let totalKDR = thousands_separators((totalKills / totalDeaths).toPrecision(3));
+          totalHeads = thousands_separators(totalHeads);
+          totalWins = thousands_separators(totalWins);
+          totalLosses = thousands_separators(totalLosses);
+          totalKills = thousands_separators(totalKills);
+          totalDeaths = thousands_separators(totalDeaths);
+          let totalLevel = 0;
+          let xp = player.player.stats.SkyWars.skywars_experience;
+          let seperateXp = thousands_separators(xp)
+          var xps = [0, 20, 70, 150, 250, 500, 1000, 2000, 3500, 6000, 10000, 15000];
+          if (xp >= 15000) {
+            totalLevel = (xp - 15000) / 10000 + 12;
+          } else {
+            for (var i = 0; i < xps.length; i++) {
+              if (xp < xps[i]) {
+                totalLevel = 1 + i + (xp - xps[i - 1]) / (xps[i] - xps[i - 1]);
+              }
+            }
+          }
+          totalLevel = totalLevel.toPrecision(4);
+          let prestige = "None";
+          if (totalLevel >= 0 && totalLevel <= 4) {
+            prestige = "Stone ⚔"
+          } else if (totalLevel >= 5 && totalLevel <= 9) {
+            prestige = "Iron ✙"
+          } else if (totalLevel >= 10 && totalLevel <= 14) {
+            prestige = "Gold ❤"
+          } else if (totalLevel >= 15 && totalLevel <= 19) {
+            prestige = "Diamond ☠"
+          } else if (totalLevel >= 20 && totalLevel <= 24) {
+            prestige = "Emerald ✧"
+          } else if (totalLevel >= 25 && totalLevel <= 29) {
+            prestige = "Sapphire 🖔"
+          } else if (totalLevel >= 30 && totalLevel <= 34) {
+            prestige = "Ruby ❦"
+          } else if (totalLevel >= 35 && totalLevel <= 39) {
+            prestige = "Crystal ❁"
+          } else if (totalLevel >= 40 && totalLevel <= 44) {
+            prestige = "Opal ❣"
+          } else if (totalLevel >= 45 && totalLevel <= 49) {
+            prestige = "Amethyst ☯"
+          } else if (totalLevel >= 50 && totalLevel <= 59) {
+            prestige = "Rainbow ✺"
+          } else if (totalLevel >= 60 && totalLevel <= 200) {
+            prestige = "Mythic (ノಠ益ಠ)ノ彡┻━┻"
+          }
+          mojangjs
+            .getUUID(username)
+            .then(uuid => {
+              return message.channel.send(
+                new Discord.RichEmbed()
+                .setTitle(`${username}'s Skywars Stats`)
+                .setDescription("Personal best ranked stats are coming soon!\n_Note: this feature is in beta. If you have no stats in one of the below fields, it may show as undefined or null._")
+                .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
+                .setColor([253, 144, 43])
+                .setThumbnail(`https://crafatar.com/renders/head/${uuid}?overlay`)
+                .addField('Solo Normal', `\`-\` Wins: ${soloNormalWins}\n \`-\` Losses: ${soloNormalLosses}\n \`-\` Kills: ${soloNormalKills}\n \`-\` Deaths: ${soloNormalDeaths}\n \`-\` WLR: ${soloNormalWLR}\n \`-\` KDR: ${soloNormalKDR}\n`, true)
+                .addField('Solo Insane', `\`-\` Wins: ${soloInsaneWins}\n \`-\` Losses: ${soloInsaneLosses}\n \`-\` Kills: ${soloInsaneKills}\n \`-\` Deaths: ${soloInsaneDeaths}\n \`-\` WLR: ${soloInsaneWLR}\n \`-\` KDR: ${soloInsaneKDR}\n`, true)
+                .addField('Teams Normal', `\`-\` Wins: ${teamNormalWins}\n \`-\` Losses: ${teamNormalLosses}\n \`-\` Kills: ${teamNormalKills}\n \`-\` Deaths: ${teamNormalDeaths}\n \`-\` WLR: ${teamNormalWLR}\n \`-\` KDR: ${teamNormalKDR}\n`, true)
+                .addField('Teams Insane', `\`-\` Wins: ${teamInsaneWins}\n \`-\` Losses: ${teamInsaneLosses}\n \`-\` Kills: ${teamInsaneKills}\n \`-\` Deaths: ${teamInsaneDeaths}\n \`-\` WLR: ${teamInsaneWLR}\n \`-\` KDR: ${teamInsaneKDR}\n`, true)
+                .addField('Mega Normal', `\`-\` Wins: ${megaWins}\n \`-\` Losses: ${megaLosses}\n \`-\` Kills: ${megaKills}\n \`-\` Deaths: ${megaDeaths}\n \`-\` WLR: ${megaWLR}\n \`-\` KDR: ${megaKDR}\n`, true)
+                .addField('Mega Doubles', `\`-\` Wins: ${mega2Wins}\n \`-\` Losses: ${mega2Losses}\n \`-\` Kills: ${mega2Kills}\n \`-\` Deaths: ${mega2Deaths}\n \`-\` WLR: ${mega2WLR}\n \`-\` KDR: ${mega2KDR}\n`, true)
+                .addField('Lab', `\`-\` Wins: ${labWins}\n \`-\` Losses: ${labLosses}\n \`-\` Kills: ${labKills}\n \`-\` Deaths: ${labDeaths}\n \`-\` WLR: ${labWLR}\n \`-\` KDR: ${labKDR}\n`, true)
+                .addField('Ranked', `\`-\` Wins: ${rankedWins}\n \`-\` Losses: ${rankedLosses}\n \`-\` Kills: ${rankedKills}\n \`-\` Deaths: ${rankedDeaths}\n \`-\` WLR: ${rankedWLR}\n \`-\` KDR: ${rankedKDR}\n`, true)
+                .addField('June 2020', `\`-\` Division: ${rankedDivision}\n \`-\` Rating: ${rankedRating}\n \`-\` Position: ${rankedPosition}`, true)
+                .addField('Totals', `\`-\` Wins: ${totalWins}\n \`-\` Losses: ${totalLosses}\n \`-\` Kills: ${totalKills}\n \`-\` Deaths: ${totalDeaths}\n \`-\` WLR: ${totalWLR}\n \`-\` KDR: ${totalKDR}\n`, true)
+                .addField('General', `\`-\` Level: ${totalLevel}\n \`-\` Prestige: ${prestige}\n \`-\` Coins: ${totalCoins}\n \`-\` XP: ${seperateXp}\n \`-\` Heads: ${totalHeads}`, true)
+              );
+            }).catch(console.error);
+        })
+      });
+    } else {
+      username = args[0];
+      hyAPI.getPlayer('name', `${username}`).then((player) => {
+        let soloNormalWins = player.player.stats.SkyWars.wins_solo_normal;
+        let soloNormalLosses = player.player.stats.SkyWars.losses_solo_normal;
+        let soloNormalKills = player.player.stats.SkyWars.kills_solo_normal;
+        let soloNormalDeaths = player.player.stats.SkyWars.deaths_solo_normal;
+        let soloNormalWLR = thousands_separators((soloNormalWins / soloNormalLosses).toPrecision(3));
+        let soloNormalKDR = thousands_separators((soloNormalKills / soloNormalDeaths).toPrecision(3));
+        let soloInsaneWins = player.player.stats.SkyWars.wins_solo_insane;
+        let soloInsaneLosses = player.player.stats.SkyWars.losses_solo_insane;
+        let soloInsaneKills = player.player.stats.SkyWars.kills_solo_insane;
+        let soloInsaneDeaths = player.player.stats.SkyWars.deaths_solo_insane;
+        let soloInsaneWLR = thousands_separators((soloInsaneWins / soloInsaneLosses).toPrecision(3));
+        let soloInsaneKDR = thousands_separators((soloInsaneKills / soloInsaneDeaths).toPrecision(3));
+        let teamNormalWins = player.player.stats.SkyWars.wins_team_normal;
+        let teamNormalLosses = player.player.stats.SkyWars.losses_team_normal;
+        let teamNormalKills = player.player.stats.SkyWars.kills_team_normal;
+        let teamNormalDeaths = player.player.stats.SkyWars.deaths_team_normal;
+        let teamNormalWLR = thousands_separators((teamNormalWins / teamNormalLosses).toPrecision(3));
+        let teamNormalKDR = thousands_separators((teamNormalKills / teamNormalDeaths).toPrecision(3));
+        let teamInsaneWins = player.player.stats.SkyWars.wins_team_insane;
+        let teamInsaneLosses = player.player.stats.SkyWars.losses_team_insane;
+        let teamInsaneKills = player.player.stats.SkyWars.kills_team_insane;
+        let teamInsaneDeaths = player.player.stats.SkyWars.deaths_team_insane;
+        let teamInsaneWLR = thousands_separators((teamInsaneWins / teamInsaneLosses).toPrecision(3));
+        let teamInsaneKDR = thousands_separators((teamInsaneKills / teamInsaneDeaths).toPrecision(3));
+        let megaWins = player.player.stats.SkyWars.wins_mega_normal;
+        let megaLosses = player.player.stats.SkyWars.losses_mega_normal;
+        let megaKills = player.player.stats.SkyWars.kills_mega_normal;
+        let megaDeaths = player.player.stats.SkyWars.deaths_mega_normal;
+        let megaWLR = thousands_separators((megaWins / megaLosses).toPrecision(3));
+        let megaKDR = thousands_separators((megaKills / megaDeaths).toPrecision(3));
+        let mega2Wins = player.player.stats.SkyWars.wins_mega_doubles;
+        let mega2Losses = player.player.stats.SkyWars.losses_mega_doubles;
+        let mega2Kills = player.player.stats.SkyWars.kills_mega_doubles;
+        let mega2Deaths = player.player.stats.SkyWars.deaths_mega_doubles;
+        let mega2WLR = thousands_separators((mega2Wins / mega2Losses).toPrecision(3));
+        let mega2KDR = thousands_separators((mega2Kills / mega2Deaths).toPrecision(3));
+        let labWins = player.player.stats.SkyWars.wins_lab;
+        let labLosses = player.player.stats.SkyWars.losses_lab;
+        let labKills = player.player.stats.SkyWars.kills_lab;
+        let labDeaths = player.player.stats.SkyWars.deaths_lab;
+        let labWLR = thousands_separators((labWins / labLosses).toPrecision(3));
+        let labKDR = thousands_separators((labKills / labDeaths).toPrecision(3));
+        let rankedWins = player.player.stats.SkyWars.wins_ranked;
+        let rankedLosses = player.player.stats.SkyWars.losses_ranked;
+        let rankedKills = player.player.stats.SkyWars.kills_ranked;
+        let rankedDeaths = player.player.stats.SkyWars.deaths_ranked;
+        let rankedWLR = thousands_separators((rankedWins / rankedLosses).toPrecision(3));
+        let rankedKDR = thousands_separators((rankedKills / rankedDeaths).toPrecision(3));
+        let rankedRating = player.player.stats.SkyWars.SkyWars_skywars_rating_6_20_rating;
+        let rankedPosition = player.player.stats.SkyWars.SkyWars_skywars_rating_6_20_position;
+        let rankedDivision = "None";
+        if (rankedPosition >= 1 && rankedPosition <= 10) {
+          rankedDivision = "Masters"
+        } else if (rankedPosition >= 11 && rankedPosition <= 200) {
+          rankedDivision = "Diamond"
+        } else if (rankedPosition >= 201 && rankedPosition <= 1500) {
+          rankedDivision = "Gold"
+        } else if (rankedPosition >= 1501 && rankedPosition <= 5000) {
+          rankedDivision = "Iron"
+        } else if (rankedPosition >= 5001 && rankedPosition <= 20000) {
+          rankedDivision = "Stone"
+        } else if (rankedPosition >= 20001 && rankedPosition <= 50000) {
+          rankedDivision = "Wood"
+        } else if (rankedPosition >= 50001) {
+          rankedDivision = "None"
+        }
+        let totalCoins = player.player.stats.SkyWars.coins;
+        totalCoins = thousands_separators(totalCoins);
+        let totalHeads = player.player.stats.SkyWars.heads;
+        let totalWins = player.player.stats.SkyWars.wins;
+        let totalLosses = player.player.stats.SkyWars.losses;
+        let totalKills = player.player.stats.SkyWars.kills;
+        let totalDeaths = player.player.stats.SkyWars.deaths;
+        let totalWLR = thousands_separators((totalWins / totalLosses).toPrecision(3));
+        let totalKDR = thousands_separators((totalKills / totalDeaths).toPrecision(3));
+        totalHeads = thousands_separators(totalHeads);
+        totalWins = thousands_separators(totalWins);
+        totalLosses = thousands_separators(totalLosses);
+        totalKills = thousands_separators(totalKills);
+        totalDeaths = thousands_separators(totalDeaths);
+        let totalLevel = 0;
+        let xp = player.player.stats.SkyWars.skywars_experience;
+        let seperateXp = thousands_separators(xp)
+        var xps = [0, 20, 70, 150, 250, 500, 1000, 2000, 3500, 6000, 10000, 15000];
+        if (xp >= 15000) {
+          totalLevel = (xp - 15000) / 10000 + 12;
+        } else {
+          for (var i = 0; i < xps.length; i++) {
+            if (xp < xps[i]) {
+              totalLevel = 1 + i + (xp - xps[i - 1]) / (xps[i] - xps[i - 1]);
+            }
+          }
+        }
+        totalLevel = totalLevel.toPrecision(4);
+        let prestige = "None";
+        if (totalLevel >= 0 && totalLevel <= 4) {
+          prestige = "Stone ⚔"
+        } else if (totalLevel >= 5 && totalLevel <= 9) {
+          prestige = "Iron ✙"
+        } else if (totalLevel >= 10 && totalLevel <= 14) {
+          prestige = "Gold ❤"
+        } else if (totalLevel >= 15 && totalLevel <= 19) {
+          prestige = "Diamond ☠"
+        } else if (totalLevel >= 20 && totalLevel <= 24) {
+          prestige = "Emerald ✧"
+        } else if (totalLevel >= 25 && totalLevel <= 29) {
+          prestige = "Sapphire 🖔"
+        } else if (totalLevel >= 30 && totalLevel <= 34) {
+          prestige = "Ruby ❦"
+        } else if (totalLevel >= 35 && totalLevel <= 39) {
+          prestige = "Crystal ❁"
+        } else if (totalLevel >= 40 && totalLevel <= 44) {
+          prestige = "Opal ❣"
+        } else if (totalLevel >= 45 && totalLevel <= 49) {
+          prestige = "Amethyst ☯"
+        } else if (totalLevel >= 50 && totalLevel <= 59) {
+          prestige = "Rainbow ✺"
+        } else if (totalLevel >= 60 && totalLevel <= 200) {
+          prestige = "Mythic (ノಠ益ಠ)ノ彡┻━┻"
+        }
+        mojangjs
+          .getUUID(username)
+          .then(uuid => {
+            return message.channel.send(
+              new Discord.RichEmbed()
+              .setTitle(`${username}'s Skywars Stats`)
+              .setDescription("Personal best ranked stats are coming soon!\n_Note: this feature is in beta. If you have no stats in one of the below fields, it may show as undefined or null._")
+              .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
+              .setColor([253, 144, 43])
+              .setThumbnail(`https://crafatar.com/renders/head/${uuid}?overlay`)
+              .addField('Solo Normal', `\`-\` Wins: ${soloNormalWins}\n \`-\` Losses: ${soloNormalLosses}\n \`-\` Kills: ${soloNormalKills}\n \`-\` Deaths: ${soloNormalDeaths}\n \`-\` WLR: ${soloNormalWLR}\n \`-\` KDR: ${soloNormalKDR}\n`, true)
+              .addField('Solo Insane', `\`-\` Wins: ${soloInsaneWins}\n \`-\` Losses: ${soloInsaneLosses}\n \`-\` Kills: ${soloInsaneKills}\n \`-\` Deaths: ${soloInsaneDeaths}\n \`-\` WLR: ${soloInsaneWLR}\n \`-\` KDR: ${soloInsaneKDR}\n`, true)
+              .addField('Teams Normal', `\`-\` Wins: ${teamNormalWins}\n \`-\` Losses: ${teamNormalLosses}\n \`-\` Kills: ${teamNormalKills}\n \`-\` Deaths: ${teamNormalDeaths}\n \`-\` WLR: ${teamNormalWLR}\n \`-\` KDR: ${teamNormalKDR}\n`, true)
+              .addField('Teams Insane', `\`-\` Wins: ${teamInsaneWins}\n \`-\` Losses: ${teamInsaneLosses}\n \`-\` Kills: ${teamInsaneKills}\n \`-\` Deaths: ${teamInsaneDeaths}\n \`-\` WLR: ${teamInsaneWLR}\n \`-\` KDR: ${teamInsaneKDR}\n`, true)
+              .addField('Mega Normal', `\`-\` Wins: ${megaWins}\n \`-\` Losses: ${megaLosses}\n \`-\` Kills: ${megaKills}\n \`-\` Deaths: ${megaDeaths}\n \`-\` WLR: ${megaWLR}\n \`-\` KDR: ${megaKDR}\n`, true)
+              .addField('Mega Doubles', `\`-\` Wins: ${mega2Wins}\n \`-\` Losses: ${mega2Losses}\n \`-\` Kills: ${mega2Kills}\n \`-\` Deaths: ${mega2Deaths}\n \`-\` WLR: ${mega2WLR}\n \`-\` KDR: ${mega2KDR}\n`, true)
+              .addField('Lab', `\`-\` Wins: ${labWins}\n \`-\` Losses: ${labLosses}\n \`-\` Kills: ${labKills}\n \`-\` Deaths: ${labDeaths}\n \`-\` WLR: ${labWLR}\n \`-\` KDR: ${labKDR}\n`, true)
+              .addField('Ranked', `\`-\` Wins: ${rankedWins}\n \`-\` Losses: ${rankedLosses}\n \`-\` Kills: ${rankedKills}\n \`-\` Deaths: ${rankedDeaths}\n \`-\` WLR: ${rankedWLR}\n \`-\` KDR: ${rankedKDR}\n`, true)
+              .addField('June 2020', `\`-\` Division: ${rankedDivision}\n \`-\` Rating: ${rankedRating}\n \`-\` Position: ${rankedPosition}`, true)
+              .addField('Totals', `\`-\` Wins: ${totalWins}\n \`-\` Losses: ${totalLosses}\n \`-\` Kills: ${totalKills}\n \`-\` Deaths: ${totalDeaths}\n \`-\` WLR: ${totalWLR}\n \`-\` KDR: ${totalKDR}\n`, true)
+              .addField('General', `\`-\` Level: ${totalLevel}\n \`-\` Prestige: ${prestige}\n \`-\` Coins: ${totalCoins}\n \`-\` XP: ${seperateXp}\n \`-\` Heads: ${totalHeads}`, true)
+            );
+          }).catch(console.error);
+      })
+    }
+  }
+  //////////////////////////////////////////////////////
+  if (command === "link") {
+    if (!args[0]) {
+      return message.reply("Please enter a username after the link command.")
+    }
+    let username = args[0];
+    var current_DB;
+    fs.readFile('hypixel.json', 'utf8', (err, data) => {
+      if (err) {
+        console.log(err);
+      }
+      current_DB = JSON.parse(data);
+      for (var i = 0; i < current_DB.linkedAccounts.length; i++) {
+        if (current_DB.linkedAccounts[i].discordID === message.member.id) {
+          message.reply("Your previous username, " + current_DB.linkedAccounts[i].hypixelID + ", has been unlinked.")
+          current_DB.linkedAccounts.splice(i, 1);
+        }
+      }
+      current_DB.linkedAccounts.push({
+        discordID: message.member.id,
+        hypixelID: username
+      });
+      message.reply("Your new username, " + username + ", has been linked.")
+      var json = JSON.stringify(current_DB);
+      fs.writeFile('hypixel.json', json, 'utf8', (err) => {
+        if (err) throw err;
+      });
+    });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "linktest") {
+    var current_DB;
+    fs.readFile('hypixel.json', 'utf8', (err, data) => {
+      if (err) {
+        console.log(err);
+      }
+      current_DB = JSON.parse(data);
+      for (var i = 0; i < current_DB.linkedAccounts.length; i++) {
+        if (current_DB.linkedAccounts[i].discordID === message.member.id) {
+          message.reply("Your current username is " + current_DB.linkedAccounts[i].hypixelID + ".")
+        }
+      }
+    });
+  }
+  //////////////////////////////////////////////////////
+  if (command === "duels") {
+    var username = "hypixel";
+    if (!args[0] || args[0] === "uhc" || args[0] === "bridge" || args[0] === "bridges") {
+      var current_DB;
+      fs.readFile('hypixel.json', 'utf8', (err, data) => {
+        if (err) {
+          console.log(err);
+        }
+        current_DB = JSON.parse(data);
+        var counter = 0;
+        for (var i = 0; i < current_DB.linkedAccounts.length; i++) {
+          if (current_DB.linkedAccounts[i].discordID === message.member.id) {
+            username = current_DB.linkedAccounts[i].hypixelID;
+            counter = 1;
+          }
+        }
+        if (counter = 0) {
+          return message.reply("You do not currently have a linked username. Use ~link <username>.")
+        }
+        hyAPI.getPlayer('name', `${username}`).then((player) => {
+          let totalWins = player.player.stats.Duels.wins;
+          let totalLosses = player.player.stats.Duels.losses;
+          let totalKills = player.player.stats.Duels.kills;
+          let totalDeaths = player.player.stats.Duels.deaths;
+          let totalWLR = thousands_separators((totalWins / totalLosses).toPrecision(3))
+          let totalKDR = thousands_separators((totalKills / totalDeaths).toPrecision(3))
+          let totalGames = player.player.stats.Duels.games_played_duels;
+          let totalHits = player.player.stats.Duels.melee_hits;
+          let totalSwings = player.player.stats.Duels.melee_swings;
+          let totalHSR = thousands_separators((totalHits / totalSwings).toPrecision(3))
+          let totalBowhit = player.player.stats.Duels.bow_hits;
+          let totalBowshot = player.player.stats.Duels.bow_shots;
+          let totalBowHSR = thousands_separators((totalBowshot / totalBowhit).toPrecision(3))
+          let uhc1Wins = player.player.stats.Duels.uhc_duel_wins;
+          let uhc1Losses = player.player.stats.Duels.uhc_duel_losses;
+          let uhc1Kills = player.player.stats.Duels.uhc_duel_kills;
+          let uhc1Deaths = player.player.stats.Duels.uhc_duel_deaths;
+          let uhc1WLR = thousands_separators((uhc1Wins / uhc1Losses).toPrecision(3))
+          let uhc1KDR = thousands_separators((uhc1Kills / uhc1Deaths).toPrecision(3))
+          let uhc2Wins = player.player.stats.Duels.uhc_doubles_wins;
+          let uhc2Losses = player.player.stats.Duels.uhc_doubles_losses;
+          let uhc2Kills = player.player.stats.Duels.uhc_doubles_kills;
+          let uhc2Deaths = player.player.stats.Duels.uhc_doubles_deaths;
+          let uhc2WLR = thousands_separators((uhc2Wins / uhc2Losses).toPrecision(3))
+          let uhc2KDR = thousands_separators((uhc2Kills / uhc2Deaths).toPrecision(3))
+          let uhc4Wins = player.player.stats.Duels.uhc_four_wins;
+          let uhc4Losses = player.player.stats.Duels.uhc_four_losses;
+          let uhc4Kills = player.player.stats.Duels.uhc_four_kills;
+          let uhc4Deaths = player.player.stats.Duels.uhc_four_deaths;
+          let uhc4WLR = thousands_separators((uhc4Wins / uhc4Losses).toPrecision(3))
+          let uhc4KDR = thousands_separators((uhc4Kills / uhc4Deaths).toPrecision(3))
+          let uhcMWins = player.player.stats.Duels.uhc_meetup_wins;
+          let uhcMLosses = player.player.stats.Duels.uhc_meetup_losses;
+          let uhcMKills = player.player.stats.Duels.uhc_meetup_kills;
+          let uhcMDeaths = player.player.stats.Duels.uhc_meetup_deaths;
+          let uhcMWLR = thousands_separators((uhcMWins / uhcMLosses).toPrecision(3))
+          let uhcMKDR = thousands_separators((uhcMKills / uhcMDeaths).toPrecision(3))
+          let skywarsTitle = "None"
+          let totalUHC = player.player.stats.Duels.uhc_duel_wins
+          let totalUHC2 = player.player.stats.Duels.uhc_doubles_wins
+          let totalUHC3 = player.player.stats.Duels.uhc_four_wins
+          let totalUHC4 = player.player.stats.Duels.uhc_meetup_wins
+          totalUHC += totalUHC2
+          totalUHC += totalUHC3
+          totalUHC += totalUHC4
+          if (totalUHC >= 0 && totalUHC <= 49) {
+            skywarsTitle = "None"
+          } else if (totalUHC >= 50 && totalUHC <= 59) {
+            skywarsTitle = "UHC Rookie"
+          } else if (totalUHC >= 60 && totalUHC <= 69) {
+            skywarsTitle = "UHC Rookie II"
+          } else if (totalUHC >= 70 && totalUHC <= 79) {
+            skywarsTitle = "UHC Rookie III"
+          } else if (totalUHC >= 80 && totalUHC <= 89) {
+            skywarsTitle = "UHC Rookie IV"
+          } else if (totalUHC >= 90 && totalUHC <= 99) {
+            skywarsTitle = "UHC Rookie V"
+          } else if (totalUHC >= 100 && totalUHC <= 129) {
+            skywarsTitle = "UHC Iron"
+          } else if (totalUHC >= 130 && totalUHC <= 159) {
+            skywarsTitle = "UHC Iron II"
+          } else if (totalUHC >= 160 && totalUHC <= 189) {
+            skywarsTitle = "UHC Iron III"
+          } else if (totalUHC >= 190 && totalUHC <= 219) {
+            skywarsTitle = "UHC Iron IV"
+          } else if (totalUHC >= 220 && totalUHC <= 249) {
+            skywarsTitle = "UHC Iron V"
+          } else if (totalUHC >= 250 && totalUHC <= 299) {
+            skywarsTitle = "UHC Gold"
+          } else if (totalUHC >= 300 && totalUHC <= 349) {
+            skywarsTitle = "UHC Gold II"
+          } else if (totalUHC >= 350 && totalUHC <= 399) {
+            skywarsTitle = "UHC Gold III"
+          } else if (totalUHC >= 400 && totalUHC <= 449) {
+            skywarsTitle = "UHC Gold IV"
+          } else if (totalUHC >= 450 && totalUHC <= 499) {
+            skywarsTitle = "UHC Gold V"
+          } else if (totalUHC >= 500 && totalUHC <= 599) {
+            skywarsTitle = "UHC Diamond"
+          } else if (totalUHC >= 600 && totalUHC <= 699) {
+            skywarsTitle = "UHC Diamond II"
+          } else if (totalUHC >= 700 && totalUHC <= 799) {
+            skywarsTitle = "UHC Diamond III"
+          } else if (totalUHC >= 800 && totalUHC <= 899) {
+            skywarsTitle = "UHC Diamond IV"
+          } else if (totalUHC >= 900 && totalUHC <= 999) {
+            skywarsTitle = "UHC Diamond V"
+          } else if (totalUHC >= 1000 && totalUHC <= 1199) {
+            skywarsTitle = "UHC Master"
+          } else if (totalUHC >= 1200 && totalUHC <= 1399) {
+            skywarsTitle = "UHC Master II"
+          } else if (totalUHC >= 1400 && totalUHC <= 1599) {
+            skywarsTitle = "UHC Master III"
+          } else if (totalUHC >= 1600 && totalUHC <= 1799) {
+            skywarsTitle = "UHC Master IV"
+          } else if (totalUHC >= 1800 && totalUHC <= 1999) {
+            skywarsTitle = "UHC Master V"
+          } else if (totalUHC >= 2000 && totalUHC <= 2599) {
+            skywarsTitle = "UHC Legend"
+          } else if (totalUHC >= 2600 && totalUHC <= 3199) {
+            skywarsTitle = "UHC Legend II"
+          } else if (totalUHC >= 3200 && totalUHC <= 3799) {
+            skywarsTitle = "UHC Legend III"
+          } else if (totalUHC >= 3800 && totalUHC <= 4399) {
+            skywarsTitle = "UHC Legend IV"
+          } else if (totalUHC >= 4400 && totalUHC <= 4999) {
+            skywarsTitle = "UHC Legend V"
+          } else if (totalUHC >= 5000 && totalUHC <= 5999) {
+            skywarsTitle = "UHC Grandmaster"
+          } else if (totalUHC >= 6000 && totalUHC <= 6999) {
+            skywarsTitle = "UHC Grandmaster II"
+          } else if (totalUHC >= 7000 && totalUHC <= 7999) {
+            skywarsTitle = "UHC Grandmaster III"
+          } else if (totalUHC >= 8000 && totalUHC <= 8999) {
+            skywarsTitle = "UHC Grandmaster IV"
+          } else if (totalUHC >= 9000 && totalUHC <= 9999) {
+            skywarsTitle = "UHC Grandmaster V"
+          } else if (totalUHC >= 10000 && totalUHC <= 10999) {
+            skywarsTitle = "UHC Godlike"
+          } else if (totalUHC >= 11000 && totalUHC <= 11999) {
+            skywarsTitle = "UHC Godlike II"
+          } else if (totalUHC >= 12000 && totalUHC <= 12999) {
+            skywarsTitle = "UHC Godlike III"
+          } else if (totalUHC >= 13000 && totalUHC <= 13999) {
+            skywarsTitle = "UHC Godlike IV"
+          } else if (totalUHC >= 14000 && totalUHC <= 14999) {
+            skywarsTitle = "UHC Godlike V"
+          } else if (totalUHC >= 15000 && totalUHC <= 15999) {
+            skywarsTitle = "UHC Godlike VI"
+          } else if (totalUHC >= 16000 && totalUHC <= 16999) {
+            skywarsTitle = "UHC Godlike VII"
+          } else if (totalUHC >= 17000 && totalUHC <= 17999) {
+            skywarsTitle = "UHC Godlike VIII"
+          } else if (totalUHC >= 18000 && totalUHC <= 18999) {
+            skywarsTitle = "UHC Godlike IX"
+          } else if (totalUHC >= 19000 && totalUHC <= 20000) {
+            skywarsTitle = "UHC Godlike X"
+          }
+
+          // let megawalls = player.player.stats.Duels.wins;
+          // let op = player.player.stats.Duels.wins;
+          // let skywars1 = player.player.stats.Duels.wins;
+          // let skywars2 = player.player.stats.Duels.wins;
+          // let bow = player.player.stats.Duels.wins;
+          // let sumo = player.player.stats.Duels.wins;
+          // let bowSpleef = player.player.stats.Duels.wins;
+          // let noDebuff = player.player.stats.Duels.wins;
+          // let combo = player.player.stats.Duels.wins;
+
+          let bridge1Wins = player.player.stats.Duels.bridge_duel_wins;
+          let bridge1Losses = player.player.stats.Duels.bridge_duel_losses;
+          let bridge1Kills = player.player.stats.Duels.bridge_duel_kills;
+          let bridge1Deaths = player.player.stats.Duels.bridge_duel_deaths;
+          let bridge1WLR = thousands_separators((bridge1Wins / bridge1Losses).toPrecision(3))
+          let bridge1KDR = thousands_separators((bridge1Kills / bridge1Deaths).toPrecision(3))
+          let bridge2Wins = player.player.stats.Duels.bridge_doubles_wins;
+          let bridge2Losses = player.player.stats.Duels.bridge_doubles_losses;
+          let bridge2Kills = player.player.stats.Duels.bridge_doubles_kills;
+          let bridge2Deaths = player.player.stats.Duels.bridge_doubles_deaths;
+          let bridge2WLR = thousands_separators((bridge2Wins / bridge2Losses).toPrecision(3))
+          let bridge2KDR = thousands_separators((bridge2Kills / bridge2Deaths).toPrecision(3))
+          let bridge4Kills = player.player.stats.Duels.bridge_four_wins;
+          let bridge4Wins = player.player.stats.Duels.bridge_four_wins;
+          let bridge4Losses = player.player.stats.Duels.bridge_four_losses;
+          let bridge4Deaths = player.player.stats.Duels.bridge_four_deaths;
+          let bridge4WLR = thousands_separators((bridge4Kills / bridge4Wins).toPrecision(3))
+          let bridge4KDR = thousands_separators((bridge4Losses / bridge4Deaths).toPrecision(3))
+          let bridge5Kills = player.player.stats.Duels.bridge_2v2v2v2_wins;
+          let bridge5Wins = player.player.stats.Duels.bridge_2v2v2v2_wins;
+          let bridge5Losses = player.player.stats.Duels.bridge_2v2v2v2_losses;
+          let bridge5Deaths = player.player.stats.Duels.bridge_2v2v2v2_deaths;
+          let bridge5WLR = thousands_separators((bridge5Kills / bridge5Wins).toPrecision(3))
+          let bridge5KDR = thousands_separators((bridge5Losses / bridge5Deaths).toPrecision(3))
+          let bridge6Kills = player.player.stats.Duels.bridge_3v3v3v3_wins;
+          let bridge6Wins = player.player.stats.Duels.bridge_3v3v3v3_wins;
+          let bridge6Losses = player.player.stats.Duels.bridge_3v3v3v3_losses;
+          let bridge6Deaths = player.player.stats.Duels.bridge_3v3v3v3_deaths;
+          let bridge6WLR = thousands_separators((bridge6Kills / bridge6Wins).toPrecision(3))
+          let bridge6KDR = thousands_separators((bridge6Losses / bridge6Deaths).toPrecision(3))
+          let bridgeTitle = "None"
+          let totalBridge = player.player.stats.Duels.bridge_duel_wins
+          let totalBridge2 = player.player.stats.Duels.bridge_doubles_wins
+          let totalBridge3 = player.player.stats.Duels.bridge_four_wins
+          let totalBridge4 = player.player.stats.Duels.bridge_2v2v2v2_wins
+          let totalBridge5 = player.player.stats.Duels.bridge_3v3v3v3_wins
+          totalBridge += totalBridge2
+          totalBridge += totalBridge3
+          totalBridge += totalBridge4
+          totalBridge += totalBridge5
+          if (totalBridge >= 0 && totalBridge <= 49) {
+            bridgeTitle = "None"
+          } else if (totalBridge >= 50 && totalBridge <= 59) {
+            bridgeTitle = "UHC Rookie"
+          } else if (totalBridge >= 60 && totalBridge <= 69) {
+            bridgeTitle = "UHC Rookie II"
+          } else if (totalBridge >= 70 && totalBridge <= 79) {
+            bridgeTitle = "UHC Rookie III"
+          } else if (totalBridge >= 80 && totalBridge <= 89) {
+            bridgeTitle = "UHC Rookie IV"
+          } else if (totalBridge >= 90 && totalBridge <= 99) {
+            bridgeTitle = "UHC Rookie V"
+          } else if (totalBridge >= 100 && totalBridge <= 129) {
+            bridgeTitle = "UHC Iron"
+          } else if (totalBridge >= 130 && totalBridge <= 159) {
+            bridgeTitle = "UHC Iron II"
+          } else if (totalBridge >= 160 && totalBridge <= 189) {
+            bridgeTitle = "UHC Iron III"
+          } else if (totalBridge >= 190 && totalBridge <= 219) {
+            bridgeTitle = "UHC Iron IV"
+          } else if (totalBridge >= 220 && totalBridge <= 249) {
+            bridgeTitle = "UHC Iron V"
+          } else if (totalBridge >= 250 && totalBridge <= 299) {
+            bridgeTitle = "UHC Gold"
+          } else if (totalBridge >= 300 && totalBridge <= 349) {
+            bridgeTitle = "UHC Gold II"
+          } else if (totalBridge >= 350 && totalBridge <= 399) {
+            bridgeTitle = "UHC Gold III"
+          } else if (totalBridge >= 400 && totalBridge <= 449) {
+            bridgeTitle = "UHC Gold IV"
+          } else if (totalBridge >= 450 && totalBridge <= 499) {
+            bridgeTitle = "UHC Gold V"
+          } else if (totalBridge >= 500 && totalBridge <= 599) {
+            bridgeTitle = "UHC Diamond"
+          } else if (totalBridge >= 600 && totalBridge <= 699) {
+            bridgeTitle = "UHC Diamond II"
+          } else if (totalBridge >= 700 && totalBridge <= 799) {
+            bridgeTitle = "UHC Diamond III"
+          } else if (totalBridge >= 800 && totalBridge <= 899) {
+            bridgeTitle = "UHC Diamond IV"
+          } else if (totalBridge >= 900 && totalBridge <= 999) {
+            bridgeTitle = "UHC Diamond V"
+          } else if (totalBridge >= 1000 && totalBridge <= 1199) {
+            bridgeTitle = "UHC Master"
+          } else if (totalBridge >= 1200 && totalBridge <= 1399) {
+            bridgeTitle = "UHC Master II"
+          } else if (totalBridge >= 1400 && totalBridge <= 1599) {
+            bridgeTitle = "UHC Master III"
+          } else if (totalBridge >= 1600 && totalBridge <= 1799) {
+            bridgeTitle = "UHC Master IV"
+          } else if (totalBridge >= 1800 && totalBridge <= 1999) {
+            bridgeTitle = "UHC Master V"
+          } else if (totalBridge >= 2000 && totalBridge <= 2599) {
+            bridgeTitle = "UHC Legend"
+          } else if (totalBridge >= 2600 && totalBridge <= 3199) {
+            bridgeTitle = "UHC Legend II"
+          } else if (totalBridge >= 3200 && totalBridge <= 3799) {
+            bridgeTitle = "UHC Legend III"
+          } else if (totalBridge >= 3800 && totalBridge <= 4399) {
+            bridgeTitle = "UHC Legend IV"
+          } else if (totalBridge >= 4400 && totalBridge <= 4999) {
+            bridgeTitle = "UHC Legend V"
+          } else if (totalBridge >= 5000 && totalBridge <= 5999) {
+            bridgeTitle = "UHC Grandmaster"
+          } else if (totalBridge >= 6000 && totalBridge <= 6999) {
+            bridgeTitle = "UHC Grandmaster II"
+          } else if (totalBridge >= 7000 && totalBridge <= 7999) {
+            bridgeTitle = "UHC Grandmaster III"
+          } else if (totalBridge >= 8000 && totalBridge <= 8999) {
+            bridgeTitle = "UHC Grandmaster IV"
+          } else if (totalBridge >= 9000 && totalBridge <= 9999) {
+            bridgeTitle = "UHC Grandmaster V"
+          } else if (totalBridge >= 10000 && totalBridge <= 10999) {
+            bridgeTitle = "UHC Godlike"
+          } else if (totalBridge >= 11000 && totalBridge <= 11999) {
+            bridgeTitle = "UHC Godlike II"
+          } else if (totalBridge >= 12000 && totalBridge <= 12999) {
+            bridgeTitle = "UHC Godlike III"
+          } else if (totalBridge >= 13000 && totalBridge <= 13999) {
+            bridgeTitle = "UHC Godlike IV"
+          } else if (totalBridge >= 14000 && totalBridge <= 14999) {
+            bridgeTitle = "UHC Godlike V"
+          } else if (totalBridge >= 15000 && totalBridge <= 15999) {
+            bridgeTitle = "UHC Godlike VI"
+          } else if (totalBridge >= 16000 && totalBridge <= 16999) {
+            bridgeTitle = "UHC Godlike VII"
+          } else if (totalBridge >= 17000 && totalBridge <= 17999) {
+            bridgeTitle = "UHC Godlike VIII"
+          } else if (totalBridge >= 18000 && totalBridge <= 18999) {
+            bridgeTitle = "UHC Godlike IX"
+          } else if (totalBridge >= 19000 && totalBridge <= 20000) {
+            bridgeTitle = "UHC Godlike X"
+          }
+          mojangjs
+            .getUUID(username)
+            .then(uuid => {
+              if (!args[0]) {
+                return message.channel.send(
+                  new Discord.RichEmbed()
+                  .setTitle(`${username}'s Duels Stats`)
+                  .setDescription("_Note: this feature is in beta. If you have no stats in one of the below fields, it may show as undefined or null._")
+                  .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
+                  .setColor([253, 144, 43])
+                  .setThumbnail(`https://crafatar.com/renders/head/${uuid}?overlay`)
+                  .addField('Overall', `\`-\` Wins: ${totalWins}\n \`-\` Losses: ${totalLosses}\n \`-\` Kills: ${totalKills}\n \`-\` Deaths: ${totalDeaths}\n \`-\`Games: ${totalGames}\n\n`, true)
+                  .addField('Ratios', `\`-\` WLR: ${totalWLR}\n \`-\` KDR: ${totalKDR}\n \`-\`Hit/Swing Ratio: ${totalHSR}\n \`-\`Bow Shot/Miss Ratio: ${totalBowHSR}\n\n`, true)
+                  .addField('Additional Stats', `Detailed stats be found with the arguments:\n \`uhc, bridge, skywars, other\`\n`)
+                );
+              } else if (args[0] === "uhc") {
+                return message.channel.send(
+                  new Discord.RichEmbed()
+                  .setTitle(`${username}'s UHC Duels Stats`)
+                  .setDescription("_Note: this feature is in beta. If you have no stats in one of the below fields, it may show as undefined or null._")
+                  .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
+                  .setColor([253, 144, 43])
+                  .setThumbnail(`https://crafatar.com/renders/head/${uuid}?overlay`)
+                  .addField('UHC 1v1', `\`-\` Wins: ${uhc1Wins}\n \`-\` Losses: ${uhc1Losses}\n \`-\` Kills: ${uhc1Kills}\n \`-\` Deaths: ${uhc1Deaths}\n \`-\` WLR: ${uhc1WLR}\n \`-\` KDR: ${uhc1KDR}`, true)
+                  .addField('UHC 2v2', `\`-\` Wins: ${uhc2Wins}\n \`-\` Losses: ${uhc2Losses}\n \`-\` Kills: ${uhc2Kills}\n \`-\` Deaths: ${uhc2Deaths}\n \`-\` WLR: ${uhc2WLR}\n \`-\` KDR: ${uhc2KDR}`, true)
+                  .addField('UHC 4v4', `\`-\` Wins: ${uhc4Wins}\n \`-\` Losses: ${uhc4Losses}\n \`-\` Kills: ${uhc4Kills}\n \`-\` Deaths: ${uhc4Deaths}\n \`-\` WLR: ${uhc4WLR}\n \`-\` KDR: ${uhc4KDR}`, true)
+                  .addField('UHC Meetup', `\`-\` Wins: ${uhcMWins}\n \`-\` Losses: ${uhcMLosses}\n \`-\` Kills: ${uhcMKills}\n \`-\` Deaths: ${uhcMDeaths}\n \`-\` WLR: ${uhcMWLR}\n \`-\` KDR: ${uhcMKDR}`, true)
+                  .addField('Prestige', `\`-\` Rank: ${skywarsTitle}\n`, true)
+                );
+              } else if (args[0] === "bridge" || args[0] === "bridges") {
+                return message.channel.send(
+                  new Discord.RichEmbed()
+                  .setTitle(`${username}'s Bridge Duels Stats`)
+                  .setDescription("_Note: this feature is in beta. If you have no stats in one of the below fields, it may show as undefined or null._")
+                  .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
+                  .setColor([253, 144, 43])
+                  .setThumbnail(`https://crafatar.com/renders/head/${uuid}?overlay`)
+                  .addField('Bridge 1v1', `\`-\` Wins: ${bridge1Wins}\n \`-\` Losses: ${bridge1Losses}\n \`-\` Kills: ${bridge1Kills}\n \`-\` Deaths: ${bridge1Deaths}\n \`-\` WLR: ${bridge1WLR}\n \`-\` KDR: ${bridge1KDR}`, true)
+                  .addField('Bridge 2v2', `\`-\` Wins: ${bridge2Wins}\n \`-\` Losses: ${bridge2Losses}\n \`-\` Kills: ${bridge2Kills}\n \`-\` Deaths: ${bridge2Deaths}\n \`-\` WLR: ${bridge2WLR}\n \`-\` KDR: ${bridge2KDR}`, true)
+                  .addField('Bridge 4v4', `\`-\` Wins: ${bridge4Wins}\n \`-\` Losses: ${bridge4Losses}\n \`-\` Kills: ${bridge4Kills}\n \`-\` Deaths: ${bridge4Deaths}\n \`-\` WLR: ${bridge4WLR}\n \`-\` KDR: ${bridge4KDR}`, true)
+                  .addField('Bridge 2v2v2v2', `\`-\` Wins: ${bridge5Wins}\n \`-\` Losses: ${bridge5Losses}\n \`-\` Kills: ${bridge5Kills}\n \`-\` Deaths: ${bridge5Deaths}\n \`-\` WLR: ${bridge5WLR}\n \`-\` KDR: ${bridge5KDR}`, true)
+                  .addField('Bridge 3v3v3v3', `\`-\` Wins: ${bridge6Wins}\n \`-\` Losses: ${bridge6Losses}\n \`-\` Kills: ${bridge6Kills}\n \`-\` Deaths: ${bridge6Deaths}\n \`-\` WLR: ${bridge6WLR}\n \`-\` KDR: ${bridge6KDR}`, true)
+                  .addField('Prestige', `\`-\` Rank: ${bridgeTitle}\n`, true)
+                );
+              }
+            }).catch(console.error);
+        })
+      });
+    } else if (args.length === 1 || args[0] != "uhc" || args[0] != "bridge" || args[0] != "bridges") {
+      console.log(args[0])
+      username = args[0];
+      hyAPI.getPlayer('name', `${username}`).then((player) => {
+        let totalWins = player.player.stats.Duels.wins;
+        let totalLosses = player.player.stats.Duels.losses;
+        let totalKills = player.player.stats.Duels.kills;
+        let totalDeaths = player.player.stats.Duels.deaths;
+        let totalWLR = thousands_separators((totalWins / totalLosses).toPrecision(3))
+        let totalKDR = thousands_separators((totalKills / totalDeaths).toPrecision(3))
+        let totalGames = player.player.stats.Duels.games_played_duels;
+        let totalHits = player.player.stats.Duels.melee_hits;
+        let totalSwings = player.player.stats.Duels.melee_swings;
+        let totalHSR = thousands_separators((totalHits / totalSwings).toPrecision(3))
+        let totalBowhit = player.player.stats.Duels.bow_hits;
+        let totalBowshot = player.player.stats.Duels.bow_shots;
+        let totalBowHSR = thousands_separators((totalBowshot / totalBowhit).toPrecision(3))
+        let uhc1Wins = player.player.stats.Duels.uhc_duel_wins;
+        let uhc1Losses = player.player.stats.Duels.uhc_duel_losses;
+        let uhc1Kills = player.player.stats.Duels.uhc_duel_kills;
+        let uhc1Deaths = player.player.stats.Duels.uhc_duel_deaths;
+        let uhc1WLR = thousands_separators((uhc1Wins / uhc1Losses).toPrecision(3))
+        let uhc1KDR = thousands_separators((uhc1Kills / uhc1Deaths).toPrecision(3))
+        let uhc2Wins = player.player.stats.Duels.uhc_doubles_wins;
+        let uhc2Losses = player.player.stats.Duels.uhc_doubles_losses;
+        let uhc2Kills = player.player.stats.Duels.uhc_doubles_kills;
+        let uhc2Deaths = player.player.stats.Duels.uhc_doubles_deaths;
+        let uhc2WLR = thousands_separators((uhc2Wins / uhc2Losses).toPrecision(3))
+        let uhc2KDR = thousands_separators((uhc2Kills / uhc2Deaths).toPrecision(3))
+        let uhc4Wins = player.player.stats.Duels.uhc_four_wins;
+        let uhc4Losses = player.player.stats.Duels.uhc_four_losses;
+        let uhc4Kills = player.player.stats.Duels.uhc_four_kills;
+        let uhc4Deaths = player.player.stats.Duels.uhc_four_deaths;
+        let uhc4WLR = thousands_separators((uhc4Wins / uhc4Losses).toPrecision(3))
+        let uhc4KDR = thousands_separators((uhc4Kills / uhc4Deaths).toPrecision(3))
+        let uhcMWins = player.player.stats.Duels.uhc_meetup_wins;
+        let uhcMLosses = player.player.stats.Duels.uhc_meetup_losses;
+        let uhcMKills = player.player.stats.Duels.uhc_meetup_kills;
+        let uhcMDeaths = player.player.stats.Duels.uhc_meetup_deaths;
+        let uhcMWLR = thousands_separators((uhcMWins / uhcMLosses).toPrecision(3))
+        let uhcMKDR = thousands_separators((uhcMKills / uhcMDeaths).toPrecision(3))
+        let skywarsTitle = "None"
+        let totalUHC = player.player.stats.Duels.uhc_duel_wins
+        let totalUHC2 = player.player.stats.Duels.uhc_doubles_wins
+        let totalUHC3 = player.player.stats.Duels.uhc_four_wins
+        let totalUHC4 = player.player.stats.Duels.uhc_meetup_wins
+        totalUHC += totalUHC2
+        totalUHC += totalUHC3
+        totalUHC += totalUHC4
+        if (totalUHC >= 0 && totalUHC <= 49) {
+          skywarsTitle = "None"
+        } else if (totalUHC >= 50 && totalUHC <= 59) {
+          skywarsTitle = "UHC Rookie"
+        } else if (totalUHC >= 60 && totalUHC <= 69) {
+          skywarsTitle = "UHC Rookie II"
+        } else if (totalUHC >= 70 && totalUHC <= 79) {
+          skywarsTitle = "UHC Rookie III"
+        } else if (totalUHC >= 80 && totalUHC <= 89) {
+          skywarsTitle = "UHC Rookie IV"
+        } else if (totalUHC >= 90 && totalUHC <= 99) {
+          skywarsTitle = "UHC Rookie V"
+        } else if (totalUHC >= 100 && totalUHC <= 129) {
+          skywarsTitle = "UHC Iron"
+        } else if (totalUHC >= 130 && totalUHC <= 159) {
+          skywarsTitle = "UHC Iron II"
+        } else if (totalUHC >= 160 && totalUHC <= 189) {
+          skywarsTitle = "UHC Iron III"
+        } else if (totalUHC >= 190 && totalUHC <= 219) {
+          skywarsTitle = "UHC Iron IV"
+        } else if (totalUHC >= 220 && totalUHC <= 249) {
+          skywarsTitle = "UHC Iron V"
+        } else if (totalUHC >= 250 && totalUHC <= 299) {
+          skywarsTitle = "UHC Gold"
+        } else if (totalUHC >= 300 && totalUHC <= 349) {
+          skywarsTitle = "UHC Gold II"
+        } else if (totalUHC >= 350 && totalUHC <= 399) {
+          skywarsTitle = "UHC Gold III"
+        } else if (totalUHC >= 400 && totalUHC <= 449) {
+          skywarsTitle = "UHC Gold IV"
+        } else if (totalUHC >= 450 && totalUHC <= 499) {
+          skywarsTitle = "UHC Gold V"
+        } else if (totalUHC >= 500 && totalUHC <= 599) {
+          skywarsTitle = "UHC Diamond"
+        } else if (totalUHC >= 600 && totalUHC <= 699) {
+          skywarsTitle = "UHC Diamond II"
+        } else if (totalUHC >= 700 && totalUHC <= 799) {
+          skywarsTitle = "UHC Diamond III"
+        } else if (totalUHC >= 800 && totalUHC <= 899) {
+          skywarsTitle = "UHC Diamond IV"
+        } else if (totalUHC >= 900 && totalUHC <= 999) {
+          skywarsTitle = "UHC Diamond V"
+        } else if (totalUHC >= 1000 && totalUHC <= 1199) {
+          skywarsTitle = "UHC Master"
+        } else if (totalUHC >= 1200 && totalUHC <= 1399) {
+          skywarsTitle = "UHC Master II"
+        } else if (totalUHC >= 1400 && totalUHC <= 1599) {
+          skywarsTitle = "UHC Master III"
+        } else if (totalUHC >= 1600 && totalUHC <= 1799) {
+          skywarsTitle = "UHC Master IV"
+        } else if (totalUHC >= 1800 && totalUHC <= 1999) {
+          skywarsTitle = "UHC Master V"
+        } else if (totalUHC >= 2000 && totalUHC <= 2599) {
+          skywarsTitle = "UHC Legend"
+        } else if (totalUHC >= 2600 && totalUHC <= 3199) {
+          skywarsTitle = "UHC Legend II"
+        } else if (totalUHC >= 3200 && totalUHC <= 3799) {
+          skywarsTitle = "UHC Legend III"
+        } else if (totalUHC >= 3800 && totalUHC <= 4399) {
+          skywarsTitle = "UHC Legend IV"
+        } else if (totalUHC >= 4400 && totalUHC <= 4999) {
+          skywarsTitle = "UHC Legend V"
+        } else if (totalUHC >= 5000 && totalUHC <= 5999) {
+          skywarsTitle = "UHC Grandmaster"
+        } else if (totalUHC >= 6000 && totalUHC <= 6999) {
+          skywarsTitle = "UHC Grandmaster II"
+        } else if (totalUHC >= 7000 && totalUHC <= 7999) {
+          skywarsTitle = "UHC Grandmaster III"
+        } else if (totalUHC >= 8000 && totalUHC <= 8999) {
+          skywarsTitle = "UHC Grandmaster IV"
+        } else if (totalUHC >= 9000 && totalUHC <= 9999) {
+          skywarsTitle = "UHC Grandmaster V"
+        } else if (totalUHC >= 10000 && totalUHC <= 10999) {
+          skywarsTitle = "UHC Godlike"
+        } else if (totalUHC >= 11000 && totalUHC <= 11999) {
+          skywarsTitle = "UHC Godlike II"
+        } else if (totalUHC >= 12000 && totalUHC <= 12999) {
+          skywarsTitle = "UHC Godlike III"
+        } else if (totalUHC >= 13000 && totalUHC <= 13999) {
+          skywarsTitle = "UHC Godlike IV"
+        } else if (totalUHC >= 14000 && totalUHC <= 14999) {
+          skywarsTitle = "UHC Godlike V"
+        } else if (totalUHC >= 15000 && totalUHC <= 15999) {
+          skywarsTitle = "UHC Godlike VI"
+        } else if (totalUHC >= 16000 && totalUHC <= 16999) {
+          skywarsTitle = "UHC Godlike VII"
+        } else if (totalUHC >= 17000 && totalUHC <= 17999) {
+          skywarsTitle = "UHC Godlike VIII"
+        } else if (totalUHC >= 18000 && totalUHC <= 18999) {
+          skywarsTitle = "UHC Godlike IX"
+        } else if (totalUHC >= 19000 && totalUHC <= 20000) {
+          skywarsTitle = "UHC Godlike X"
+        }
+
+        // let megawalls = player.player.stats.Duels.wins;
+        // let op = player.player.stats.Duels.wins;
+        // let skywars1 = player.player.stats.Duels.wins;
+        // let skywars2 = player.player.stats.Duels.wins;
+        // let bow = player.player.stats.Duels.wins;
+        // let sumo = player.player.stats.Duels.wins;
+        // let bowSpleef = player.player.stats.Duels.wins;
+        // let noDebuff = player.player.stats.Duels.wins;
+        // let combo = player.player.stats.Duels.wins;
+
+        let bridge1Wins = player.player.stats.Duels.bridge_duel_wins;
+        let bridge1Losses = player.player.stats.Duels.bridge_duel_losses;
+        let bridge1Kills = player.player.stats.Duels.bridge_duel_kills;
+        let bridge1Deaths = player.player.stats.Duels.bridge_duel_deaths;
+        let bridge1WLR = thousands_separators((bridge1Wins / bridge1Losses).toPrecision(3))
+        let bridge1KDR = thousands_separators((bridge1Kills / bridge1Deaths).toPrecision(3))
+        let bridge2Wins = player.player.stats.Duels.bridge_doubles_wins;
+        let bridge2Losses = player.player.stats.Duels.bridge_doubles_losses;
+        let bridge2Kills = player.player.stats.Duels.bridge_doubles_kills;
+        let bridge2Deaths = player.player.stats.Duels.bridge_doubles_deaths;
+        let bridge2WLR = thousands_separators((bridge2Wins / bridge2Losses).toPrecision(3))
+        let bridge2KDR = thousands_separators((bridge2Kills / bridge2Deaths).toPrecision(3))
+        let bridge4Kills = player.player.stats.Duels.bridge_four_wins;
+        let bridge4Wins = player.player.stats.Duels.bridge_four_wins;
+        let bridge4Losses = player.player.stats.Duels.bridge_four_losses;
+        let bridge4Deaths = player.player.stats.Duels.bridge_four_deaths;
+        let bridge4WLR = thousands_separators((bridge4Kills / bridge4Wins).toPrecision(3))
+        let bridge4KDR = thousands_separators((bridge4Losses / bridge4Deaths).toPrecision(3))
+        let bridge5Kills = player.player.stats.Duels.bridge_2v2v2v2_wins;
+        let bridge5Wins = player.player.stats.Duels.bridge_2v2v2v2_wins;
+        let bridge5Losses = player.player.stats.Duels.bridge_2v2v2v2_losses;
+        let bridge5Deaths = player.player.stats.Duels.bridge_2v2v2v2_deaths;
+        let bridge5WLR = thousands_separators((bridge5Kills / bridge5Wins).toPrecision(3))
+        let bridge5KDR = thousands_separators((bridge5Losses / bridge5Deaths).toPrecision(3))
+        let bridge6Kills = player.player.stats.Duels.bridge_3v3v3v3_wins;
+        let bridge6Wins = player.player.stats.Duels.bridge_3v3v3v3_wins;
+        let bridge6Losses = player.player.stats.Duels.bridge_3v3v3v3_losses;
+        let bridge6Deaths = player.player.stats.Duels.bridge_3v3v3v3_deaths;
+        let bridge6WLR = thousands_separators((bridge6Kills / bridge6Wins).toPrecision(3))
+        let bridge6KDR = thousands_separators((bridge6Losses / bridge6Deaths).toPrecision(3))
+        let bridgeTitle = "None"
+        let totalBridge = player.player.stats.Duels.bridge_duel_wins
+        let totalBridge2 = player.player.stats.Duels.bridge_doubles_wins
+        let totalBridge3 = player.player.stats.Duels.bridge_four_wins
+        let totalBridge4 = player.player.stats.Duels.bridge_2v2v2v2_wins
+        let totalBridge5 = player.player.stats.Duels.bridge_3v3v3v3_wins
+        totalBridge += totalBridge2
+        totalBridge += totalBridge3
+        totalBridge += totalBridge4
+        totalBridge += totalBridge5
+        if (totalBridge >= 0 && totalBridge <= 49) {
+          bridgeTitle = "None"
+        } else if (totalBridge >= 50 && totalBridge <= 59) {
+          bridgeTitle = "UHC Rookie"
+        } else if (totalBridge >= 60 && totalBridge <= 69) {
+          bridgeTitle = "UHC Rookie II"
+        } else if (totalBridge >= 70 && totalBridge <= 79) {
+          bridgeTitle = "UHC Rookie III"
+        } else if (totalBridge >= 80 && totalBridge <= 89) {
+          bridgeTitle = "UHC Rookie IV"
+        } else if (totalBridge >= 90 && totalBridge <= 99) {
+          bridgeTitle = "UHC Rookie V"
+        } else if (totalBridge >= 100 && totalBridge <= 129) {
+          bridgeTitle = "UHC Iron"
+        } else if (totalBridge >= 130 && totalBridge <= 159) {
+          bridgeTitle = "UHC Iron II"
+        } else if (totalBridge >= 160 && totalBridge <= 189) {
+          bridgeTitle = "UHC Iron III"
+        } else if (totalBridge >= 190 && totalBridge <= 219) {
+          bridgeTitle = "UHC Iron IV"
+        } else if (totalBridge >= 220 && totalBridge <= 249) {
+          bridgeTitle = "UHC Iron V"
+        } else if (totalBridge >= 250 && totalBridge <= 299) {
+          bridgeTitle = "UHC Gold"
+        } else if (totalBridge >= 300 && totalBridge <= 349) {
+          bridgeTitle = "UHC Gold II"
+        } else if (totalBridge >= 350 && totalBridge <= 399) {
+          bridgeTitle = "UHC Gold III"
+        } else if (totalBridge >= 400 && totalBridge <= 449) {
+          bridgeTitle = "UHC Gold IV"
+        } else if (totalBridge >= 450 && totalBridge <= 499) {
+          bridgeTitle = "UHC Gold V"
+        } else if (totalBridge >= 500 && totalBridge <= 599) {
+          bridgeTitle = "UHC Diamond"
+        } else if (totalBridge >= 600 && totalBridge <= 699) {
+          bridgeTitle = "UHC Diamond II"
+        } else if (totalBridge >= 700 && totalBridge <= 799) {
+          bridgeTitle = "UHC Diamond III"
+        } else if (totalBridge >= 800 && totalBridge <= 899) {
+          bridgeTitle = "UHC Diamond IV"
+        } else if (totalBridge >= 900 && totalBridge <= 999) {
+          bridgeTitle = "UHC Diamond V"
+        } else if (totalBridge >= 1000 && totalBridge <= 1199) {
+          bridgeTitle = "UHC Master"
+        } else if (totalBridge >= 1200 && totalBridge <= 1399) {
+          bridgeTitle = "UHC Master II"
+        } else if (totalBridge >= 1400 && totalBridge <= 1599) {
+          bridgeTitle = "UHC Master III"
+        } else if (totalBridge >= 1600 && totalBridge <= 1799) {
+          bridgeTitle = "UHC Master IV"
+        } else if (totalBridge >= 1800 && totalBridge <= 1999) {
+          bridgeTitle = "UHC Master V"
+        } else if (totalBridge >= 2000 && totalBridge <= 2599) {
+          bridgeTitle = "UHC Legend"
+        } else if (totalBridge >= 2600 && totalBridge <= 3199) {
+          bridgeTitle = "UHC Legend II"
+        } else if (totalBridge >= 3200 && totalBridge <= 3799) {
+          bridgeTitle = "UHC Legend III"
+        } else if (totalBridge >= 3800 && totalBridge <= 4399) {
+          bridgeTitle = "UHC Legend IV"
+        } else if (totalBridge >= 4400 && totalBridge <= 4999) {
+          bridgeTitle = "UHC Legend V"
+        } else if (totalBridge >= 5000 && totalBridge <= 5999) {
+          bridgeTitle = "UHC Grandmaster"
+        } else if (totalBridge >= 6000 && totalBridge <= 6999) {
+          bridgeTitle = "UHC Grandmaster II"
+        } else if (totalBridge >= 7000 && totalBridge <= 7999) {
+          bridgeTitle = "UHC Grandmaster III"
+        } else if (totalBridge >= 8000 && totalBridge <= 8999) {
+          bridgeTitle = "UHC Grandmaster IV"
+        } else if (totalBridge >= 9000 && totalBridge <= 9999) {
+          bridgeTitle = "UHC Grandmaster V"
+        } else if (totalBridge >= 10000 && totalBridge <= 10999) {
+          bridgeTitle = "UHC Godlike"
+        } else if (totalBridge >= 11000 && totalBridge <= 11999) {
+          bridgeTitle = "UHC Godlike II"
+        } else if (totalBridge >= 12000 && totalBridge <= 12999) {
+          bridgeTitle = "UHC Godlike III"
+        } else if (totalBridge >= 13000 && totalBridge <= 13999) {
+          bridgeTitle = "UHC Godlike IV"
+        } else if (totalBridge >= 14000 && totalBridge <= 14999) {
+          bridgeTitle = "UHC Godlike V"
+        } else if (totalBridge >= 15000 && totalBridge <= 15999) {
+          bridgeTitle = "UHC Godlike VI"
+        } else if (totalBridge >= 16000 && totalBridge <= 16999) {
+          bridgeTitle = "UHC Godlike VII"
+        } else if (totalBridge >= 17000 && totalBridge <= 17999) {
+          bridgeTitle = "UHC Godlike VIII"
+        } else if (totalBridge >= 18000 && totalBridge <= 18999) {
+          bridgeTitle = "UHC Godlike IX"
+        } else if (totalBridge >= 19000 && totalBridge <= 20000) {
+          bridgeTitle = "UHC Godlike X"
+        }
+        mojangjs
+          .getUUID(username)
+          .then(uuid => {
+            if (!args[0]) {
+              return message.channel.send(
+                new Discord.RichEmbed()
+                .setTitle(`${username}'s Duels Stats`)
+                .setDescription("_Note: this feature is in beta. If you have no stats in one of the below fields, it may show as undefined or null._")
+                .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
+                .setColor([253, 144, 43])
+                .setThumbnail(`https://crafatar.com/renders/head/${uuid}?overlay`)
+                .addField('Overall', `\`-\` Wins: ${totalWins}\n \`-\` Losses: ${totalLosses}\n \`-\` Kills: ${totalKills}\n \`-\` Deaths: ${totalDeaths}\n \`-\`Games: ${totalGames}\n\n`, true)
+                .addField('Ratios', `\`-\` WLR: ${totalWLR}\n \`-\` KDR: ${totalKDR}\n \`-\`Hit/Swing Ratio: ${totalHSR}\n \`-\`Bow Shot/Miss Ratio: ${totalBowHSR}\n\n`, true)
+                .addField('Additional Stats', `Detailed stats be found with the arguments:\n \`uhc, bridge, skywars, other\`\n`)
+              );
+            } else if (args[0] === "uhc") {
+              return message.channel.send(
+                new Discord.RichEmbed()
+                .setTitle(`${username}'s UHC Duels Stats`)
+                .setDescription("_Note: this feature is in beta. If you have no stats in one of the below fields, it may show as undefined or null._")
+                .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
+                .setColor([253, 144, 43])
+                .setThumbnail(`https://crafatar.com/renders/head/${uuid}?overlay`)
+                .addField('UHC 1v1', `\`-\` Wins: ${uhc1Wins}\n \`-\` Losses: ${uhc1Losses}\n \`-\` Kills: ${uhc1Kills}\n \`-\` Deaths: ${uhc1Deaths}\n \`-\` WLR: ${uhc1WLR}\n \`-\` KDR: ${uhc1KDR}`, true)
+                .addField('UHC 2v2', `\`-\` Wins: ${uhc2Wins}\n \`-\` Losses: ${uhc2Losses}\n \`-\` Kills: ${uhc2Kills}\n \`-\` Deaths: ${uhc2Deaths}\n \`-\` WLR: ${uhc2WLR}\n \`-\` KDR: ${uhc2KDR}`, true)
+                .addField('UHC 4v4', `\`-\` Wins: ${uhc4Wins}\n \`-\` Losses: ${uhc4Losses}\n \`-\` Kills: ${uhc4Kills}\n \`-\` Deaths: ${uhc4Deaths}\n \`-\` WLR: ${uhc4WLR}\n \`-\` KDR: ${uhc4KDR}`, true)
+                .addField('UHC Meetup', `\`-\` Wins: ${uhcMWins}\n \`-\` Losses: ${uhcMLosses}\n \`-\` Kills: ${uhcMKills}\n \`-\` Deaths: ${uhcMDeaths}\n \`-\` WLR: ${uhcMWLR}\n \`-\` KDR: ${uhcMKDR}`, true)
+                .addField('Prestige', `\`-\` Rank: ${skywarsTitle}\n`, true)
+              );
+            } else if (args[0] === "bridge" || args[0] === "bridges") {
+              return message.channel.send(
+                new Discord.RichEmbed()
+                .setTitle(`${username}'s Bridge Duels Stats`)
+                .setDescription("_Note: this feature is in beta. If you have no stats in one of the below fields, it may show as undefined or null._")
+                .setFooter(`${tangerineFooter}`, `${tangerineIcon}`)
+                .setColor([253, 144, 43])
+                .setThumbnail(`https://crafatar.com/renders/head/${uuid}?overlay`)
+                .addField('Bridge 1v1', `\`-\` Wins: ${bridge1Wins}\n \`-\` Losses: ${bridge1Losses}\n \`-\` Kills: ${bridge1Kills}\n \`-\` Deaths: ${bridge1Deaths}\n \`-\` WLR: ${bridge1WLR}\n \`-\` KDR: ${bridge1KDR}`, true)
+                .addField('Bridge 2v2', `\`-\` Wins: ${bridge2Wins}\n \`-\` Losses: ${bridge2Losses}\n \`-\` Kills: ${bridge2Kills}\n \`-\` Deaths: ${bridge2Deaths}\n \`-\` WLR: ${bridge2WLR}\n \`-\` KDR: ${bridge2KDR}`, true)
+                .addField('Bridge 4v4', `\`-\` Wins: ${bridge4Wins}\n \`-\` Losses: ${bridge4Losses}\n \`-\` Kills: ${bridge4Kills}\n \`-\` Deaths: ${bridge4Deaths}\n \`-\` WLR: ${bridge4WLR}\n \`-\` KDR: ${bridge4KDR}`, true)
+                .addField('Bridge 2v2v2v2', `\`-\` Wins: ${bridge5Wins}\n \`-\` Losses: ${bridge5Losses}\n \`-\` Kills: ${bridge5Kills}\n \`-\` Deaths: ${bridge5Deaths}\n \`-\` WLR: ${bridge5WLR}\n \`-\` KDR: ${bridge5KDR}`, true)
+                .addField('Bridge 3v3v3v3', `\`-\` Wins: ${bridge6Wins}\n \`-\` Losses: ${bridge6Losses}\n \`-\` Kills: ${bridge6Kills}\n \`-\` Deaths: ${bridge6Deaths}\n \`-\` WLR: ${bridge6WLR}\n \`-\` KDR: ${bridge6KDR}`, true)
+                .addField('Prestige', `\`-\` Rank: ${bridgeTitle}\n`, true)
+              );
+            }
+          }).catch(console.error);
+      })
+    }
   }
   //////////////////////////////////////////////////////
 });
