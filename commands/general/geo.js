@@ -1,11 +1,14 @@
 const Command = require("../../structures/CommandClass");
-const { EmbedBuilder, SlashCommandBuilder } = require("discord.js");
+const {
+  EmbedBuilder,
+  SlashCommandBuilder
+} = require("discord.js");
 const gis = require("g-i-s");
-const country_list_easy = require("../../assets/geo/easy.json");
-const country_list_medium = require("../../assets/geo/medium.json");
-const country_list_hard = require("../../assets/geo/hard.json");
-const state_list = require("../../assets/geo/states.json");
-const landmark_list = require("../../assets/geo/landmarks.json");
+const country_list_easy = require("../../keys/geo/easy.json");
+const country_list_medium = require("../../keys/geo/medium.json");
+const country_list_hard = require("../../keys/geo/hard.json");
+const state_list = require("../../keys/geo/states.json");
+const landmark_list = require("../../keys/geo/landmarks.json");
 module.exports = class geo extends Command {
   constructor(client) {
     super(client, {
@@ -15,36 +18,30 @@ module.exports = class geo extends Command {
         .setDMPermission(true)
         .addStringOption((option) =>
           option
-            .setName("gamemode")
-            .setDescription(
-              "Choose which gamem mode you want to play! Easy is top 25, medium is top 50, and hard is top 100!"
-            )
-            .setRequired(true)
-            .addChoices(
-              {
-                name: "Easy",
-                value: "Easy",
-              },
-              {
-                name: "Medium",
-                value: "Medium",
-              },
-              {
-                name: "Hard",
-                value: "Hard",
-              },
-              {
-                name: "States",
-                value: "States",
-              },
-              {
-                name: "Landmarks",
-                value: "Landmarks",
-              }
-            )
+          .setName("gamemode")
+          .setDescription(
+            "Choose which game mode you want to play! Easy is top 25, medium is top 50, and hard is top 100!"
+          )
+          .setRequired(true)
+          .addChoices({
+            name: "Easy",
+            value: "Easy",
+          }, {
+            name: "Medium",
+            value: "Medium",
+          }, {
+            name: "Hard",
+            value: "Hard",
+          }, {
+            name: "States",
+            value: "States",
+          }, {
+            name: "Landmarks",
+            value: "Landmarks",
+          })
         ),
       usage: "geo",
-      category: "Info",
+      category: "Minigames",
       permissions: ["Use Application Commands", "Send Messages", "Embed Links"],
     });
   }
@@ -92,7 +89,7 @@ module.exports = class geo extends Command {
         console.log(e);
       } else {
         const imageEmbed = new EmbedBuilder()
-          .setColor([45, 70, 163])
+          .setColor([253, 144, 43])
           .setTitle(`What ${regionType} is this? You have 45 seconds!`)
           .setDescription(`Game mode: **${gamemode}**`)
           .setImage(`${res[0].url}`);

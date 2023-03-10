@@ -24,10 +24,10 @@ module.exports = class Ping extends Command {
 		await interaction.deferReply();
 
 		const pingEmbed = new EmbedBuilder()
-			.setColor([45, 70, 163])
+			.setColor([253, 144, 43])
 			.setFooter({
-				text: 'Created by alt#0001 for the Extorious Guild. 2022.',
-				iconURL: 'https://cdn.discordapp.com/avatars/680525837334085658/65909733c50e0eba2c22a3d519aef39b.png'
+				text: "[OSS] Tangerine Team, 2023",
+				iconURL: "https://raw.githubusercontent.com/tangerine-bot/tangerine/master/tangerine_icon_full.png",
 			})
 			.setDescription(stripIndents `
             **Roundtrip:** ${Math.round(Date.now() - now)} ms
